@@ -1,0 +1,154 @@
+{
+  "project": "Searchopoly",
+  "latest_month": "2026-10",
+  "months": [
+    "2026-10"
+  ],
+  "boards": {
+    "world": {
+      "label": "World",
+      "months": [
+        "2026-10"
+      ],
+      "latest": "snapshots/2026-10/world.json",
+      "status": "ok",
+      "source": "tranco",
+      "list_id": "K9Z7W"
+    },
+    "uk": {
+      "label": "United Kingdom",
+      "months": [],
+      "latest": null,
+      "status": "pending",
+      "reason": "CLOUDFLARE_API_TOKEN is not set, so Cloudflare Radar was skipped."
+    }
+  },
+  "categories": [
+    {
+      "category": "search",
+      "group": "search_portals",
+      "label": "Search & portals"
+    },
+    {
+      "category": "social",
+      "group": "social_messaging",
+      "label": "Social"
+    },
+    {
+      "category": "messaging",
+      "group": "social_messaging",
+      "label": "Messaging"
+    },
+    {
+      "category": "video",
+      "group": "entertainment",
+      "label": "Video & streaming"
+    },
+    {
+      "category": "music",
+      "group": "entertainment",
+      "label": "Music & audio"
+    },
+    {
+      "category": "gaming",
+      "group": "entertainment",
+      "label": "Gaming"
+    },
+    {
+      "category": "shopping",
+      "group": "shopping",
+      "label": "Shopping"
+    },
+    {
+      "category": "news",
+      "group": "news_sport",
+      "label": "News"
+    },
+    {
+      "category": "sport",
+      "group": "news_sport",
+      "label": "Sport"
+    },
+    {
+      "category": "weather",
+      "group": "news_sport",
+      "label": "Weather"
+    },
+    {
+      "category": "reference",
+      "group": "reference_learning",
+      "label": "Reference"
+    },
+    {
+      "category": "education",
+      "group": "reference_learning",
+      "label": "Education & research"
+    },
+    {
+      "category": "government",
+      "group": "reference_learning",
+      "label": "Government & public services"
+    },
+    {
+      "category": "tech",
+      "group": "tech_ai",
+      "label": "Tech"
+    },
+    {
+      "category": "ai",
+      "group": "tech_ai",
+      "label": "AI assistants"
+    },
+    {
+      "category": "productivity",
+      "group": "work_money",
+      "label": "Work & productivity"
+    },
+    {
+      "category": "finance",
+      "group": "work_money",
+      "label": "Finance & banking"
+    },
+    {
+      "category": "travel",
+      "group": "work_money",
+      "label": "Travel & transport"
+    }
+  ],
+  "groups": {
+    "search_portals": [
+      "search"
+    ],
+    "social_messaging": [
+      "social",
+      "messaging"
+    ],
+    "entertainment": [
+      "video",
+      "music",
+      "gaming"
+    ],
+    "shopping": [
+      "shopping"
+    ],
+    "news_sport": [
+      "news",
+      "sport",
+      "weather"
+    ],
+    "reference_learning": [
+      "reference",
+      "education",
+      "government"
+    ],
+    "tech_ai": [
+      "tech",
+      "ai"
+    ],
+    "work_money": [
+      "productivity",
+      "finance",
+      "travel"
+    ]
+  }
+}

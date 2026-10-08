@@ -1,0 +1,455 @@
+{
+  "board": "world",
+  "label": "World",
+  "month": "2026-10",
+  "generated_at": "2026-10-08T18:17:15Z",
+  "metric": "Relative popularity (most visited), not search volume",
+  "source": {
+    "name": "Tranco",
+    "list_id": "K9Z7W",
+    "list_date": "2026-10-07",
+    "window": "2026-09-08 to 2026-10-07",
+    "providers": [
+      "crux",
+      "farsight",
+      "majestic",
+      "radar",
+      "umbrella"
+    ],
+    "url": "https://tranco-list.eu/list/K9Z7W",
+    "citation": "Le Pochat et al. (2019), 'Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation', NDSS 2019. https://doi.org/10.14722/ndss.2019.23386",
+    "licence_note": "Tranco aggregates Cisco Umbrella, Majestic (CC BY 3.0), Farsight, Chrome UX Report and Cloudflare Radar (CC BY-NC 4.0) rankings. Non-commercial use."
+  },
+  "coverage": {
+    "last_board_source_rank": 87,
+    "reviewed_through_rank": 500,
+    "unreviewed_above_cutoff": [],
+    "ok": true
+  },
+  "sites": [
+    {
+      "rank": 1,
+      "brand": "Google",
+      "domain": "google.com",
+      "category": "search",
+      "group": "search_portals",
+      "source": "tranco",
+      "source_rank": 1,
+      "merged_domains": [
+        "google.com",
+        "gmail.com",
+        "google.cn",
+        "google.de",
+        "google.co.uk",
+        "google.com.br",
+        "google.fr",
+        "google.ca",
+        "google.co.jp",
+        "google.co.in",
+        "google.it",
+        "google.es"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 2,
+      "brand": "Facebook",
+      "domain": "facebook.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 4,
+      "merged_domains": [
+        "facebook.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 3,
+      "brand": "Microsoft",
+      "domain": "microsoft.com",
+      "category": "productivity",
+      "group": "work_money",
+      "source": "tranco",
+      "source_rank": 8,
+      "merged_domains": [
+        "microsoft.com",
+        "office.com",
+        "live.com",
+        "cloud.microsoft",
+        "sharepoint.com",
+        "office365.com",
+        "outlook.com",
+        "microsoft365.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 4,
+      "brand": "Apple",
+      "domain": "apple.com",
+      "category": "tech",
+      "group": "tech_ai",
+      "source": "tranco",
+      "source_rank": 9,
+      "merged_domains": [
+        "apple.com",
+        "icloud.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 5,
+      "brand": "YouTube",
+      "domain": "youtube.com",
+      "category": "video",
+      "group": "entertainment",
+      "source": "tranco",
+      "source_rank": 10,
+      "merged_domains": [
+        "youtube.com",
+        "youtu.be"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 6,
+      "brand": "Instagram",
+      "domain": "instagram.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 11,
+      "merged_domains": [
+        "instagram.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 7,
+      "brand": "Mail.ru",
+      "domain": "mail.ru",
+      "category": "search",
+      "group": "search_portals",
+      "source": "tranco",
+      "source_rank": 13,
+      "merged_domains": [
+        "mail.ru"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 8,
+      "brand": "X (Twitter)",
+      "domain": "x.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 16,
+      "merged_domains": [
+        "twitter.com",
+        "x.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 9,
+      "brand": "LinkedIn",
+      "domain": "linkedin.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 17,
+      "merged_domains": [
+        "linkedin.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 10,
+      "brand": "Dzen",
+      "domain": "dzen.ru",
+      "category": "news",
+      "group": "news_sport",
+      "source": "tranco",
+      "source_rank": 18,
+      "merged_domains": [
+        "dzen.ru"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 11,
+      "brand": "Amazon",
+      "domain": "amazon.com",
+      "category": "shopping",
+      "group": "shopping",
+      "source": "tranco",
+      "source_rank": 26,
+      "merged_domains": [
+        "amazon.com",
+        "amazon.co.uk",
+        "amazon.de",
+        "amazon.co.jp",
+        "amazon.fr",
+        "amazon.ca",
+        "amazon.in",
+        "amazon.es",
+        "amazon.it",
+        "amazon.com.br"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 12,
+      "brand": "GitHub",
+      "domain": "github.com",
+      "category": "tech",
+      "group": "tech_ai",
+      "source": "tranco",
+      "source_rank": 29,
+      "merged_domains": [
+        "github.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 13,
+      "brand": "Wikipedia",
+      "domain": "wikipedia.org",
+      "category": "reference",
+      "group": "reference_learning",
+      "source": "tranco",
+      "source_rank": 31,
+      "merged_domains": [
+        "wikipedia.org"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 14,
+      "brand": "Bing",
+      "domain": "bing.com",
+      "category": "search",
+      "group": "search_portals",
+      "source": "tranco",
+      "source_rank": 33,
+      "merged_domains": [
+        "bing.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 15,
+      "brand": "Netflix",
+      "domain": "netflix.com",
+      "category": "video",
+      "group": "entertainment",
+      "source": "tranco",
+      "source_rank": 46,
+      "merged_domains": [
+        "netflix.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 16,
+      "brand": "Pinterest",
+      "domain": "pinterest.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 53,
+      "merged_domains": [
+        "pinterest.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 17,
+      "brand": "WhatsApp",
+      "domain": "whatsapp.com",
+      "category": "messaging",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 56,
+      "merged_domains": [
+        "whatsapp.com",
+        "wa.me"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 18,
+      "brand": "TikTok",
+      "domain": "tiktok.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 57,
+      "merged_domains": [
+        "tiktok.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 19,
+      "brand": "Yahoo",
+      "domain": "yahoo.com",
+      "category": "search",
+      "group": "search_portals",
+      "source": "tranco",
+      "source_rank": 61,
+      "merged_domains": [
+        "yahoo.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 20,
+      "brand": "Adobe",
+      "domain": "adobe.com",
+      "category": "productivity",
+      "group": "work_money",
+      "source": "tranco",
+      "source_rank": 64,
+      "merged_domains": [
+        "adobe.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 21,
+      "brand": "Roblox",
+      "domain": "roblox.com",
+      "category": "gaming",
+      "group": "entertainment",
+      "source": "tranco",
+      "source_rank": 66,
+      "merged_domains": [
+        "roblox.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 22,
+      "brand": "Spotify",
+      "domain": "spotify.com",
+      "category": "music",
+      "group": "entertainment",
+      "source": "tranco",
+      "source_rank": 69,
+      "merged_domains": [
+        "spotify.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 23,
+      "brand": "Zoom",
+      "domain": "zoom.us",
+      "category": "productivity",
+      "group": "work_money",
+      "source": "tranco",
+      "source_rank": 70,
+      "merged_domains": [
+        "zoom.us"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 24,
+      "brand": "MSN",
+      "domain": "msn.com",
+      "category": "news",
+      "group": "news_sport",
+      "source": "tranco",
+      "source_rank": 72,
+      "merged_domains": [
+        "msn.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 25,
+      "brand": "QQ",
+      "domain": "qq.com",
+      "category": "messaging",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 78,
+      "merged_domains": [
+        "qq.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 26,
+      "brand": "Baidu",
+      "domain": "baidu.com",
+      "category": "search",
+      "group": "search_portals",
+      "source": "tranco",
+      "source_rank": 81,
+      "merged_domains": [
+        "baidu.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 27,
+      "brand": "Vimeo",
+      "domain": "vimeo.com",
+      "category": "video",
+      "group": "entertainment",
+      "source": "tranco",
+      "source_rank": 85,
+      "merged_domains": [
+        "vimeo.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    },
+    {
+      "rank": 28,
+      "brand": "ChatGPT",
+      "domain": "chatgpt.com",
+      "category": "ai",
+      "group": "tech_ai",
+      "source": "tranco",
+      "source_rank": 87,
+      "merged_domains": [
+        "chatgpt.com",
+        "openai.com"
+      ],
+      "previous_rank": null,
+      "movement": null
+    }
+  ]
+}
