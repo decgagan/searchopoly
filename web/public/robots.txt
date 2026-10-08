@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://searchopoly.co.uk/sitemap.xml
