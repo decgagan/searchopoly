@@ -10,14 +10,17 @@ sets, and a month slider will show who climbed and who fell.
 It's a data science portfolio project: the interesting part is the pipeline that turns
 messy, infrastructure-heavy domain rankings into an honest, explainable list of sites.
 
-> **Status:** milestone 3 of 5 (pipeline, interactive board, site cards, mobile layout). Month-by-month movement comes next.
+> **Status:** milestone 4 of 5 (interactive board with ten months of history, updated automatically each month). Launch comes next.
 > Planned home: [searchopoly.co.uk](https://searchopoly.co.uk).
 
 ![The October 2026 World board](docs/board.png)
 
 <p>
+  <img src="docs/slider.png" alt="Month slider with movement arrows" width="62%">
+  <img src="docs/mobile.png" alt="Mobile layout" width="20%">
+</p>
+<p>
   <img src="docs/card.png" alt="A site card open on the board" width="62%">
-  <img src="docs/mobile.png" alt="Mobile layout: ranked list" width="20%">
 </p>
 
 ## What it measures (and what it doesn't)
@@ -29,21 +32,21 @@ counts, so the board never claims numbers it can't back up.
 
 ## October 2026: World board
 
-From [Tranco list K9Z7W](https://tranco-list.eu/list/K9Z7W) (generated 7 October 2026, covering 8 September to 7 October 2026).
-`Source rank` is the brand's best position in the raw list before cleaning.
+From [Tranco list Y83YG](https://tranco-list.eu/list/Y83YG) (dated 1 October 2026, covering 2 September to 1 October 2026).
+`Source rank` is the brand's best position in the raw list before cleaning; `vs Sep` is the change in board position.
 
-| # | Site | Category | Source rank |
-|---|------|----------|-------------|
-| 1 | Google | search | 1 |
-| 2 | Facebook | social | 4 |
-| 3 | Microsoft | productivity | 8 |
-| 4 | Apple | tech | 9 |
-| 5 | YouTube | video | 10 |
-| 6 | Instagram | social | 11 |
-| 7 | Mail.ru | search | 13 |
-| 8 | X (Twitter) | social | 16 |
-| 9 | LinkedIn | social | 17 |
-| 10 | Dzen | news | 18 |
+| # | Site | Category | Source rank | vs Sep |
+|---|------|----------|-------------|--------|
+| 1 | Google | search | 1 | = |
+| 2 | Facebook | social | 3 | = |
+| 3 | Microsoft | productivity | 8 | = |
+| 4 | YouTube | video | 9 | = |
+| 5 | Apple | tech | 10 | = |
+| 6 | Instagram | social | 11 | = |
+| 7 | Mail.ru | search | 12 | = |
+| 8 | X (Twitter) | social | 15 | +1 |
+| 9 | Dzen | news | 17 | -1 |
+| 10 | LinkedIn | social | 18 | = |
 
 The full 28 are in [`data/snapshots/2026-10/world.json`](data/snapshots/2026-10/world.json).
 Every one of the top 500 raw domains, and how it was treated, is in
@@ -61,9 +64,11 @@ Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk
                         patterns)           └─> data/latest.json       (index for the site)
 ```
 
-1. **Fetch.** The latest daily [Tranco](https://tranco-list.eu) list (World) and
-   [Cloudflare Radar](https://radar.cloudflare.com/domains) top 100 for `location=GB` (UK).
-   Only the first 5,000 Tranco rows are downloaded, never the full million.
+1. **Fetch.** For month `YYYY-MM`, the [Tranco](https://tranco-list.eu) list dated `YYYY-MM-01`
+   (World) and the [Cloudflare Radar](https://radar.cloudflare.com/domains) top 100 for
+   `location=GB` on the same date (UK). Pinning every month to the list from the 1st keeps months
+   comparable and each snapshot reproducible from its list ID. Only the first 5,000 Tranco rows are
+   downloaded, never the full million. Tranco's API limit (1 request/second) is respected.
 2. **Classify.** Every domain is one of:
    - `mapped`: in [`pipeline/data/site_map.csv`](pipeline/data/site_map.csv), a hand-curated
      list of real destinations with brand, canonical domain and category;
@@ -74,8 +79,8 @@ Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk
    `google.com` + `google.co.uk` + `gmail.com` → Google; `twitter.com` + `x.com` → X;
    `office.com` + `live.com` + `outlook.com` → Microsoft.
 4. **Check coverage.** If any unreviewed domain outranks the 28th site, the run warns,
-   because the board might be missing a real site. The October world list is fully
-   reviewed to rank 500.
+   because the board might be missing a real site. Every month from January to October 2026 is
+   fully reviewed to raw rank 500.
 5. **Write.** Small JSON files for the front end. Each site has a stable `id` (brand slug) and an
    optional `note`, plus `previous_rank` and `movement` once there's an earlier month to compare against.
 
@@ -106,11 +111,29 @@ python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt
 
-python -m pipeline.run             # fetch, clean, write snapshots
-pytest                             # run the tests
+python -m pipeline.run                         # this month's snapshot
+python -m pipeline.run --month 2026-09         # a specific month
+python -m pipeline.run --backfill 2026-01:2026-10   # a range, oldest first
+pytest                                         # run the tests
 ```
 
-Options: `--month 2026-10` to label a snapshot explicitly, `--board-size 28`.
+Re-runs are idempotent: a file is only rewritten when its data changes (timestamps are ignored).
+Each run ends with a report covering the top 5, the biggest movers, coverage and any **unreviewed
+domains** to curate.
+
+### Historical data
+
+The ten World snapshots (January to October 2026) are genuine: each was built from the real
+Tranco list dated the 1st of that month, using the same cleaning rules. List IDs are recorded in
+every snapshot:
+
+| Month | Tranco list | Month | Tranco list |
+|---|---|---|---|
+| 2026-01 | [VQ3PN](https://tranco-list.eu/list/VQ3PN) | 2026-06 | [334VL](https://tranco-list.eu/list/334VL) |
+| 2026-02 | [3Q9NL](https://tranco-list.eu/list/3Q9NL) | 2026-07 | [JZ2VY](https://tranco-list.eu/list/JZ2VY) |
+| 2026-03 | [VQPQN](https://tranco-list.eu/list/VQPQN) | 2026-08 | [V3JQN](https://tranco-list.eu/list/V3JQN) |
+| 2026-04 | [NNQ7W](https://tranco-list.eu/list/NNQ7W) | 2026-09 | [K9QPW](https://tranco-list.eu/list/K9QPW) |
+| 2026-05 | [GV93K](https://tranco-list.eu/list/GV93K) | 2026-10 | [Y83YG](https://tranco-list.eu/list/Y83YG) |
 
 ### Website
 
@@ -129,9 +152,10 @@ The URL hash holds the state, so any view can be shared:
 
 | URL | Shows |
 |-----|-------|
-| `/` or `#world` | World board |
+| `/` or `#world` | World board, latest month |
 | `#uk` | UK board ("coming soon" until `uk.json` exists) |
-| `#world/google`, `#uk/bbc` | That board with a site card open (IDs are brand slugs, e.g. `x-twitter`) |
+| `#world/2026-06` | World board for June 2026 |
+| `#world/google`, `#world/2026-06/chatgpt` | A board with a site card open (IDs are brand slugs, e.g. `x-twitter`) |
 
 The UK board switches on automatically as soon as the pipeline writes `uk.json` and marks it
 `ok` in `latest.json`. No front-end change is needed.
@@ -149,6 +173,31 @@ Connect the GitHub repo in Cloudflare Pages and use:
 | Node version | from `.node-version` (22); or set `NODE_VERSION=22` |
 
 The build needs no secrets: the Radar token is only used by the pipeline, never by the site.
+
+## Automation (GitHub Actions)
+
+| Workflow | When | What it does |
+|----------|------|--------------|
+| [`monthly.yml`](.github/workflows/monthly.yml) | 04:17 UTC on the 3rd of each month, or by hand | Runs the tests, then `python -m pipeline.run`, then commits `data/` to `main` **only if it changed** (as `github-actions[bot]`). The push triggers a Cloudflare Pages rebuild. |
+| [`ci.yml`](.github/workflows/ci.yml) | Every push to `main` and every pull request | Runs `pytest` and builds the website. |
+
+The monthly run writes its report to the **job summary** (open the run in the Actions tab).
+Unreviewed domains that could belong on a board show up there as a warning and as a workflow
+annotation. To fix one, add the domain to `pipeline/data/site_map.csv` (a real site) or
+`pipeline/data/exclude.csv` (background traffic), push, and re-run the workflow.
+
+To run it by hand: **Actions → Monthly snapshot → Run workflow** (optionally with a month such
+as `2026-09`), or `gh workflow run monthly.yml -f month=2026-09`.
+
+### Adding the Cloudflare Radar token (UK board)
+
+1. Create the token as described in "Enabling the UK board" above (Account → Radar → Read).
+2. In the GitHub repo go to **Settings → Secrets and variables → Actions → New repository
+   secret**, name it `CLOUDFLARE_API_TOKEN` and paste the token. Or, from a terminal:
+   `gh secret set CLOUDFLARE_API_TOKEN --repo decgagan/searchopoly`.
+3. Run the monthly workflow by hand once. The UK board appears on the site after the next deploy.
+
+Without the secret the workflow still succeeds; the UK board just stays "coming soon".
 
 ### Enabling the UK board (Cloudflare Radar)
 
@@ -184,7 +233,7 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 - [x] **1. Pipeline and first snapshot.** Tranco and Radar fetchers, curated cleaning, World board for October 2026, tests.
 - [x] **2. Static board.** Svelte 5 + Vite. 28 squares in 8 colour sets plus 4 original corner squares, centre panel with month, top three, legend and credits; UK "coming soon" state.
 - [x] **3. Interaction.** Site cards (rank, movement, category, raw rank, merged domains, notes on known biases), keyboard support, shareable URL hashes, UK/World toggle with URL state, mobile layout.
-- [ ] **4. Movement.** Month slider that animates sites swapping squares (D3 transitions), plus a monthly GitHub Actions job that runs `python -m pipeline.run` and commits the new snapshot.
+- [x] **4. Movement.** Month slider with play button; squares and list rows glide to their new positions (FLIP animation, off under reduced motion); ▲/▼/NEW badges, biggest climber and faller, a rank-over-time sparkline on each card; ten months of real backfilled data; monthly and CI GitHub Actions workflows.
 - [ ] **5. Launch.** "How it's made" method page with full credits, custom domain on Cloudflare Pages, share images.
 
 ## Front-end design notes
@@ -204,6 +253,12 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
   reads "First month tracked" until a second snapshot exists, then "New this month",
   "Up 3 places" and so on. Notes come from the optional `note` column in `site_map.csv` and flag
   known biases (e.g. Windows background traffic inflating Microsoft).
+- **Months:** every month of a board is loaded up front (a few KB each), so the slider is instant.
+  Sites are keyed by ID, so changing month moves each square to its new position using Svelte's
+  FLIP animation. Sites joining or leaving the top 28 fade in and out. The biggest climber gets a
+  pulsing outline. With `prefers-reduced-motion`, everything jumps straight to the new state.
+- **Sparkline:** each card plots the site's rank by month (D3 scales and line generator), with
+  gaps for months it was off the board.
 - **Mobile (≤700px):** the centre panel moves to the top, followed by a ranked list that keeps the
   colour bands. Site cards open as a bottom sheet.
 
@@ -216,6 +271,9 @@ web/
   src/lib/CentrePanel.svelte # title, toggle, top three, legend, source
   src/lib/MobileList.svelte  # mobile ranked list
   src/lib/SiteCard.svelte    # site card dialog
+  src/lib/MonthPicker.svelte # month slider and play button
+  src/lib/Sparkline.svelte   # rank-over-time chart on the card
+  src/lib/movement.js        # movement badges and movers summary
   src/lib/router.js     # URL hash state
   src/lib/Square.svelte # one property square
   src/lib/Corner.svelte # the four corner squares
@@ -228,11 +286,13 @@ pipeline/
   radar.py        # Cloudflare Radar ranking API client
   clean.py        # classify, merge brands, coverage check
   snapshot.py     # JSON/CSV writers and the latest.json index
+  report.py       # run report, job summary and warnings
   data/           # hand-curated site_map.csv, exclude.csv, categories.csv
 data/
   latest.json     # index the front end loads first
   snapshots/YYYY-MM/
-tests/            # pytest suite for the cleaning logic and Radar client
+tests/            # pytest suite: cleaning, Radar client, movement, run report
+.github/workflows # monthly snapshot job and CI
 ```
 
 ## Licence
