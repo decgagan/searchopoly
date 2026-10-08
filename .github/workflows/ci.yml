@@ -34,3 +34,8 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: npm ci --prefix web
       - run: npm run build --prefix web
+      # Smoke test for the share image the monthly job redraws (uses the runner's Google Chrome).
+      - name: Render share image
+        run: |
+          npm run og --prefix web
+          python3 -c "import struct; d=open('web/public/og.png','rb').read(); w,h=struct.unpack('>II', d[16:24]); assert (w,h)==(1200,630), (w,h); print('og.png', w, 'x', h, len(d), 'bytes')"
