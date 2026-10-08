@@ -13,7 +13,6 @@
     class:selected
     class:hot
     style:--set={group.colour}
-    aria-label={`Number ${site.rank}: ${site.brand}, ${group.label}${badge ? `, ${badge.label}` : ""}. Open site card`}
     aria-haspopup="dialog"
     onclick={(e) => onOpen(site, e.currentTarget)}
   >
@@ -25,6 +24,7 @@
         <span class="brand">{site.brand}</span>
         <span class="domain">{site.domain}</span>
       </span>
+      <span class="sr-only">, {group.label}{badge ? `, ${badge.label}` : ""}. Open site card</span>
     </span>
   </button>
 {:else}
@@ -122,9 +122,9 @@
     color: #fff;
     letter-spacing: 0.02em;
   }
-  .badge.up { background: #2b8a3e; }
-  .badge.down { background: #c92a2a; }
-  .badge.new { background: var(--accent); }
+  .badge.up { background: var(--up); }
+  .badge.down { background: var(--down); }
+  .badge.new { background: var(--accent-strong); }
 
   .tile {
     flex: none;

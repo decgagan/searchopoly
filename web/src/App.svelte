@@ -2,6 +2,8 @@
   import Board from "./lib/Board.svelte";
   import MobileList from "./lib/MobileList.svelte";
   import SiteCard from "./lib/SiteCard.svelte";
+  import About from "./lib/About.svelte";
+  import OgCard from "./lib/OgCard.svelte";
   import { parseHash, formatHash } from "./lib/router.js";
 
   const DATA = `${import.meta.env.BASE_URL}data`;
@@ -11,6 +13,7 @@
   // snapshots[board][month] -> snapshot JSON
   let snapshots = $state({});
   let error = $state(null);
+  let ready = $state(false);
 
   // URL hash is the source of truth for which board and which card are showing.
   let route = $state(parseHash(location.hash));
@@ -45,7 +48,11 @@
           jobs.push(getJSON(`snapshots/${m}/${key}.json`).then((d) => (snapshots[key][m] = d)));
         }
       }
+      // Wait for the two web fonts too, so text doesn't reflow (layout shift) after first paint.
+      const fonts = ['700 1em "Space Grotesk Variable"', '400 1em "Inter Variable"', '650 1em "Inter Variable"'];
+      jobs.push(...fonts.map((f) => document.fonts.load(f).catch(() => {})));
       await Promise.all(jobs);
+      ready = true;
     } catch (e) {
       error = e.message;
     }
@@ -71,7 +78,7 @@
 
   const openSite = (s) => navigate({ site: s.id });
   const closeSite = () => navigate({ site: null });
-  const selectBoard = (board) => navigate({ board, month: null, site: null });
+  const selectBoard = (board) => navigate({ page: "board", board, month: null, site: null });
   // Keep the open card if the site is on the new month's board too.
   const selectMonth = (m) => {
     const keep = route.site && snapshots[route.board]?.[m]?.sites.some((s) => s.id === route.site);
@@ -83,17 +90,32 @@
     if (i >= 0 && i < sites.length) navigate({ site: sites[i].id });
   }
 
+  // Scroll to the top when switching between the board and the method page.
+  $effect(() => {
+    route.page;
+    window.scrollTo(0, 0);
+  });
+
   $effect(() => {
     const where = route.board === "uk" ? "UK" : "World";
-    document.title = site
+    document.title = route.page === "about"
+      ? "How Searchopoly is made · Searchopoly"
+      : site
       ? `${site.brand}: #${site.rank} on the ${where} board, ${snapshot.month} · Searchopoly`
       : "Searchopoly: the web's most visited sites, as a board";
   });
 </script>
 
-<main class:mobile>
+{#if route.page === "og" && world && ready}
+  <OgCard snapshot={world} boardInfo={index.boards} />
+{:else}
+<main class:mobile class:page={route.page === "about"}>
   {#if error}
     <p class="error">Couldn't load the board data ({error}).</p>
+  {:else if !ready}
+    <p class="loading">Loading the board…</p>
+  {:else if index && route.page === "about"}
+    <About {index} {world} />
   {:else if index}
     {@const props = {
       snapshot,
@@ -116,7 +138,7 @@
   {/if}
 </main>
 
-{#if site}
+{#if site && route.page === "board"}
   {#key route.board}
     <SiteCard
       {site}
@@ -130,6 +152,7 @@
   {/key}
 {/if}
 
+{#if ready || error}
 <footer>
   <p>
     <strong>Searchopoly</strong> ranks websites by relative popularity of visits, not search volume.
@@ -146,12 +169,15 @@
     <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>.
     Tranco also includes Radar data. Data modified as described above.
   </p>
+  <p><a href="#about">How it's made: sources, method and known biases</a></p>
   <p class="small">
     Not affiliated with any board game publisher, or with Tranco, Cloudflare or any site shown.
     Brand names belong to their owners. Code
     <a href="https://github.com/decgagan/searchopoly" target="_blank" rel="noopener">on GitHub</a> (MIT).
   </p>
 </footer>
+{/if}
+{/if}
 
 <style>
   main {
@@ -161,6 +187,7 @@
     padding: calc(var(--board) * 0.05) 0 calc(var(--board) * 0.04);
   }
   main.mobile { place-items: start center; padding: 14px 0 24px; min-height: 0; }
+  main.page { place-items: start center; padding: 40px 0; }
   .loading, .error { color: var(--paper); opacity: 0.8; }
   footer {
     max-width: 880px;

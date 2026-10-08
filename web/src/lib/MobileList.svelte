@@ -34,7 +34,6 @@
             type="button"
             class:selected={site.id === selectedId}
             onclick={(e) => onOpen(site, e.currentTarget)}
-            aria-label={`Number ${site.rank}: ${site.brand}, ${g.label}${badge ? `, ${badge.label}` : ""}. Open site card`}
             aria-haspopup="dialog"
           >
             <span class="band">{site.rank}</span>
@@ -43,6 +42,7 @@
               <span class="brand">{site.brand}</span>
               <span class="meta">{site.domain} · {categoryLabels[site.category] ?? site.category}</span>
             </span>
+            <span class="sr-only">{badge ? `, ${badge.label}` : ""}. Open site card</span>
             {#if badge}<span class="badge {badge.tone}" aria-hidden="true">{badge.text}</span>{/if}
             <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
           </button>
@@ -130,9 +130,9 @@
     border-radius: 999px;
     color: #fff;
   }
-  .badge.up { background: #2b8a3e; }
-  .badge.down { background: #c92a2a; }
-  .badge.new { background: var(--accent); }
+  .badge.up { background: var(--up); }
+  .badge.down { background: var(--down); }
+  .badge.new { background: var(--accent-strong); }
   .chev { width: 18px; height: 18px; flex: none; fill: none; stroke: #b0a898; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
   .ghost li { cursor: default; opacity: 0.7; }

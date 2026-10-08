@@ -47,7 +47,7 @@
     <ol class="podium" aria-label="Top three">
       {#each podium as s (s.id)}
         <li style:--set={GROUPS[s.group]?.colour}>
-          <button type="button" onclick={(e) => onOpen(s, e.currentTarget)} aria-label={`Number ${s.rank}: ${s.brand}. Open site card`}>
+          <button type="button" onclick={(e) => onOpen(s, e.currentTarget)}>
             <span class="pos">{s.rank}</span>
             <span class="name">{s.brand}</span>
           </button>
@@ -111,6 +111,7 @@
     {:else}
       Latest World data: {monthLabel(latestMonth)}
     {/if}
+    · <a class="how" href="#about">How it's made</a>
   </p>
 </section>
 
@@ -193,7 +194,7 @@
     padding: 0.35em 1.5em;
     border-radius: 999px;
     background: transparent;
-    color: var(--ink-soft);
+    color: #4f5668;
     cursor: pointer;
   }
   .toggle button:hover:not(.active) { color: var(--ink); }
@@ -207,7 +208,7 @@
     margin-left: 0.35em;
     padding: 0.1em 0.45em;
     border-radius: 999px;
-    background: var(--accent);
+    background: var(--accent-strong);
     color: #fff;
     vertical-align: 0.15em;
   }
@@ -289,7 +290,6 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 700;
-    opacity: 0.75;
   }
   .mover.up { background: #d3f0da; color: #1e6b31; }
   .mover.down { background: #fbdcdc; color: #9b1f1f; }
@@ -327,4 +327,6 @@
 
   .source { margin: var(--gap) 0 0; font-size: var(--fs-source); color: var(--ink-soft); }
   .source a { color: inherit; }
+  .source a.how { color: var(--accent); font-weight: 650; text-decoration: none; }
+  .source a.how:hover { text-decoration: underline; }
 </style>

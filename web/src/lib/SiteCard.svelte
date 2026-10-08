@@ -35,6 +35,24 @@
     tick().then(() => closeBtn?.focus());
   });
 
+  let shareStatus = $state("");
+  async function share() {
+    const url = location.href;
+    const text = `${site.brand} is #${site.rank} on the ${boardName} board of the web's most visited sites`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${site.brand} · Searchopoly`, text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      shareStatus = "Link copied";
+    } catch (e) {
+      if (e?.name === "AbortError") return; // user closed the share sheet
+      shareStatus = "Couldn't copy, use the address bar";
+    }
+    setTimeout(() => (shareStatus = ""), 2500);
+  }
+
   function close() {
     onClose();
     // Give focus back to whatever opened the card.
@@ -129,6 +147,11 @@
         Visit {site.domain}
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
       </a>
+      <button type="button" class="share" onclick={share} aria-describedby="share-status">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" /></svg>
+        Share
+      </button>
+      <span id="share-status" class="status" role="status">{shareStatus}</span>
       <div class="steps">
         <button type="button" onclick={() => onStep(-1)} disabled={site.rank === 1} aria-label="Previous site">‹</button>
         <button type="button" onclick={() => onStep(1)} disabled={site.rank === total} aria-label="Next site">›</button>
@@ -243,9 +266,9 @@
   .big { font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.1; }
   .move dd { font-weight: 650; font-size: 14px; }
   .move .detail { font-weight: 400; font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
-  .move.up .sym { color: #2b8a3e; }
+  .move.up .sym { color: var(--up); }
   .move.down .sym { color: #c92a2a; }
-  .move.new .sym { color: var(--accent); }
+  .move.new .sym { color: var(--accent-strong); }
   .move.neutral .sym { color: var(--ink-soft); }
 
   .facts { margin-top: 16px; display: grid; gap: 12px; }
@@ -276,8 +299,8 @@
   footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
     padding: 16px 22px 20px;
   }
   .visit {
@@ -295,6 +318,24 @@
   }
   .visit:hover { background: #24324d; }
   .visit svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .share {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: inherit;
+    font-weight: 650;
+    font-size: 14px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid #dcd4c4;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .share:hover { border-color: var(--set); color: var(--set); }
+  .share:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .share svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .status { font-size: 12px; color: var(--ink-soft); margin-right: auto; }
   .steps { display: flex; gap: 8px; }
   .steps button {
     width: 40px;
