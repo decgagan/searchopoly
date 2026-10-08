@@ -2,7 +2,7 @@
   "board": "world",
   "label": "World",
   "month": "2026-10",
-  "generated_at": "2026-10-08T18:33:13Z",
+  "generated_at": "2026-10-08T18:40:06Z",
   "metric": "Relative popularity (most visited), not search volume",
   "source": {
     "name": "Tranco",
@@ -280,7 +280,7 @@
       ],
       "previous_rank": 13,
       "movement": -1,
-      "note": null
+      "note": "Possibly boosted by Windows search, widgets and Edge features that contact bing.com in the background."
     },
     {
       "rank": 15,
