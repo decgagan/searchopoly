@@ -39,6 +39,11 @@ INFRA_PATTERNS = [
 _INFRA_RE = re.compile("|".join(INFRA_PATTERNS))
 
 
+def slugify(brand: str) -> str:
+    """URL-safe, stable ID for a brand, e.g. 'X (Twitter)' -> 'x-twitter'."""
+    return re.sub(r"[^a-z0-9]+", "-", brand.lower()).strip("-")
+
+
 def normalise_domain(domain: str) -> str:
     d = str(domain).strip().lower().rstrip(".")
     if d.startswith("www."):
@@ -48,7 +53,7 @@ def normalise_domain(domain: str) -> str:
 
 @dataclass
 class Rules:
-    site_map: pd.DataFrame       # domain, brand, canonical_domain, category
+    site_map: pd.DataFrame       # domain, brand, canonical_domain, category, note (optional)
     excludes: pd.DataFrame       # domain, reason
     categories: pd.DataFrame     # category, group, label
 
@@ -70,6 +75,8 @@ def load_rules(site_map_path=config.SITE_MAP_CSV, exclude_path=config.EXCLUDE_CS
     site_map = pd.read_csv(site_map_path, comment="#", skipinitialspace=True, dtype=str)
     excludes = pd.read_csv(exclude_path, comment="#", skipinitialspace=True, dtype=str)
     categories = pd.read_csv(categories_path, comment="#", skipinitialspace=True, dtype=str)
+    if "note" not in site_map.columns:
+        site_map["note"] = None
     for frame in (site_map, excludes):
         frame["domain"] = frame["domain"].map(normalise_domain)
     validate_rules(site_map, excludes, categories)
@@ -92,6 +99,9 @@ def validate_rules(site_map: pd.DataFrame, excludes: pd.DataFrame,
     bad_cats = sorted(set(site_map["category"]) - set(categories["category"]))
     if bad_cats:
         problems.append(f"unknown categories in site_map: {bad_cats}")
+    slugs = site_map.drop_duplicates("brand")["brand"].map(slugify)
+    if slugs.duplicated().any():
+        problems.append(f"brands with clashing URL ids: {slugs[slugs.duplicated()].tolist()}")
     if site_map[["brand", "canonical_domain", "category"]].isna().any().any():
         problems.append("site_map has blank brand/canonical_domain/category cells")
     # Every row of one brand must agree on canonical domain and category.
@@ -111,21 +121,23 @@ def classify(ranked: pd.DataFrame, rules: Rules) -> pd.DataFrame:
 
     out = ranked.copy()
     out["domain"] = out["domain"].map(normalise_domain)
-    status, brand, canonical, category, group, reason = [], [], [], [], [], []
+    status, brand, canonical, category, group, reason, note = [], [], [], [], [], [], []
     for d in out["domain"]:
         if d in excluded:
-            status.append("excluded"); reason.append(excluded[d])
+            status.append("excluded"); reason.append(excluded[d]); note.append(None)
             brand.append(None); canonical.append(None); category.append(None); group.append(None)
         elif d in mapped:
             m = mapped[d]
             status.append("mapped"); reason.append(None)
             brand.append(m["brand"]); canonical.append(m["canonical_domain"])
             category.append(m["category"]); group.append(groups.get(m["category"]))
+            n = m.get("note")
+            note.append(n if isinstance(n, str) and n.strip() else None)
         elif _INFRA_RE.search(d):
-            status.append("excluded"); reason.append("infrastructure (name pattern)")
+            status.append("excluded"); reason.append("infrastructure (name pattern)"); note.append(None)
             brand.append(None); canonical.append(None); category.append(None); group.append(None)
         else:
-            status.append("unreviewed"); reason.append(None)
+            status.append("unreviewed"); reason.append(None); note.append(None)
             brand.append(None); canonical.append(None); category.append(None); group.append(None)
     out["status"] = status
     out["brand"] = brand
@@ -133,6 +145,7 @@ def classify(ranked: pd.DataFrame, rules: Rules) -> pd.DataFrame:
     out["category"] = category
     out["group"] = group
     out["reason"] = reason
+    out["note"] = note
     return out
 
 
@@ -141,10 +154,11 @@ def build_board(classified: pd.DataFrame, board_size: int = config.BOARD_SIZE) -
 
     A brand takes the best (lowest) rank of any of its domains.
     """
+    columns = ["rank", "id", "brand", "domain", "category", "group", "source_rank",
+               "merged_domains", "note"]
     mapped = classified[classified["status"] == "mapped"].sort_values("rank")
     if mapped.empty:
-        return pd.DataFrame(columns=["rank", "brand", "domain", "category", "group",
-                                     "source_rank", "merged_domains"])
+        return pd.DataFrame(columns=columns)
     agg = (
         mapped.groupby("brand", sort=False)
         .agg(
@@ -153,6 +167,7 @@ def build_board(classified: pd.DataFrame, board_size: int = config.BOARD_SIZE) -
             category=("category", "first"),
             group=("group", "first"),
             merged_domains=("domain", list),
+            note=("note", lambda s: next((n for n in s if isinstance(n, str)), None)),
         )
         .reset_index()
         .sort_values("source_rank", kind="stable")
@@ -160,7 +175,8 @@ def build_board(classified: pd.DataFrame, board_size: int = config.BOARD_SIZE) -
         .reset_index(drop=True)
     )
     agg.insert(0, "rank", range(1, len(agg) + 1))
-    return agg[["rank", "brand", "domain", "category", "group", "source_rank", "merged_domains"]]
+    agg["id"] = agg["brand"].map(slugify)
+    return agg[columns]
 
 
 def coverage_check(classified: pd.DataFrame, board: pd.DataFrame) -> dict:

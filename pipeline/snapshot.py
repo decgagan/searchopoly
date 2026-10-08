@@ -25,6 +25,10 @@ def _previous_ranks(board_name: str, month: str) -> dict[str, int]:
     return {s["brand"]: s["rank"] for s in data.get("sites", [])}
 
 
+def has_earlier_snapshot(board_name: str, month: str) -> bool:
+    return any(p.parent.name < month for p in config.SNAPSHOT_DIR.glob(f"*/{board_name}.json"))
+
+
 def board_payload(board: pd.DataFrame, board_name: str, month: str, source: dict,
                   source_key: str, coverage: dict) -> dict:
     prev = _previous_ranks(board_name, month)
@@ -33,6 +37,7 @@ def board_payload(board: pd.DataFrame, board_name: str, month: str, source: dict
         previous = prev.get(row.brand)
         sites.append({
             "rank": int(row.rank),
+            "id": row.id,
             "brand": row.brand,
             "domain": row.domain,
             "category": row.category,
@@ -43,6 +48,7 @@ def board_payload(board: pd.DataFrame, board_name: str, month: str, source: dict
             "previous_rank": previous,
             # Positive = climbed. None when the site is new or there's no earlier month.
             "movement": (previous - int(row.rank)) if previous else None,
+            "note": row.note if isinstance(row.note, str) and row.note.strip() else None,
         })
     return {
         "board": board_name,
@@ -52,13 +58,14 @@ def board_payload(board: pd.DataFrame, board_name: str, month: str, source: dict
         "metric": "Relative popularity (most visited), not search volume",
         "source": source,
         "coverage": coverage,
+        "has_previous_month": has_earlier_snapshot(board_name, month),
         "sites": sites,
     }
 
 
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n")
     log.info("Wrote %s", path.relative_to(config.ROOT))
 
 

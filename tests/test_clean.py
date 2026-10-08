@@ -106,7 +106,27 @@ def test_validation_rejects_brand_with_conflicting_categories(rules):
         clean.validate_rules(bad_map, rules.excludes, rules.categories)
 
 
+def test_brand_ids_are_url_safe_and_notes_carry_through(rules):
+    rules.site_map["note"] = [None, "Includes country sites.", None, None, None, None, None]
+    board = clean.build_board(clean.classify(ranking("google.com", "google.co.uk"), rules))
+    assert board.iloc[0]["id"] == "google"
+    assert board.iloc[0]["note"] == "Includes country sites."
+    assert clean.slugify("X (Twitter)") == "x-twitter"
+    assert clean.slugify("Yahoo! JAPAN") == "yahoo-japan"
+
+
 def test_real_curation_files_are_valid():
     rules = clean.load_rules()  # raises on any problem
     assert len(rules.site_map) > 100
     assert (rules.excludes["reason"] == "adult").sum() >= 5
+
+
+def test_snapshot_payload_is_strict_json(rules):
+    import json
+    from pipeline import snapshot
+    rules.site_map["note"] = [None, None, "Has a note.", None, None, None, None]
+    board = clean.build_board(clean.classify(ranking("google.com", "youtube.com"), rules))
+    payload = snapshot.board_payload(board, "test", "2000-01", {}, "test", {})
+    text = json.dumps(payload, allow_nan=False)  # raises on NaN
+    sites = json.loads(text)["sites"]
+    assert sites[0]["note"] is None and sites[1]["note"] == "Has a note."

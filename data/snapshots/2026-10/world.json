@@ -2,7 +2,7 @@
   "board": "world",
   "label": "World",
   "month": "2026-10",
-  "generated_at": "2026-10-08T18:17:15Z",
+  "generated_at": "2026-10-08T18:27:40Z",
   "metric": "Relative popularity (most visited), not search volume",
   "source": {
     "name": "Tranco",
@@ -26,9 +26,11 @@
     "unreviewed_above_cutoff": [],
     "ok": true
   },
+  "has_previous_month": false,
   "sites": [
     {
       "rank": 1,
+      "id": "google",
       "brand": "Google",
       "domain": "google.com",
       "category": "search",
@@ -50,10 +52,12 @@
         "google.es"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Includes Google's country sites (google.co.uk, google.de and others) and gmail.com. YouTube is counted separately."
     },
     {
       "rank": 2,
+      "id": "facebook",
       "brand": "Facebook",
       "domain": "facebook.com",
       "category": "social",
@@ -64,10 +68,12 @@
         "facebook.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Background traffic from Facebook's SDK and image servers (facebook.net, fbcdn.net) is excluded."
     },
     {
       "rank": 3,
+      "id": "microsoft",
       "brand": "Microsoft",
       "domain": "microsoft.com",
       "category": "productivity",
@@ -85,10 +91,12 @@
         "microsoft365.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Likely ranked higher than real visits alone would justify: DNS-based rankings also count Windows and Office background traffic (updates, sign-ins). Merges microsoft.com, office.com, live.com, outlook.com and more."
     },
     {
       "rank": 4,
+      "id": "apple",
       "brand": "Apple",
       "domain": "apple.com",
       "category": "tech",
@@ -100,10 +108,12 @@
         "icloud.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Likely boosted by iPhone and Mac background traffic to apple.com and icloud.com, which DNS-based rankings can't separate from real visits."
     },
     {
       "rank": 5,
+      "id": "youtube",
       "brand": "YouTube",
       "domain": "youtube.com",
       "category": "video",
@@ -115,10 +125,12 @@
         "youtu.be"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Includes youtu.be share links. Video streaming hosts (googlevideo.com, ytimg.com) are excluded."
     },
     {
       "rank": 6,
+      "id": "instagram",
       "brand": "Instagram",
       "domain": "instagram.com",
       "category": "social",
@@ -129,10 +141,12 @@
         "instagram.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 7,
+      "id": "mail-ru",
       "brand": "Mail.ru",
       "domain": "mail.ru",
       "category": "search",
@@ -143,10 +157,12 @@
         "mail.ru"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Russian portal and email service. Ranks unusually high partly because some of Tranco's sources are DNS-based, which can favour regional giants with large resolver footprints."
     },
     {
       "rank": 8,
+      "id": "x-twitter",
       "brand": "X (Twitter)",
       "domain": "x.com",
       "category": "social",
@@ -158,10 +174,12 @@
         "x.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Merges twitter.com and x.com. The t.co link shortener is excluded."
     },
     {
       "rank": 9,
+      "id": "linkedin",
       "brand": "LinkedIn",
       "domain": "linkedin.com",
       "category": "social",
@@ -172,10 +190,12 @@
         "linkedin.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 10,
+      "id": "dzen",
       "brand": "Dzen",
       "domain": "dzen.ru",
       "category": "news",
@@ -186,10 +206,12 @@
         "dzen.ru"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Russian news and blogging feed. Like Mail.ru, its high rank partly reflects the DNS-based sources Tranco blends in."
     },
     {
       "rank": 11,
+      "id": "amazon",
       "brand": "Amazon",
       "domain": "amazon.com",
       "category": "shopping",
@@ -209,10 +231,12 @@
         "amazon.com.br"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Merges Amazon's country stores (amazon.co.uk, amazon.de and others). Prime Video and AWS are not included."
     },
     {
       "rank": 12,
+      "id": "github",
       "brand": "GitHub",
       "domain": "github.com",
       "category": "tech",
@@ -223,10 +247,12 @@
         "github.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 13,
+      "id": "wikipedia",
       "brand": "Wikipedia",
       "domain": "wikipedia.org",
       "category": "reference",
@@ -237,10 +263,12 @@
         "wikipedia.org"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 14,
+      "id": "bing",
       "brand": "Bing",
       "domain": "bing.com",
       "category": "search",
@@ -251,10 +279,12 @@
         "bing.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 15,
+      "id": "netflix",
       "brand": "Netflix",
       "domain": "netflix.com",
       "category": "video",
@@ -265,10 +295,12 @@
         "netflix.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 16,
+      "id": "pinterest",
       "brand": "Pinterest",
       "domain": "pinterest.com",
       "category": "social",
@@ -279,10 +311,12 @@
         "pinterest.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 17,
+      "id": "whatsapp",
       "brand": "WhatsApp",
       "domain": "whatsapp.com",
       "category": "messaging",
@@ -294,10 +328,12 @@
         "wa.me"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Counts whatsapp.com and wa.me links. In-app chat traffic (whatsapp.net) is excluded."
     },
     {
       "rank": 18,
+      "id": "tiktok",
       "brand": "TikTok",
       "domain": "tiktok.com",
       "category": "social",
@@ -308,10 +344,12 @@
         "tiktok.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 19,
+      "id": "yahoo",
       "brand": "Yahoo",
       "domain": "yahoo.com",
       "category": "search",
@@ -322,10 +360,12 @@
         "yahoo.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 20,
+      "id": "adobe",
       "brand": "Adobe",
       "domain": "adobe.com",
       "category": "productivity",
@@ -336,10 +376,12 @@
         "adobe.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Possibly boosted by Creative Cloud apps contacting adobe.com in the background."
     },
     {
       "rank": 21,
+      "id": "roblox",
       "brand": "Roblox",
       "domain": "roblox.com",
       "category": "gaming",
@@ -350,10 +392,12 @@
         "roblox.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 22,
+      "id": "spotify",
       "brand": "Spotify",
       "domain": "spotify.com",
       "category": "music",
@@ -364,10 +408,12 @@
         "spotify.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 23,
+      "id": "zoom",
       "brand": "Zoom",
       "domain": "zoom.us",
       "category": "productivity",
@@ -378,10 +424,12 @@
         "zoom.us"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Includes the Zoom app's own traffic to zoom.us as well as browser visits."
     },
     {
       "rank": 24,
+      "id": "msn",
       "brand": "MSN",
       "domain": "msn.com",
       "category": "news",
@@ -392,10 +440,12 @@
         "msn.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 25,
+      "id": "qq",
       "brand": "QQ",
       "domain": "qq.com",
       "category": "messaging",
@@ -406,10 +456,12 @@
         "qq.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Tencent's portal and messaging service, hugely popular in China."
     },
     {
       "rank": 26,
+      "id": "baidu",
       "brand": "Baidu",
       "domain": "baidu.com",
       "category": "search",
@@ -420,10 +472,12 @@
         "baidu.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "China's largest search engine."
     },
     {
       "rank": 27,
+      "id": "vimeo",
       "brand": "Vimeo",
       "domain": "vimeo.com",
       "category": "video",
@@ -434,10 +488,12 @@
         "vimeo.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": null
     },
     {
       "rank": 28,
+      "id": "chatgpt",
       "brand": "ChatGPT",
       "domain": "chatgpt.com",
       "category": "ai",
@@ -449,7 +505,8 @@
         "openai.com"
       ],
       "previous_rank": null,
-      "movement": null
+      "movement": null,
+      "note": "Merges chatgpt.com and openai.com."
     }
   ]
 }
