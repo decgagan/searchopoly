@@ -102,7 +102,8 @@ def write_ranked_csv(classified: pd.DataFrame, path: Path, top_n: int = config.R
     log.info("Wrote %s", path.relative_to(config.ROOT))
 
 
-def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict]) -> bool:
+def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict],
+                       curation: dict | None = None) -> bool:
     """Rebuild data/latest.json from every snapshot on disk."""
     months = sorted({p.name for p in config.SNAPSHOT_DIR.iterdir() if p.is_dir()})
     latest = months[-1] if months else None
@@ -130,5 +131,6 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict]) 
         "boards": boards,
         "categories": categories.to_dict("records"),
         "groups": groups,
+        "curation": curation or {},
     }
     return write_json(config.LATEST_JSON, index)

@@ -110,7 +110,13 @@ def main(argv: list[str] | None = None) -> int:
         b: ({"status": "pending", "reason": r.message.split(".")[0] + "."} if r.status == "pending" else {})
         for b, r in last.items()
     }
-    snapshot.write_latest_index(rules.categories, status)
+    curation = {
+        "mapped_domains": int(len(rules.site_map)),
+        "brands": int(rules.site_map["brand"].nunique()),
+        "excluded_domains": int(len(rules.excludes)),
+        "infra_patterns": len(clean.INFRA_PATTERNS),
+    }
+    snapshot.write_latest_index(rules.categories, status, curation)
     report.publish(results)
 
     failed = [r for r in results if r.board == "world" and r.status == "failed"]

@@ -166,5 +166,11 @@
       "finance",
       "travel"
     ]
+  },
+  "curation": {
+    "mapped_domains": 280,
+    "brands": 228,
+    "excluded_domains": 357,
+    "infra_patterns": 43
   }
 }
