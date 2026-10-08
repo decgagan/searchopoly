@@ -1,0 +1,30 @@
+:root {
+  --display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+  --body: "Inter Variable", "Inter", system-ui, sans-serif;
+  --ink: #101828;
+  --ink-soft: #5d6577;
+  --paper: #fbf7ef;
+  --paper-deep: #f3ecdf;
+  --line: #1d2939;
+  --frame: #f3ecdf;
+  --accent: #e8590c;
+  --board: min(94vw, 94vh, 1000px);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  font-family: var(--body);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 700px at 50% 0%, #22304a 0%, transparent 70%),
+    #101828;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 640px) {
+  :root { --board: 96vw; }
+}
