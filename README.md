@@ -5,13 +5,14 @@
 Searchopoly takes public website popularity rankings, strips out the background noise
 (CDNs, ad servers, telemetry), merges sibling domains into the brands people actually
 recognise, and lays the top 28 out as squares on a game board. Categories are the colour
-sets, and a month slider will show who climbed and who fell.
+sets, and a month slider shows who climbed and who fell. A "How it's made" page
+(`#about`) explains the method, the known biases and the credits.
 
 It's a data science portfolio project: the interesting part is the pipeline that turns
 messy, infrastructure-heavy domain rankings into an honest, explainable list of sites.
 
-> **Status:** milestone 4 of 5 (interactive board with ten months of history, updated automatically each month). Launch comes next.
-> Planned home: [searchopoly.co.uk](https://searchopoly.co.uk).
+> **Status:** all five milestones are built in code. The site goes live at
+> [searchopoly.co.uk](https://searchopoly.co.uk) once the steps in [LAUNCH.md](LAUNCH.md) are done.
 
 ![The October 2026 World board](docs/board.png)
 
@@ -21,6 +22,7 @@ messy, infrastructure-heavy domain rankings into an honest, explainable list of 
 </p>
 <p>
   <img src="docs/card.png" alt="A site card open on the board" width="62%">
+  <img src="docs/about.png" alt="The How it's made page" width="20%">
 </p>
 
 ## What it measures (and what it doesn't)
@@ -143,7 +145,15 @@ npm install
 npm run dev        # local dev server at http://localhost:5173
 npm run build      # production build into web/dist
 npm run preview    # serve the production build
+npm run og         # after a build: redraw public/og.png (the 1200x630 share image) from the real board
+npm run icons      # redraw the PNG favicons and app icons from public/favicon.svg
 ```
+
+`og` and `icons` use headless Chrome through `playwright-core` (no browser download; set
+`CHROME_PATH` if Chrome isn't in a standard place). The share image is the `#og` view of the
+site itself: the title, the month's top five and the board, screenshotted at 1200x630. Cloudflare
+Pages can't run Chrome, so `og.png` is committed. The monthly workflow redraws it whenever the
+data changes.
 
 `npm run dev` and `npm run build` first run `scripts/copy-data.mjs`, which copies the
 pipeline's JSON output from `data/` into `web/public/data/` (git-ignored). The site loads
@@ -156,13 +166,15 @@ The URL hash holds the state, so any view can be shared:
 | `#uk` | UK board ("coming soon" until `uk.json` exists) |
 | `#world/2026-06` | World board for June 2026 |
 | `#world/google`, `#world/2026-06/chatgpt` | A board with a site card open (IDs are brand slugs, e.g. `x-twitter`) |
+| `#about` | "How it's made": method, sources, curation, biases, licences, tech stack |
 
 The UK board switches on automatically as soon as the pipeline writes `uk.json` and marks it
 `ok` in `latest.json`. No front-end change is needed.
 
 ### Deploying to Cloudflare Pages
 
-Connect the GitHub repo in Cloudflare Pages and use:
+Step-by-step launch instructions (Pages, custom domain, token, going public) are in
+[LAUNCH.md](LAUNCH.md). The build settings are:
 
 | Setting | Value |
 |---------|-------|
@@ -170,7 +182,13 @@ Connect the GitHub repo in Cloudflare Pages and use:
 | Root directory | *(leave blank: repo root)* |
 | Build command | `npm ci --prefix web && npm run build --prefix web` |
 | Build output directory | `web/dist` |
-| Node version | from `.node-version` (22); or set `NODE_VERSION=22` |
+| Environment variables | `NODE_VERSION=22`, `SKIP_DEPENDENCY_INSTALL=true` (skips the pipeline's Python deps) |
+
+`web/public/` also holds `_headers` (security headers, a self-only CSP, long caching for hashed
+assets), `404.html` (served by Pages for unknown paths; views live in the hash, so real pages
+never 404), `robots.txt`, `sitemap.xml`, `site.webmanifest`, the icons and `og.png`.
+`index.html` carries the title, description, canonical URL (`https://searchopoly.co.uk/`),
+Open Graph and Twitter card tags, and JSON-LD.
 
 The build needs no secrets: the Radar token is only used by the pipeline, never by the site.
 
@@ -178,7 +196,7 @@ The build needs no secrets: the Radar token is only used by the pipeline, never 
 
 | Workflow | When | What it does |
 |----------|------|--------------|
-| [`monthly.yml`](.github/workflows/monthly.yml) | 04:17 UTC on the 3rd of each month, or by hand | Runs the tests, then `python -m pipeline.run`, then commits `data/` to `main` **only if it changed** (as `github-actions[bot]`). The push triggers a Cloudflare Pages rebuild. |
+| [`monthly.yml`](.github/workflows/monthly.yml) | 04:17 UTC on the 3rd of each month, or by hand | Runs the tests, then `python -m pipeline.run`. If the data changed, it builds the site and redraws `web/public/og.png`, then commits `data/` and `og.png` to `main` (as `github-actions[bot]`). Re-runs with no new data commit nothing. The push triggers a Cloudflare Pages rebuild. |
 | [`ci.yml`](.github/workflows/ci.yml) | Every push to `main` and every pull request | Runs `pytest` and builds the website. |
 
 The monthly run writes its report to the **job summary** (open the run in the Actions tab).
@@ -223,7 +241,7 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 - The project is non-commercial. Because Radar data is CC BY-NC (and also feeds into Tranco),
   the site shouldn't carry ads or be monetised without first checking with the data owners.
 - The data has been **modified**: infrastructure domains removed, sibling domains merged and
-  categories added. The method page (milestone 5) will say so alongside the credits.
+  categories added. The method page (`#about`) says so alongside the credits.
 - Searchopoly is not affiliated with or endorsed by Tranco, Cloudflare, or any site shown.
   Brand names belong to their owners and are used only to identify the sites.
 - The board design is original. Searchopoly is not affiliated with any board game publisher.
@@ -234,7 +252,8 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 - [x] **2. Static board.** Svelte 5 + Vite. 28 squares in 8 colour sets plus 4 original corner squares, centre panel with month, top three, legend and credits; UK "coming soon" state.
 - [x] **3. Interaction.** Site cards (rank, movement, category, raw rank, merged domains, notes on known biases), keyboard support, shareable URL hashes, UK/World toggle with URL state, mobile layout.
 - [x] **4. Movement.** Month slider with play button; squares and list rows glide to their new positions (FLIP animation, off under reduced motion); ▲/▼/NEW badges, biggest climber and faller, a rank-over-time sparkline on each card; ten months of real backfilled data; monthly and CI GitHub Actions workflows.
-- [ ] **5. Launch.** "How it's made" method page with full credits, custom domain on Cloudflare Pages, share images.
+- [x] **5. Launch (code).** "How it's made" method page with full credits; Open Graph/Twitter tags and a share image drawn from the real board each month; favicon and app icons; Share button on site cards (Web Share API, copy-link fallback); robots.txt, sitemap, 404 page, security headers. Lighthouse: 100/100/100/100 on desktop, 99/100/100/100 on mobile.
+- [ ] **Go live.** Cloudflare Pages, custom domain, Radar token, public repo: see [LAUNCH.md](LAUNCH.md).
 
 ## Front-end design notes
 
@@ -259,6 +278,13 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
   pulsing outline. With `prefers-reduced-motion`, everything jumps straight to the new state.
 - **Sparkline:** each card plots the site's rank by month (D3 scales and line generator), with
   gaps for months it was off the board.
+- **Sharing:** the card's Share button opens the device share sheet (Web Share API) with the
+  card's URL, e.g. `searchopoly.co.uk/#world/github`. Where that isn't available it copies the
+  link and says "Link copied".
+- **Accessibility and colour:** colour-set and movement colours meet WCAG AA contrast against
+  the cream squares. Squares and rows are buttons whose accessible name starts with the visible
+  text (rank, brand, domain), followed by visually hidden context. The app waits for data and
+  fonts before drawing, so nothing jumps about (layout shift 0).
 - **Mobile (≤700px):** the centre panel moves to the top, followed by a ranked list that keeps the
   colour bands. Site cards open as a bottom sheet.
 
@@ -270,7 +296,9 @@ web/
   src/lib/Board.svelte  # desktop board grid
   src/lib/CentrePanel.svelte # title, toggle, top three, legend, source
   src/lib/MobileList.svelte  # mobile ranked list
-  src/lib/SiteCard.svelte    # site card dialog
+  src/lib/SiteCard.svelte    # site card dialog and Share button
+  src/lib/About.svelte       # "How it's made" page (#about)
+  src/lib/OgCard.svelte      # 1200x630 share-image layout (#og)
   src/lib/MonthPicker.svelte # month slider and play button
   src/lib/Sparkline.svelte   # rank-over-time chart on the card
   src/lib/movement.js        # movement badges and movers summary
@@ -280,6 +308,9 @@ web/
   src/lib/layout.js     # square positions, corner names
   src/lib/groups.js     # the 8 colour sets
   scripts/copy-data.mjs # copies data/ into the build
+  scripts/og-image.mjs  # npm run og: screenshots #og into public/og.png
+  scripts/icons.mjs     # npm run icons: PNG icons from favicon.svg
+  public/               # favicon, icons, og.png, _headers, 404.html, robots.txt, sitemap.xml
 pipeline/
   run.py          # entry point: python -m pipeline.run
   tranco.py       # Tranco list metadata and download
