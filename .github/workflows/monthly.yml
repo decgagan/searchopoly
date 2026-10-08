@@ -50,9 +50,34 @@ jobs:
             python -m pipeline.run
           fi
 
+      - name: Check for data changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain -- data)" ]; then
+            echo "data=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "data=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The share image is a screenshot of the real board, so it is only redrawn when the data
+      # changed (keeps re-runs idempotent). The runner image ships with Google Chrome.
+      - uses: actions/setup-node@v7
+        if: steps.changes.outputs.data == 'true'
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Redraw share image (og.png)
+        if: steps.changes.outputs.data == 'true'
+        run: |
+          npm ci --prefix web
+          npm run build --prefix web
+          npm run og --prefix web
+
       - name: Commit new data (only if it changed)
         run: |
-          git add data
+          git add data web/public/og.png
           if git diff --cached --quiet; then
             echo "No data changes, nothing to commit." | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
