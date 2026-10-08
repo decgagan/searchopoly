@@ -10,10 +10,15 @@ sets, and a month slider will show who climbed and who fell.
 It's a data science portfolio project: the interesting part is the pipeline that turns
 messy, infrastructure-heavy domain rankings into an honest, explainable list of sites.
 
-> **Status:** milestone 2 of 5 (pipeline plus a static board). Interactivity comes next.
+> **Status:** milestone 3 of 5 (pipeline, interactive board, site cards, mobile layout). Month-by-month movement comes next.
 > Planned home: [searchopoly.co.uk](https://searchopoly.co.uk).
 
 ![The October 2026 World board](docs/board.png)
+
+<p>
+  <img src="docs/card.png" alt="A site card open on the board" width="62%">
+  <img src="docs/mobile.png" alt="Mobile layout: ranked list" width="20%">
+</p>
 
 ## What it measures (and what it doesn't)
 
@@ -71,8 +76,8 @@ Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk
 4. **Check coverage.** If any unreviewed domain outranks the 28th site, the run warns,
    because the board might be missing a real site. The October world list is fully
    reviewed to rank 500.
-5. **Write.** Small JSON files for the front end, including `previous_rank` and `movement`
-   once there's an earlier month to compare against.
+5. **Write.** Small JSON files for the front end. Each site has a stable `id` (brand slug) and an
+   optional `note`, plus `previous_rank` and `movement` once there's an earlier month to compare against.
 
 ### Curation rules
 
@@ -120,7 +125,16 @@ npm run preview    # serve the production build
 `npm run dev` and `npm run build` first run `scripts/copy-data.mjs`, which copies the
 pipeline's JSON output from `data/` into `web/public/data/` (git-ignored). The site loads
 `data/latest.json` at runtime, so a new monthly snapshot needs only a rebuild, not a code change.
-Add `#uk` to the URL to open the UK board directly.
+The URL hash holds the state, so any view can be shared:
+
+| URL | Shows |
+|-----|-------|
+| `/` or `#world` | World board |
+| `#uk` | UK board ("coming soon" until `uk.json` exists) |
+| `#world/google`, `#uk/bbc` | That board with a site card open (IDs are brand slugs, e.g. `x-twitter`) |
+
+The UK board switches on automatically as soon as the pipeline writes `uk.json` and marks it
+`ok` in `latest.json`. No front-end change is needed.
 
 ### Deploying to Cloudflare Pages
 
@@ -169,7 +183,7 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 
 - [x] **1. Pipeline and first snapshot.** Tranco and Radar fetchers, curated cleaning, World board for October 2026, tests.
 - [x] **2. Static board.** Svelte 5 + Vite. 28 squares in 8 colour sets plus 4 original corner squares, centre panel with month, top three, legend and credits; UK "coming soon" state.
-- [ ] **3. Interaction.** Click a square for a site card (rank, change, category, trend), UK/World toggle, mobile layout.
+- [x] **3. Interaction.** Site cards (rank, movement, category, raw rank, merged domains, notes on known biases), keyboard support, shareable URL hashes, UK/World toggle with URL state, mobile layout.
 - [ ] **4. Movement.** Month slider that animates sites swapping squares (D3 transitions), plus a monthly GitHub Actions job that runs `python -m pipeline.run` and commits the new snapshot.
 - [ ] **5. Launch.** "How it's made" method page with full credits, custom domain on Cloudflare Pages, share images.
 
@@ -185,13 +199,24 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 - **Fonts:** Space Grotesk and Inter (SIL Open Font License), self-hosted via Fontsource, so no
   requests go to Google Fonts.
 - **No tracking, no cookies, no external requests** at runtime.
+- **Site cards:** a native modal `<dialog>`. Esc or a backdrop click closes it, Tab is trapped
+  inside, ←/→ step through the ranks, and focus goes back to the square that opened it. Movement
+  reads "First month tracked" until a second snapshot exists, then "New this month",
+  "Up 3 places" and so on. Notes come from the optional `note` column in `site_map.csv` and flag
+  known biases (e.g. Windows background traffic inflating Microsoft).
+- **Mobile (≤700px):** the centre panel moves to the top, followed by a ranked list that keeps the
+  colour bands. Site cards open as a bottom sheet.
 
 ## Project layout
 
 ```
 web/
   src/App.svelte        # loads data, footer credits
-  src/lib/Board.svelte  # grid, centre panel, legend
+  src/lib/Board.svelte  # desktop board grid
+  src/lib/CentrePanel.svelte # title, toggle, top three, legend, source
+  src/lib/MobileList.svelte  # mobile ranked list
+  src/lib/SiteCard.svelte    # site card dialog
+  src/lib/router.js     # URL hash state
   src/lib/Square.svelte # one property square
   src/lib/Corner.svelte # the four corner squares
   src/lib/layout.js     # square positions, corner names
