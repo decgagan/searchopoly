@@ -8,6 +8,7 @@
   const MOBILE_QUERY = "(max-width: 700px)";
 
   let index = $state(null);
+  // snapshots[board][month] -> snapshot JSON
   let snapshots = $state({});
   let error = $state(null);
 
@@ -34,27 +35,48 @@
   async function load() {
     try {
       index = await getJSON("latest.json");
-      // Any board with status "ok" is loaded, so the UK board lights up as soon as uk.json exists.
+      // Every month of every live board is loaded up front (a few KB each), so the month
+      // slider is instant. The UK board lights up as soon as uk.json exists.
+      const jobs = [];
       for (const [key, info] of Object.entries(index.boards)) {
-        if (info.status === "ok" && info.latest) snapshots[key] = await getJSON(info.latest);
+        if (info.status !== "ok") continue;
+        snapshots[key] = {};
+        for (const m of info.months) {
+          jobs.push(getJSON(`snapshots/${m}/${key}.json`).then((d) => (snapshots[key][m] = d)));
+        }
       }
+      await Promise.all(jobs);
     } catch (e) {
       error = e.message;
     }
   }
   load();
 
-  const snapshot = $derived(snapshots[route.board] ?? null);
+  const months = $derived(index?.boards?.[route.board]?.months ?? []);
+  const latest = $derived(months.at(-1) ?? null);
+  const month = $derived(route.month && months.includes(route.month) ? route.month : latest);
+  const snapshot = $derived(snapshots[route.board]?.[month] ?? null);
+  const rankHistory = $derived(
+    site ? months.map((m) => ({
+      month: m,
+      rank: snapshots[route.board]?.[m]?.sites.find((s) => s.id === site.id)?.rank ?? null,
+    })) : []
+  );
   const site = $derived(snapshot?.sites.find((s) => s.id === route.site) ?? null);
   const categoryLabels = $derived(
     Object.fromEntries((index?.categories ?? []).map((c) => [c.category, c.label]))
   );
-  const world = $derived(snapshots.world);
+  const world = $derived(snapshot?.board === "world" ? snapshot : snapshots.world?.[index?.boards?.world?.months?.at(-1)]);
   const ukReady = $derived(index?.boards?.uk?.status === "ok");
 
   const openSite = (s) => navigate({ site: s.id });
   const closeSite = () => navigate({ site: null });
-  const selectBoard = (board) => navigate({ board, site: null });
+  const selectBoard = (board) => navigate({ board, month: null, site: null });
+  // Keep the open card if the site is on the new month's board too.
+  const selectMonth = (m) => {
+    const keep = route.site && snapshots[route.board]?.[m]?.sites.some((s) => s.id === route.site);
+    navigate({ month: m === latest ? null : m, site: keep ? route.site : null });
+  };
   function step(delta) {
     const sites = snapshot.sites;
     const i = sites.findIndex((s) => s.id === route.site) + delta;
@@ -64,7 +86,7 @@
   $effect(() => {
     const where = route.board === "uk" ? "UK" : "World";
     document.title = site
-      ? `${site.brand}: #${site.rank} on the ${where} board · Searchopoly`
+      ? `${site.brand}: #${site.rank} on the ${where} board, ${snapshot.month} · Searchopoly`
       : "Searchopoly: the web's most visited sites, as a board";
   });
 </script>
@@ -81,6 +103,8 @@
       onSelectBoard: selectBoard,
       onOpen: openSite,
       selectedId: site?.id ?? null,
+      months,
+      onSelectMonth: selectMonth,
     }}
     {#if mobile}
       <MobileList {...props} {categoryLabels} />
@@ -99,6 +123,7 @@
       {snapshot}
       boardKey={route.board}
       {categoryLabels}
+      history={rankHistory}
       onClose={closeSite}
       onStep={step}
     />

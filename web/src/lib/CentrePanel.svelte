@@ -1,10 +1,15 @@
 <script>
   import { GROUPS } from "./groups.js";
   import { monthLabel, dayLabel } from "./format.js";
+  import { summarise } from "./movement.js";
+  import MonthPicker from "./MonthPicker.svelte";
 
   let {
     snapshot = null, boardKey, boardInfo, latestMonth, onSelectBoard, onOpen, mobile = false,
+    months = [], onSelectMonth,
   } = $props();
+
+  const summary = $derived(summarise(snapshot));
 
   const sites = $derived(snapshot?.sites ?? []);
   const counts = $derived(
@@ -33,7 +38,10 @@
   </div>
 
   {#if snapshot}
-    <p class="month">{monthLabel(snapshot.month)}</p>
+    <p class="month" aria-live="polite">{monthLabel(snapshot.month)}</p>
+    {#if months.length > 1}
+      <MonthPicker {months} month={snapshot.month} onSelect={onSelectMonth} compact={mobile} />
+    {/if}
     <p class="sub">Top {sites.length} sites{boardKey === "uk" ? " in the UK" : " worldwide"}, ranked by visits</p>
 
     <ol class="podium" aria-label="Top three">
@@ -46,6 +54,31 @@
         </li>
       {/each}
     </ol>
+    <div class="movers" aria-label="This month's movement">
+      {#if summary}
+        {#if summary.climber}
+          <button type="button" class="mover up" onclick={(e) => onOpen(summary.climber, e.currentTarget)}>
+            <span class="tag">Biggest climber</span> ▲{summary.climber.movement} {summary.climber.brand}
+          </button>
+        {/if}
+        {#if summary.faller}
+          <button type="button" class="mover down" onclick={(e) => onOpen(summary.faller, e.currentTarget)}>
+            <span class="tag">Biggest faller</span> ▼{-summary.faller.movement} {summary.faller.brand}
+          </button>
+        {/if}
+        {#if summary.newcomers.length}
+          <span class="mover new"><span class="tag">New</span> {summary.newcomers.map((s) => s.brand).join(", ")}</span>
+        {/if}
+        {#if summary.dropped.length}
+          <span class="mover out"><span class="tag">Dropped out</span> {summary.dropped.map((s) => s.brand).join(", ")}</span>
+        {/if}
+        {#if !summary.climber && !summary.faller && !summary.newcomers.length}
+          <span class="mover out">No change from last month</span>
+        {/if}
+      {:else}
+        <span class="mover out">First month on record: movement starts next month</span>
+      {/if}
+    </div>
   {:else}
     <div class="soon" role="status">
       <p class="month">{boardLabel(boardKey)} data coming soon</p>
@@ -91,7 +124,9 @@
     --fs-pod: calc(var(--u) * 0.14);
     --fs-legend: calc(var(--u) * 0.115);
     --fs-source: calc(var(--u) * 0.1);
-    --gap: calc(var(--u) * 0.1);
+    --fs-picker: calc(var(--u) * 0.11);
+    --fs-movers: calc(var(--u) * 0.105);
+    --gap: calc(var(--u) * 0.085);
     grid-row: 2 / 9;
     grid-column: 2 / 9;
     background:
@@ -105,6 +140,7 @@
     padding: calc(var(--u) * 0.35);
     gap: var(--gap);
   }
+  .centre > * { max-width: 100%; }
   .centre.mobile {
     --fs-kicker: 11px;
     --fs-h1: clamp(40px, 13vw, 56px);
@@ -114,9 +150,13 @@
     --fs-pod: 14px;
     --fs-legend: 12.5px;
     --fs-source: 12px;
+    --fs-picker: 13px;
+    --fs-movers: 12.5px;
     --gap: 10px;
-    padding: 28px 18px 22px;
+    padding: 28px 16px 22px;
     border-radius: 18px;
+    min-width: 0;
+    width: 100%;
   }
 
   .kicker {
@@ -183,7 +223,7 @@
 
   .podium {
     list-style: none;
-    margin: var(--gap) 0;
+    margin: calc(var(--gap) * 0.5) 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
@@ -219,6 +259,42 @@
     font-size: 0.93em;
   }
   .podium .name { font-weight: 650; color: var(--ink); }
+
+  .movers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45em;
+    font-size: var(--fs-movers);
+    max-width: 46em;
+    margin-top: calc(var(--gap) * -0.3);
+  }
+  .mover {
+    font: inherit;
+    font-weight: 600;
+    border: 0;
+    border-radius: 8px;
+    padding: 0.35em 0.7em;
+    background: #ebe3d4;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+  }
+  button.mover { cursor: pointer; }
+  button.mover:hover { filter: brightness(0.96); }
+  button.mover:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .mover .tag {
+    font-size: 0.78em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    opacity: 0.75;
+  }
+  .mover.up { background: #d3f0da; color: #1e6b31; }
+  .mover.down { background: #fbdcdc; color: #9b1f1f; }
+  .mover.new { background: #fde3d0; color: #a8430a; }
+  .mover.out { color: var(--ink-soft); font-weight: 500; }
 
   .soon { display: flex; flex-direction: column; align-items: center; gap: var(--gap); margin-bottom: var(--gap); }
   .link {

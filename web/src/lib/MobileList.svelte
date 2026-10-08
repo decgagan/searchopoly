@@ -1,7 +1,12 @@
 <script>
+  import { flip } from "svelte/animate";
+  import { fade } from "svelte/transition";
+  import { cubicInOut } from "svelte/easing";
   import CentrePanel from "./CentrePanel.svelte";
   import { groupOf } from "./groups.js";
   import { initials } from "./layout.js";
+  import { badgeFor } from "./movement.js";
+  import { motion } from "./motion.svelte.js";
 
   let { snapshot = null, selectedId = null, onOpen, categoryLabels = {}, ...panel } = $props();
   const sites = $derived(snapshot?.sites ?? []);
@@ -18,12 +23,18 @@
     <ol class="list" aria-label={`Top ${sites.length} sites`}>
       {#each sites as site (site.id)}
         {@const g = groupOf(site.group)}
-        <li style:--set={g.colour}>
+        {@const badge = badgeFor(site, snapshot)}
+        <li
+          style:--set={g.colour}
+          animate:flip={{ duration: motion.move, easing: cubicInOut }}
+          in:fade={{ duration: motion.fade }}
+          out:fade={{ duration: motion.reduced ? 0 : 120 }}
+        >
           <button
             type="button"
             class:selected={site.id === selectedId}
             onclick={(e) => onOpen(site, e.currentTarget)}
-            aria-label={`Number ${site.rank}: ${site.brand}, ${g.label}. Open site card`}
+            aria-label={`Number ${site.rank}: ${site.brand}, ${g.label}${badge ? `, ${badge.label}` : ""}. Open site card`}
             aria-haspopup="dialog"
           >
             <span class="band">{site.rank}</span>
@@ -32,6 +43,7 @@
               <span class="brand">{site.brand}</span>
               <span class="meta">{site.domain} · {categoryLabels[site.category] ?? site.category}</span>
             </span>
+            {#if badge}<span class="badge {badge.tone}" aria-hidden="true">{badge.text}</span>{/if}
             <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
           </button>
         </li>
@@ -47,7 +59,7 @@
 </div>
 
 <style>
-  .mobile { width: min(100%, 520px); padding: 0 12px; display: flex; flex-direction: column; gap: 14px; }
+  .mobile { width: min(100%, 520px); min-width: 0; padding: 0 12px; display: flex; flex-direction: column; gap: 14px; }
   .start {
     display: flex;
     align-items: center;
@@ -109,6 +121,18 @@
   .text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .brand { font-weight: 650; font-size: 16px; color: var(--ink); }
   .meta { font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .badge {
+    flex: none;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    color: #fff;
+  }
+  .badge.up { background: #2b8a3e; }
+  .badge.down { background: #c92a2a; }
+  .badge.new { background: var(--accent); }
   .chev { width: 18px; height: 18px; flex: none; fill: none; stroke: #b0a898; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
   .ghost li { cursor: default; opacity: 0.7; }

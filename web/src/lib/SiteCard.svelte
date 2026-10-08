@@ -3,8 +3,9 @@
   import { groupOf } from "./groups.js";
   import { initials } from "./layout.js";
   import { describeMovement } from "./movement.js";
+  import Sparkline from "./Sparkline.svelte";
 
-  let { site, snapshot, boardKey, categoryLabels = {}, onClose, onStep } = $props();
+  let { site, snapshot, boardKey, categoryLabels = {}, history = [], onClose, onStep } = $props();
 
   let dialog;
   let closeBtn;
@@ -97,6 +98,10 @@
           <dd class="detail">{move.detail}</dd>
         </div>
       </dl>
+
+      {#if history.length > 1}
+        <Sparkline {history} size={total} colour={group.colour} brand={site.brand} />
+      {/if}
 
       <dl class="facts">
         <div><dt>Category</dt><dd>{categoryLabels[site.category] ?? site.category}</dd></div>

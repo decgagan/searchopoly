@@ -2,24 +2,24 @@
   import { groupOf } from "./groups.js";
   import { initials } from "./layout.js";
 
-  let { site = null, position, slot, selected = false, onOpen } = $props();
+  let { site = null, side, slot = 0, selected = false, hot = false, badge = null, onOpen } = $props();
   const group = $derived(site ? groupOf(site.group) : null);
 </script>
 
 {#if site}
   <button
     type="button"
-    class="square {position.side}"
+    class="square {side}"
     class:selected
-    style:grid-row={position.row}
-    style:grid-column={position.col}
+    class:hot
     style:--set={group.colour}
-    aria-label={`Number ${site.rank}: ${site.brand}, ${group.label}. Open site card`}
+    aria-label={`Number ${site.rank}: ${site.brand}, ${group.label}${badge ? `, ${badge.label}` : ""}. Open site card`}
     aria-haspopup="dialog"
     onclick={(e) => onOpen(site, e.currentTarget)}
   >
     <span class="band"><span class="rank">{site.rank}</span></span>
     <span class="body">
+      {#if badge}<span class="badge {badge.tone}" aria-hidden="true">{badge.text}</span>{/if}
       <span class="tile" aria-hidden="true">{initials(site.brand)}</span>
       <span class="text">
         <span class="brand">{site.brand}</span>
@@ -28,13 +28,7 @@
     </span>
   </button>
 {:else}
-  <div
-    class="square {position.side} placeholder"
-    style:grid-row={position.row}
-    style:grid-column={position.col}
-    style:--set="#c9c2b3"
-    aria-hidden="true"
-  >
+  <div class="square {side} placeholder" style:--set="#c9c2b3" aria-hidden="true">
     <span class="band"><span class="rank">{slot + 1}</span></span>
     <span class="body">
       <span class="tile ghost">?</span>
@@ -47,6 +41,8 @@
   .square {
     position: relative;
     display: flex;
+    width: 100%;
+    height: 100%;
     background: var(--paper);
     overflow: hidden;
     min-width: 0;
@@ -57,24 +53,30 @@
     font: inherit;
     color: inherit;
     text-align: inherit;
-    transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+    transition: background-color 120ms ease, box-shadow 120ms ease;
   }
   button.square { cursor: pointer; }
   button.square:hover {
     background: color-mix(in srgb, var(--set) 7%, #fff);
-    z-index: 1;
-    box-shadow: 0 0 0 2px var(--set);
+    box-shadow: inset 0 0 0 2px var(--set);
   }
-  button.square:focus-visible {
-    outline: 3px solid var(--accent);
-    outline-offset: -3px;
-    z-index: 2;
-  }
+  button.square:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
   button.square.selected {
     background: color-mix(in srgb, var(--set) 12%, #fff);
-    box-shadow: 0 0 0 3px var(--set);
-    z-index: 2;
+    box-shadow: inset 0 0 0 3px var(--set);
   }
+  button.square.hot { box-shadow: inset 0 0 0 3px #2b8a3e; }
+  button.square.hot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 3px #2b8a3e;
+    animation: pulse 1.6s ease-out 3;
+  }
+  @keyframes pulse { 50% { box-shadow: inset 0 0 0 7px rgba(43, 138, 62, 0.35); } }
+  @media (prefers-reduced-motion: reduce) { button.square.hot::after { animation: none; } }
+
   .square.bottom { flex-direction: column; }
   .square.top { flex-direction: column-reverse; }
   .square.left { flex-direction: row-reverse; }
@@ -96,6 +98,7 @@
   }
 
   .body {
+    position: relative;
     flex: 1;
     min-width: 0;
     display: flex;
@@ -103,12 +106,25 @@
     padding: calc(var(--u) * 0.08);
     gap: calc(var(--u) * 0.06);
   }
-  .bottom .body, .top .body {
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-  }
+  .bottom .body, .top .body { flex-direction: column; justify-content: center; text-align: center; }
   .left .body, .right .body { flex-direction: row; }
+
+  .badge {
+    position: absolute;
+    top: calc(var(--u) * 0.05);
+    right: calc(var(--u) * 0.05);
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: calc(var(--u) * 0.1);
+    line-height: 1;
+    padding: 0.25em 0.4em;
+    border-radius: 999px;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+  .badge.up { background: #2b8a3e; }
+  .badge.down { background: #c92a2a; }
+  .badge.new { background: var(--accent); }
 
   .tile {
     flex: none;
