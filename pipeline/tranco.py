@@ -6,7 +6,9 @@ cited and reproduced exactly.
 from __future__ import annotations
 
 import io
+import json
 import logging
+import time
 
 import pandas as pd
 import requests
@@ -15,8 +17,26 @@ from . import config
 
 log = logging.getLogger(__name__)
 
-API_LATEST = "https://tranco-list.eu/api/lists/date/latest"
+API_BY_DATE = "https://tranco-list.eu/api/lists/date/{date}"
 LIST_PAGE = "https://tranco-list.eu/list/{list_id}"
+
+
+_last_call = 0.0
+
+
+def _get(session: requests.Session, url: str, retries: int = 4) -> requests.Response:
+    """GET with Tranco's 1 request/second API limit respected, retrying on HTTP 429."""
+    global _last_call
+    for attempt in range(retries + 1):
+        wait = 1.1 - (time.monotonic() - _last_call)
+        if wait > 0:
+            time.sleep(wait)
+        _last_call = time.monotonic()
+        resp = session.get(url, timeout=config.HTTP_TIMEOUT)
+        if resp.status_code != 429 or attempt == retries:
+            return resp
+        time.sleep(2 ** attempt)
+    return resp
 
 
 def _session() -> requests.Session:
@@ -25,15 +45,36 @@ def _session() -> requests.Session:
     return s
 
 
-def latest_list_meta(session: requests.Session | None = None) -> dict:
-    """Return metadata for the latest daily Tranco list (ID, creation date, providers)."""
+class TrancoUnavailable(Exception):
+    """Raised when the requested daily list doesn't exist (yet)."""
+
+
+def list_meta(date: str = "latest", session: requests.Session | None = None) -> dict:
+    """Metadata for the daily Tranco list of ``date`` (YYYY-MM-DD) or "latest".
+
+    The list for day D is published around 22:00 UTC on D and averages the 30 days up to D.
+    """
+    key = date.replace("-", "")
+    # Past lists never change, so their metadata is cached; "latest" always hits the API.
+    cache_file = config.CACHE_DIR / f"tranco_meta_{key}.json"
+    if key != "latest" and cache_file.exists():
+        return json.loads(cache_file.read_text())
     session = session or _session()
-    resp = session.get(API_LATEST, timeout=config.HTTP_TIMEOUT)
+    resp = _get(session, API_BY_DATE.format(date=key))
+    if resp.status_code == 404:
+        raise TrancoUnavailable(f"No Tranco list for {date} (it appears around 22:00 UTC that day).")
     resp.raise_for_status()
     meta = resp.json()
     if not meta.get("available") or meta.get("failed"):
-        raise RuntimeError(f"Latest Tranco list is not available: {meta}")
+        raise TrancoUnavailable(f"Tranco list for {date} is not available: {meta}")
+    if key != "latest":
+        config.CACHE_DIR.mkdir(exist_ok=True)
+        cache_file.write_text(json.dumps(meta))
     return meta
+
+
+def latest_list_meta(session: requests.Session | None = None) -> dict:
+    return list_meta("latest", session)
 
 
 def download_list(meta: dict, top_n: int = config.TRANCO_FETCH_N,
@@ -53,7 +94,7 @@ def download_list(meta: dict, top_n: int = config.TRANCO_FETCH_N,
         session = session or _session()
         url = f"https://tranco-list.eu/download/{list_id}/{top_n}"
         log.info("Tranco: downloading top %d of list %s", top_n, list_id)
-        resp = session.get(url, timeout=config.HTTP_TIMEOUT)
+        resp = _get(session, url)
         resp.raise_for_status()
         text = resp.text
         cache_file.write_text(text)

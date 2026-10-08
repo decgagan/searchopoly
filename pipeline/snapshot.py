@@ -15,14 +15,13 @@ log = logging.getLogger(__name__)
 BOARD_LABELS = {"world": "World", "uk": "United Kingdom"}
 
 
-def _previous_ranks(board_name: str, month: str) -> dict[str, int]:
-    """Brand -> rank from the most recent earlier snapshot of the same board, if any."""
+def _previous_sites(board_name: str, month: str) -> list[dict]:
+    """Sites from the most recent earlier snapshot of the same board, if any."""
     earlier = sorted(p for p in config.SNAPSHOT_DIR.glob(f"*/{board_name}.json")
                      if p.parent.name < month)
     if not earlier:
-        return {}
-    data = json.loads(earlier[-1].read_text())
-    return {s["brand"]: s["rank"] for s in data.get("sites", [])}
+        return []
+    return json.loads(earlier[-1].read_text()).get("sites", [])
 
 
 def has_earlier_snapshot(board_name: str, month: str) -> bool:
@@ -31,7 +30,8 @@ def has_earlier_snapshot(board_name: str, month: str) -> bool:
 
 def board_payload(board: pd.DataFrame, board_name: str, month: str, source: dict,
                   source_key: str, coverage: dict) -> dict:
-    prev = _previous_ranks(board_name, month)
+    prev_sites = _previous_sites(board_name, month)
+    prev = {s["brand"]: s["rank"] for s in prev_sites}
     sites = []
     for row in board.itertuples(index=False):
         previous = prev.get(row.brand)
@@ -60,13 +60,38 @@ def board_payload(board: pd.DataFrame, board_name: str, month: str, source: dict
         "coverage": coverage,
         "has_previous_month": has_earlier_snapshot(board_name, month),
         "sites": sites,
+        # On last month's board but not this one.
+        "dropped_out": [
+            {"id": s.get("id"), "brand": s["brand"], "previous_rank": s["rank"]}
+            for s in prev_sites if s["brand"] not in set(board["brand"])
+        ],
     }
 
 
-def write_json(path: Path, payload: dict) -> None:
+VOLATILE_KEYS = {"generated_at"}
+
+
+def _stable(payload: dict) -> dict:
+    return {k: v for k, v in payload.items() if k not in VOLATILE_KEYS}
+
+
+def write_json(path: Path, payload: dict) -> bool:
+    """Write ``payload`` unless only volatile fields (timestamps) would change.
+
+    Keeps re-runs idempotent, so the monthly job only commits when the data really changed.
+    Returns True if the file was written.
+    """
+    if path.exists():
+        try:
+            if _stable(json.loads(path.read_text())) == _stable(payload):
+                log.info("Unchanged %s", path.relative_to(config.ROOT))
+                return False
+        except ValueError:
+            pass
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n")
     log.info("Wrote %s", path.relative_to(config.ROOT))
+    return True
 
 
 def write_ranked_csv(classified: pd.DataFrame, path: Path, top_n: int = config.RAW_TOP_N) -> None:
@@ -77,7 +102,7 @@ def write_ranked_csv(classified: pd.DataFrame, path: Path, top_n: int = config.R
     log.info("Wrote %s", path.relative_to(config.ROOT))
 
 
-def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict]) -> dict:
+def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict]) -> bool:
     """Rebuild data/latest.json from every snapshot on disk."""
     months = sorted({p.name for p in config.SNAPSHOT_DIR.iterdir() if p.is_dir()})
     latest = months[-1] if months else None
@@ -90,7 +115,12 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict]) 
             "latest": f"snapshots/{available[-1]}/{name}.json" if available else None,
             "status": "ok" if available else "pending",
         }
-        entry.update(board_status.get(name, {}))
+        status = board_status.get(name, {})
+        if available and status.get("status") == "pending":
+            # Older snapshots exist, so keep the board live and just note why this run skipped it.
+            entry["note"] = status.get("reason")
+        else:
+            entry.update(status)
         boards[name] = entry
     groups = (categories.groupby("group", sort=False)["category"].apply(list).to_dict())
     index = {
@@ -101,5 +131,4 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict]) 
         "categories": categories.to_dict("records"),
         "groups": groups,
     }
-    write_json(config.LATEST_JSON, index)
-    return index
+    return write_json(config.LATEST_JSON, index)

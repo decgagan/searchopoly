@@ -37,11 +37,12 @@ def get_token() -> str | None:
 
 
 def fetch_top(location: str | None = None, limit: int = config.RADAR_LIMIT,
-              token: str | None = None,
+              token: str | None = None, date: str | None = None,
               session: requests.Session | None = None) -> tuple[pd.DataFrame, dict]:
     """Return (DataFrame[rank, domain, radar_categories], meta) for the POPULAR ranking.
 
     ``location`` is an ISO alpha-2 code such as "GB"; ``None`` means worldwide.
+    ``date`` (YYYY-MM-DD) asks for the ranking on that day; ``None`` means the latest.
     """
     token = token or get_token()
     if not token:
@@ -53,6 +54,8 @@ def fetch_top(location: str | None = None, limit: int = config.RADAR_LIMIT,
     params = {"limit": limit, "rankingType": "POPULAR", "format": "JSON", "name": "top"}
     if location:
         params["location"] = location
+    if date:
+        params["date"] = date
     session = session or requests.Session()
     resp = session.get(
         API_URL,

@@ -279,3 +279,88 @@ aliyuncsslbintl.com,infrastructure (cloud)
 gandi-ns.fr,infrastructure (nameservers)
 byteglb.com,background (ByteDance)
 nease.net,background (NetEase)
+# --- Added in the Jan–Oct 2026 backfill review ---
+behindmlm.com,anomalous rank (niche blog ranked in the top 100; likely list artefact)
+beyondwickedmapping.org,anomalous rank (likely list artefact)
+health.mil,background (anomalous rank for a niche government site)
+deere.com,background (farm-equipment telemetry)
+capgemini.com,background (enterprise)
+achmea.nl,background (enterprise)
+actify.nl,background (enterprise)
+workbox.dk,background (enterprise)
+ack.de,background (enterprise)
+amon.tech,background (enterprise)
+mulesoft.com,background (enterprise integration APIs)
+docker.com,infrastructure (software distribution)
+mysql.com,infrastructure (software distribution)
+teamviewer.com,background (remote-access software)
+firefox.com,background (Firefox services)
+my.com,background (VK app services)
+mediatek.com,background (device chipsets)
+eset.com,background (antivirus updates)
+telekom.de,telecom
+t-mobile.com,telecom
+att.com,telecom
+att.net,telecom
+e2ro.com,background
+keenetic.io,background (routers)
+mikrotik.com,background (routers)
+mynetname.net,infrastructure (router dynamic DNS)
+wyzecam.com,background (security cameras)
+vivoglobal.com,background (Vivo devices)
+xiaomi.net,background (Xiaomi devices)
+amazonalexa.com,background (Alexa devices)
+safebrowsing.apple,background (Apple)
+icloud-content.com,background (iCloud storage)
+mailinabox.email,infrastructure (mail servers)
+0xrpc.io,infrastructure (blockchain RPC)
+merkle.io,infrastructure (blockchain RPC)
+llamarpc.com,infrastructure (blockchain RPC)
+libp2p.direct,infrastructure (peer-to-peer networking)
+nic.direct,infrastructure
+nstld.com,infrastructure (domain registry)
+tld-servers.ru,infrastructure (domain registry)
+ipinfo.io,infrastructure (IP lookup API)
+oxylabs.io,infrastructure (proxy network)
+myhuaweicloud.com,infrastructure (cloud)
+elasticbeanstalk.com,infrastructure (cloud)
+run.app,hosting (Google Cloud Run)
+hostinger.com,hosting
+rzone.de,hosting
+ngenix.net,infrastructure (CDN)
+msidentity.com,infrastructure (Microsoft sign-in)
+svc.ms,infrastructure (Microsoft services)
+exp-tas.com,background (Microsoft experiments)
+xboxlive.com,background (Xbox services)
+wbx2.com,background (Webex app)
+discord.media,background (Discord media)
+sc-gw.com,background (Snapchat app)
+bamgrid.com,background (Disney+ streaming)
+aiv-delivery.net,background (Prime Video streaming)
+imgsmail.ru,background (Mail.ru images)
+geobasket.ru,background
+byteconnect.io,background (ByteDance)
+pushy.io,background (push notifications)
+ioref.io,background
+easebar.com,background
+cmediahub.ru,background
+mhverifier.ru,background
+vedsalb.com,background
+notamedia.ru,background
+supertms.com,background
+featureassets.org,background
+amagi.tv,background (TV ad insertion)
+cookielaw.org,background (cookie banners)
+cloudflareinsights.com,analytics
+newrelic.com,analytics
+openx.net,ads
+3lift.com,ads
+adriver.ru,ads
+moe.video,ads (video ad network)
+id5-sync.com,ads
+sharethrough.com,ads
+bidswitch.net,ads
+deepintent.com,ads
+360yield.com,ads
+branch.io,ads/attribution SDK
+amzn.to,shortener
