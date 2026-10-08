@@ -1,0 +1,65 @@
+name: Monthly snapshot
+
+# Builds the new month's boards and commits them. Cloudflare Pages rebuilds the site on push.
+on:
+  schedule:
+    # 04:17 UTC on the 3rd: the Tranco list for the 1st is published around 22:00 UTC that day.
+    - cron: "17 4 3 * *"
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Month to build (YYYY-MM). Leave blank for the current month."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monthly-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Build snapshot
+        env:
+          # Optional. Without it the UK board stays "pending" and the run still succeeds.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          MONTH: ${{ inputs.month }}
+        run: |
+          if [ -n "$MONTH" ]; then
+            python -m pipeline.run --month "$MONTH"
+          else
+            python -m pipeline.run
+          fi
+
+      - name: Commit new data (only if it changed)
+        run: |
+          git add data
+          if git diff --cached --quiet; then
+            echo "No data changes, nothing to commit." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          month=$(python -c "import json; print(json.load(open('data/latest.json'))['latest_month'])")
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "data: monthly snapshot ${month} [bot]"
+          git push
+          echo "Committed new data for ${month}: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
