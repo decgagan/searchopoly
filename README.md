@@ -10,8 +10,10 @@ sets, and a month slider will show who climbed and who fell.
 It's a data science portfolio project: the interesting part is the pipeline that turns
 messy, infrastructure-heavy domain rankings into an honest, explainable list of sites.
 
-> **Status:** milestone 1 of 5 (data pipeline and first snapshot). The front end comes next.
+> **Status:** milestone 2 of 5 (pipeline plus a static board). Interactivity comes next.
 > Planned home: [searchopoly.co.uk](https://searchopoly.co.uk).
+
+![The October 2026 World board](docs/board.png)
 
 ## What it measures (and what it doesn't)
 
@@ -90,7 +92,9 @@ Reference & learning · Tech & AI · Work & money.
 
 ## Running it
 
-Requires Python 3.11+.
+Requires Python 3.11+ for the pipeline and Node.js 20.19+ (22 recommended) for the website.
+
+### Data pipeline
 
 ```bash
 python -m venv .venv
@@ -102,6 +106,35 @@ pytest                             # run the tests
 ```
 
 Options: `--month 2026-10` to label a snapshot explicitly, `--board-size 28`.
+
+### Website
+
+```bash
+cd web
+npm install
+npm run dev        # local dev server at http://localhost:5173
+npm run build      # production build into web/dist
+npm run preview    # serve the production build
+```
+
+`npm run dev` and `npm run build` first run `scripts/copy-data.mjs`, which copies the
+pipeline's JSON output from `data/` into `web/public/data/` (git-ignored). The site loads
+`data/latest.json` at runtime, so a new monthly snapshot needs only a rebuild, not a code change.
+Add `#uk` to the URL to open the UK board directly.
+
+### Deploying to Cloudflare Pages
+
+Connect the GitHub repo in Cloudflare Pages and use:
+
+| Setting | Value |
+|---------|-------|
+| Framework preset | None |
+| Root directory | *(leave blank: repo root)* |
+| Build command | `npm ci --prefix web && npm run build --prefix web` |
+| Build output directory | `web/dist` |
+| Node version | from `.node-version` (22); or set `NODE_VERSION=22` |
+
+The build needs no secrets: the Radar token is only used by the pipeline, never by the site.
 
 ### Enabling the UK board (Cloudflare Radar)
 
@@ -135,14 +168,35 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 ## Roadmap
 
 - [x] **1. Pipeline and first snapshot.** Tranco and Radar fetchers, curated cleaning, World board for October 2026, tests.
-- [ ] **2. Static board.** Svelte or React with Vite, D3 layout of 28 squares in 8 colour sets, reading `data/latest.json`.
+- [x] **2. Static board.** Svelte 5 + Vite. 28 squares in 8 colour sets plus 4 original corner squares, centre panel with month, top three, legend and credits; UK "coming soon" state.
 - [ ] **3. Interaction.** Click a square for a site card (rank, change, category, trend), UK/World toggle, mobile layout.
-- [ ] **4. Movement.** Month slider that animates sites swapping squares, plus a monthly GitHub Actions job that runs `python -m pipeline.run` and commits the new snapshot.
+- [ ] **4. Movement.** Month slider that animates sites swapping squares (D3 transitions), plus a monthly GitHub Actions job that runs `python -m pipeline.run` and commits the new snapshot.
 - [ ] **5. Launch.** "How it's made" method page with full credits, custom domain on Cloudflare Pages, share images.
+
+## Front-end design notes
+
+- **Board:** a 9×9 CSS grid. The 28 sites run clockwise from the **Log On** corner, 7 per side,
+  so #1 sits next to the start. The other corners are **Buffering…**, **Incognito** and **404**.
+  All names, icons and artwork are original.
+- **Icons:** each site shows a coloured initial rather than its favicon. Loading favicons from a
+  third-party service at runtime would leak visitors' data to that service and depend on its
+  terms; bundling trademarked logos raises licensing questions. Initials keep the site
+  self-contained, private and consistent. Locally cached favicons could be added later.
+- **Fonts:** Space Grotesk and Inter (SIL Open Font License), self-hosted via Fontsource, so no
+  requests go to Google Fonts.
+- **No tracking, no cookies, no external requests** at runtime.
 
 ## Project layout
 
 ```
+web/
+  src/App.svelte        # loads data, footer credits
+  src/lib/Board.svelte  # grid, centre panel, legend
+  src/lib/Square.svelte # one property square
+  src/lib/Corner.svelte # the four corner squares
+  src/lib/layout.js     # square positions, corner names
+  src/lib/groups.js     # the 8 colour sets
+  scripts/copy-data.mjs # copies data/ into the build
 pipeline/
   run.py          # entry point: python -m pipeline.run
   tranco.py       # Tranco list metadata and download
