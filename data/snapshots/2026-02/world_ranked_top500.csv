@@ -1,0 +1,501 @@
+rank,domain,status,brand,category,reason
+1,google.com,mapped,Google,search,
+2,gtld-servers.net,excluded,,,infrastructure (name pattern)
+3,microsoft.com,mapped,Microsoft,productivity,
+4,facebook.com,mapped,Facebook,social,
+5,mail.ru,mapped,Mail.ru,search,
+6,cloudflare.com,excluded,,,infrastructure (DNS/CDN provider; 1.1.1.1 and edge services)
+7,googleapis.com,excluded,,,infrastructure (name pattern)
+8,apple.com,mapped,Apple,tech,
+9,youtube.com,mapped,YouTube,video,
+10,amazonaws.com,excluded,,,infrastructure (name pattern)
+11,instagram.com,mapped,Instagram,social,
+12,dzen.ru,mapped,Dzen,news,
+13,gstatic.com,excluded,,,infrastructure (name pattern)
+14,office.com,mapped,Microsoft,productivity,
+15,akamai.net,excluded,,,infrastructure (name pattern)
+16,twitter.com,mapped,X (Twitter),social,
+17,googlevideo.com,excluded,,,infrastructure (name pattern)
+18,live.com,mapped,Microsoft,productivity,
+19,linkedin.com,mapped,LinkedIn,social,
+20,fbcdn.net,excluded,,,background (Facebook media)
+21,googletagmanager.com,excluded,,,infrastructure (name pattern)
+22,akadns.net,excluded,,,infrastructure (name pattern)
+23,akamaiedge.net,excluded,,,infrastructure (name pattern)
+24,amazon.com,mapped,Amazon,shopping,
+25,workers.dev,excluded,,,infrastructure (name pattern)
+26,microsoftonline.com,excluded,,,infrastructure (Microsoft sign-in)
+27,azure.com,excluded,,,infrastructure (name pattern)
+28,windowsupdate.com,excluded,,,infrastructure (name pattern)
+29,wikipedia.org,mapped,Wikipedia,reference,
+30,googleusercontent.com,excluded,,,infrastructure (name pattern)
+31,github.com,mapped,GitHub,tech,
+32,doubleclick.net,excluded,,,infrastructure (name pattern)
+33,domaincontrol.com,excluded,,,infrastructure (GoDaddy nameservers)
+34,bing.com,mapped,Bing,search,
+35,netflix.com,mapped,Netflix,video,
+36,whatsapp.net,excluded,,,background (WhatsApp app traffic)
+37,digicert.com,excluded,,,infrastructure (TLS certificates)
+38,e2ro.com,excluded,,,background
+39,fastly.net,excluded,,,infrastructure (name pattern)
+40,apple-dns.net,excluded,,,background (Apple)
+41,wordpress.org,excluded,,,infrastructure (WordPress update and plugin API traffic)
+42,office.net,excluded,,,infrastructure (Office service traffic)
+43,aaplimg.com,excluded,,,background (Apple)
+44,appsflyersdk.com,excluded,,,ads/attribution SDK
+45,youtu.be,mapped,YouTube,video,
+46,pinterest.com,mapped,Pinterest,social,
+47,sharepoint.com,mapped,Microsoft,productivity,
+48,icloud.com,mapped,Apple,tech,
+49,trafficmanager.net,excluded,,,infrastructure (name pattern)
+50,akam.net,excluded,,,infrastructure (name pattern)
+51,ripn.net,excluded,,,infrastructure
+52,yahoo.com,mapped,Yahoo,search,
+53,whatsapp.com,mapped,WhatsApp,messaging,
+54,windows.net,excluded,,,infrastructure
+55,googlesyndication.com,excluded,,,infrastructure (name pattern)
+56,goo.gl,excluded,,,shortener
+57,skype.com,excluded,,,infrastructure (Skype closed in 2025; residual app traffic)
+58,x.com,mapped,X (Twitter),social,
+59,msn.com,mapped,MSN,news,
+60,cloudfront.net,excluded,,,infrastructure (name pattern)
+61,spotify.com,mapped,Spotify,music,
+62,gandi.net,excluded,,,infrastructure (registrar/nameservers)
+63,ntp.org,excluded,,,infrastructure (time servers)
+64,pv-cdn.net,excluded,,,background
+65,tiktok.com,mapped,TikTok,social,
+66,vimeo.com,mapped,Vimeo,video,
+67,tiktokcdn.com,excluded,,,infrastructure (name pattern)
+68,adobe.com,mapped,Adobe,productivity,
+69,roblox.com,mapped,Roblox,gaming,
+70,cloudflare.net,excluded,,,infrastructure
+71,gvt2.com,excluded,,,background (Chrome/Android updates)
+72,tiktokv.com,excluded,,,background (TikTok app)
+73,yandex.net,excluded,,,background (Yandex services)
+74,ytimg.com,excluded,,,background (YouTube images)
+75,googledomains.com,excluded,,,infrastructure
+76,gvt1.com,excluded,,,background (Chrome/Android updates)
+77,nic.ru,excluded,,,infrastructure (registrar)
+78,wa.me,mapped,WhatsApp,messaging,
+79,google-analytics.com,excluded,,,infrastructure (name pattern)
+80,qq.com,mapped,QQ,messaging,
+81,office365.com,mapped,Microsoft,productivity,
+82,ax-msedge.net,excluded,,,infrastructure (name pattern)
+83,zoom.us,mapped,Zoom,productivity,
+84,nginx.org,excluded,,,infrastructure (software distribution)
+85,edgekey.net,excluded,,,infrastructure (name pattern)
+86,cloudflare-dns.com,excluded,,,infrastructure (name pattern)
+87,t-msedge.net,excluded,,,infrastructure (name pattern)
+88,opera.com,excluded,,,background (browser updates)
+89,samsung.com,mapped,Samsung,tech,
+90,yandex.ru,mapped,Yandex,search,
+91,root-servers.net,excluded,,,infrastructure (name pattern)
+92,bit.ly,excluded,,,shortener
+93,edgesuite.net,excluded,,,infrastructure (name pattern)
+94,baidu.com,mapped,Baidu,search,
+95,vedcdnlb.com,excluded,,,infrastructure (name pattern)
+96,nginx.com,excluded,,,infrastructure
+97,wordpress.com,mapped,WordPress.com,social,
+98,okcdn.ru,excluded,,,infrastructure (name pattern)
+99,ui.com,excluded,,,background (network devices)
+100,unity3d.com,excluded,,,background (game engine services)
+101,sentry.io,excluded,,,analytics (error reporting)
+102,windows.com,excluded,,,infrastructure (Windows services)
+103,mozilla.org,excluded,,,background (Firefox services)
+104,reddit.com,mapped,Reddit,social,
+105,a2z.com,excluded,,,infrastructure (Amazon internal)
+106,googleadservices.com,excluded,,,infrastructure (name pattern)
+107,cdninstagram.com,excluded,,,background (Instagram media)
+108,intuit.com,mapped,Intuit,finance,
+109,vk.com,mapped,VK,social,
+110,blogspot.com,mapped,Blogger,social,
+111,discord.gg,mapped,Discord,messaging,
+112,t.me,mapped,Telegram,messaging,
+113,europa.eu,mapped,European Union,government,
+114,epicgames.com,mapped,Epic Games,gaming,
+115,bytefcdn-oversea.com,excluded,,,infrastructure (name pattern)
+116,snapchat.com,mapped,Snapchat,social,
+117,dns.google,excluded,,,infrastructure (name pattern)
+118,dnsowl.com,excluded,,,infrastructure (name pattern)
+119,paypal.com,mapped,PayPal,finance,
+120,amazon-adsystem.com,excluded,,,infrastructure (name pattern)
+121,app-measurement.com,excluded,,,infrastructure (name pattern)
+122,github.io,excluded,,,hosting (user-hosted pages)
+123,apache.org,excluded,,,infrastructure (software distribution)
+124,cloud.microsoft,mapped,Microsoft,productivity,
+125,dropbox.com,mapped,Dropbox,productivity,
+126,gravatar.com,excluded,,,background (embedded avatars)
+127,amazon.dev,excluded,,,infrastructure (Amazon internal)
+128,outlook.com,mapped,Microsoft,productivity,
+129,amazonvideo.com,excluded,,,infrastructure (Prime Video app/API traffic)
+130,pki.goog,excluded,,,infrastructure (certificates)
+131,steamserver.net,excluded,,,background (game servers)
+132,criteo.com,excluded,,,ads
+133,wac-msedge.net,excluded,,,infrastructure (name pattern)
+134,xiaomi.com,mapped,Xiaomi,tech,
+135,vecdnlb.com,excluded,,,infrastructure (name pattern)
+136,msftncsi.com,excluded,,,infrastructure (name pattern)
+137,app-analytics-services.com,excluded,,,analytics
+138,one.one,excluded,,,infrastructure (1.1.1.1 resolver)
+139,trbcdn.net,excluded,,,infrastructure (name pattern)
+140,applovin.com,excluded,,,ads
+141,f5.com,excluded,,,infrastructure
+142,nih.gov,mapped,NIH (incl. PubMed),education,
+143,archive.org,mapped,Internet Archive,reference,
+144,b-cdn.net,excluded,,,infrastructure (name pattern)
+145,forms.gle,excluded,,,shortener
+146,registrar-servers.com,excluded,,,infrastructure (Namecheap nameservers)
+147,miit.gov.cn,excluded,,,background (Chinese site-registration badges)
+148,mulesoft.com,excluded,,,background (enterprise integration APIs)
+149,tumblr.com,mapped,Tumblr,social,
+150,kaspersky.com,excluded,,,background (antivirus updates)
+151,ggpht.com,excluded,,,background (Google images)
+152,msftconnecttest.com,excluded,,,infrastructure (name pattern)
+153,nytimes.com,mapped,The New York Times,news,
+154,cdn77.org,excluded,,,infrastructure (name pattern)
+155,dual-s-msedge.net,excluded,,,infrastructure (name pattern)
+156,spo-msedge.net,excluded,,,infrastructure (name pattern)
+157,tiktokcdn-us.com,excluded,,,infrastructure (name pattern)
+158,spov-msedge.net,excluded,,,infrastructure (name pattern)
+159,3gppnetwork.org,excluded,,,infrastructure (mobile network)
+160,aliyuncs.com,excluded,,,infrastructure (cloud)
+161,reg.ru,excluded,,,infrastructure (registrar/hosting)
+162,macromedia.com,excluded,,,background (Adobe Flash legacy)
+163,aws.dev,excluded,,,infrastructure (Amazon internal)
+164,cncdn.com,excluded,,,infrastructure (name pattern)
+165,vkuserphoto.ru,excluded,,,background (VK media)
+166,flickr.com,mapped,Flickr,social,
+167,shopify.com,mapped,Shopify,tech,
+168,msedge.net,excluded,,,infrastructure (name pattern)
+169,discord.com,mapped,Discord,messaging,
+170,chatgpt.com,mapped,ChatGPT,ai,
+171,adnxs.com,excluded,,,ads
+172,cdn-apple.com,excluded,,,infrastructure (name pattern)
+173,telekom.de,excluded,,,telecom
+174,nist.gov,excluded,,,infrastructure (time servers)
+175,soundcloud.com,mapped,SoundCloud,music,
+176,godaddy.com,excluded,,,hosting (registrar; rank driven by DNS and parked domains)
+177,adobe.io,excluded,,,background (Adobe services)
+178,userapi.com,excluded,,,background (VK media)
+179,lencr.org,excluded,,,infrastructure (Let's Encrypt certificates)
+180,rubiconproject.com,excluded,,,ads
+181,medium.com,mapped,Medium,social,
+182,mailinabox.email,excluded,,,infrastructure (mail servers)
+183,vungle.com,excluded,,,ads
+184,cnn.com,mapped,CNN,news,
+185,w3.org,excluded,,,infrastructure (schema references)
+186,azurefd.net,excluded,,,infrastructure (name pattern)
+187,avast.com,excluded,,,background (antivirus updates)
+188,shifen.com,excluded,,,background (Baidu)
+189,example.com,excluded,,,infrastructure (reserved example domain)
+190,azurewebsites.net,excluded,,,hosting
+191,miui.com,excluded,,,background (Xiaomi devices)
+192,taboola.com,excluded,,,ads
+193,theguardian.com,mapped,The Guardian,news,
+194,0xrpc.io,excluded,,,infrastructure (blockchain RPC)
+195,ttdns2.com,excluded,,,infrastructure (name pattern)
+196,playstation.net,excluded,,,background (console services)
+197,nflxso.net,excluded,,,background (Netflix)
+198,mts.ru,excluded,,,telecom
+199,pubmatic.com,excluded,,,ads
+200,creativecommons.org,excluded,,,infrastructure (licence links)
+201,webex.com,mapped,Webex,productivity,
+202,nominetdns.uk,excluded,,,infrastructure (name pattern)
+203,adtrafficquality.google,excluded,,,ads
+204,forbes.com,mapped,Forbes,news,
+205,t.co,excluded,,,shortener
+206,ln-msedge.net,excluded,,,infrastructure (name pattern)
+207,twitch.tv,mapped,Twitch,video,
+208,azureedge.net,excluded,,,infrastructure (name pattern)
+209,wildberries.ru,mapped,Wildberries,shopping,
+210,bbc.com,mapped,BBC,news,
+211,ozon.ru,mapped,Ozon,shopping,
+212,bbc.co.uk,mapped,BBC,news,
+213,sourceforge.net,excluded,,,infrastructure (software distribution)
+214,salesforce.com,mapped,Salesforce,productivity,
+215,myfritz.net,excluded,,,infrastructure (router remote access)
+216,sciencedirect.com,mapped,ScienceDirect,education,
+217,mangosip.ru,excluded,,,telecom
+218,adsrvr.org,excluded,,,infrastructure (name pattern)
+219,gmail.com,mapped,Google,search,
+220,oracle.com,mapped,Oracle,tech,
+221,researchgate.net,mapped,ResearchGate,education,
+222,ubuntu.com,excluded,,,infrastructure (OS updates)
+223,mit.edu,mapped,MIT,education,
+224,weather.com,mapped,The Weather Channel,weather,
+225,android.com,excluded,,,background (Android OS services)
+226,canva.com,mapped,Canva,productivity,
+227,cpanel.net,excluded,,,hosting
+228,doi.org,excluded,,,infrastructure (citation redirects)
+229,wsdvs.com,excluded,,,background
+230,roku.com,excluded,,,background (TV devices)
+231,ebay.com,mapped,eBay,shopping,
+232,akamaized.net,excluded,,,infrastructure (name pattern)
+233,imdb.com,mapped,IMDb,video,
+234,comcast.net,excluded,,,telecom
+235,booking.com,mapped,Booking.com,travel,
+236,cisco.com,excluded,,,background (enterprise networking)
+237,edgecdn.ru,excluded,,,infrastructure (name pattern)
+238,youtube-nocookie.com,excluded,,,background (embedded YouTube)
+239,scorecardresearch.com,excluded,,,analytics
+240,jomodns.com,excluded,,,infrastructure (name pattern)
+241,alibabadns.com,excluded,,,background (Alibaba)
+242,demdex.net,excluded,,,analytics (Adobe)
+243,casalemedia.com,excluded,,,ads
+244,prudential.com,mapped,Prudential,finance,
+245,static.microsoft,excluded,,,infrastructure
+246,meraki.com,excluded,,,background (network devices)
+247,rocket-cdn.com,excluded,,,infrastructure (name pattern)
+248,wixsite.com,excluded,,,hosting
+249,linktr.ee,mapped,Linktree,social,
+250,ksyuncdn.com,excluded,,,infrastructure (name pattern)
+251,ttvnw.net,excluded,,,infrastructure (Twitch video)
+252,hubspot.com,excluded,,,background (marketing tracking)
+253,who.int,mapped,World Health Organization,government,
+254,inmobi.com,excluded,,,ads
+255,yandex.com,mapped,Yandex,search,
+256,samsungqbe.com,excluded,,,background (Samsung devices)
+257,omtrdc.net,excluded,,,analytics (Adobe)
+258,cdngslb.com,excluded,,,infrastructure (name pattern)
+259,nr-data.net,excluded,,,analytics (New Relic)
+260,dns-parking.com,excluded,,,infrastructure (name pattern)
+261,hp.com,mapped,HP,tech,
+262,harvard.edu,mapped,Harvard,education,
+263,launchpad.net,excluded,,,infrastructure (software distribution)
+264,stripe.com,excluded,,,background (payments API)
+265,doubleverify.com,excluded,,,ads
+266,moe.video,excluded,,,ads (video ad network)
+267,mozilla.com,excluded,,,background (Firefox services)
+268,uber.com,mapped,Uber,travel,
+269,hichina.com,excluded,,,infrastructure (cloud)
+270,tinyurl.com,excluded,,,shortener
+271,wikimedia.org,excluded,,,background (Wikipedia images and media)
+272,samsungcloud.com,excluded,,,background (Samsung devices)
+273,appsflyer.com,excluded,,,ads/attribution SDK
+274,media-amazon.com,excluded,,,infrastructure (Amazon images)
+275,drom.ru,mapped,Drom,shopping,
+276,shalltry.com,excluded,,,background (Transsion devices)
+277,ea.com,mapped,EA,gaming,
+278,dnsmadeeasy.com,excluded,,,infrastructure (name pattern)
+279,amazon.co.uk,mapped,Amazon,shopping,
+280,mtgglobals.com,excluded,,,ads
+281,openai.com,mapped,ChatGPT,ai,
+282,fastly-edge.com,excluded,,,infrastructure (name pattern)
+283,openx.net,excluded,,,ads
+284,capcutapi.com,excluded,,,background (CapCut app)
+285,googleblog.com,excluded,,,background (feeds)
+286,ok.ru,mapped,OK,social,
+287,heytapmobile.com,excluded,,,background (Oppo devices)
+288,mzstatic.com,excluded,,,background (Apple media)
+289,dropcatch.com,excluded,,,hosting (domain marketplace)
+290,reuters.com,mapped,Reuters,news,
+291,springer.com,mapped,Springer,education,
+292,name-services.com,excluded,,,infrastructure
+293,alibaba.com,mapped,Alibaba,shopping,
+294,byteoversea.net,excluded,,,background (TikTok/ByteDance)
+295,gov.uk,mapped,GOV.UK,government,
+296,ibm.com,mapped,IBM,tech,
+297,ampproject.org,excluded,,,background (AMP)
+298,kwai-pro.com,excluded,,,background (Kuaishou app)
+299,steampowered.com,mapped,Steam,gaming,
+300,media.net,excluded,,,ads
+301,3lift.com,excluded,,,ads
+302,etsy.com,mapped,Etsy,shopping,
+303,jsdelivr.net,excluded,,,infrastructure (CDN)
+304,forter.com,excluded,,,background (fraud detection)
+305,php.net,excluded,,,infrastructure (software distribution)
+306,bilibili.com,mapped,Bilibili,video,
+307,ivi.ru,mapped,ivi,video,
+308,opendns.com,excluded,,,infrastructure (name pattern)
+309,kaspersky-labs.com,excluded,,,background (antivirus updates)
+310,ezvizlife.com,excluded,,,background (security cameras)
+311,mikrotik.com,excluded,,,background (routers)
+312,wyzecam.com,excluded,,,background (security cameras)
+313,slack.com,mapped,Slack,productivity,
+314,nature.com,mapped,Nature,education,
+315,tradingview.com,mapped,TradingView,finance,
+316,debian.org,excluded,,,infrastructure (OS updates)
+317,wiley.com,mapped,Wiley,education,
+318,grammarly.com,mapped,Grammarly,productivity,
+319,issuu.com,mapped,Issuu,reference,
+320,crashlytics.com,excluded,,,infrastructure (name pattern)
+321,alidns.com,excluded,,,infrastructure (name pattern)
+322,cloudflareinsights.com,excluded,,,analytics
+323,douyincdn.com,excluded,,,infrastructure (name pattern)
+324,weebly.com,excluded,,,hosting
+325,smartadserver.com,excluded,,,ads
+326,adriver.ru,excluded,,,ads
+327,launchdarkly.com,excluded,,,analytics
+328,autodesk.com,excluded,,,background (software licensing)
+329,weibo.com,mapped,Weibo,social,
+330,mi.com,mapped,Xiaomi,tech,
+331,vedsalb.com,excluded,,,background
+332,netflix.net,excluded,,,background (Netflix)
+333,washingtonpost.com,mapped,The Washington Post,news,
+334,checkpoint.com,excluded,,,background (security appliances)
+335,cdc.gov,mapped,CDC,government,
+336,akamaihd.net,excluded,,,infrastructure (name pattern)
+337,clarity.ms,excluded,,,analytics (Microsoft Clarity)
+338,whecloud.com,excluded,,,background
+339,tiktokv.us,excluded,,,background (TikTok app)
+340,wsj.com,mapped,The Wall Street Journal,news,
+341,myshopify.com,excluded,,,hosting
+342,inner-active.mobi,excluded,,,ads
+343,bamgrid.com,excluded,,,background (Disney+ streaming)
+344,go.com,excluded,,,background (Disney redirect domain)
+345,un.org,mapped,United Nations,government,
+346,allawnos.com,excluded,,,background (Oppo devices)
+347,naver.com,mapped,Naver,search,
+348,dailymail.co.uk,mapped,Daily Mail,news,
+349,samsungcloudsolution.com,excluded,,,background (Samsung devices)
+350,oxylabs.io,excluded,,,infrastructure (proxy network)
+351,cdnbuild.net,excluded,,,infrastructure (name pattern)
+352,bloomberg.com,mapped,Bloomberg,news,
+353,xboxlive.com,excluded,,,background (Xbox services)
+354,live-video.net,excluded,,,infrastructure (Twitch video)
+355,aliyun.com,excluded,,,infrastructure (cloud)
+356,sc-cdn.net,excluded,,,infrastructure (name pattern)
+357,cloudns.net,excluded,,,infrastructure (name pattern)
+358,vk.ru,mapped,VK,social,
+359,telegraph.co.uk,mapped,The Telegraph,news,
+360,wbx2.com,excluded,,,background (Webex app)
+361,rzone.de,excluded,,,hosting
+362,avsxappcaptiveportal.com,excluded,,,infrastructure (name pattern)
+363,stanford.edu,mapped,Stanford,education,
+364,nvidia.com,mapped,NVIDIA,tech,
+365,dailymotion.com,mapped,Dailymotion,video,
+366,vkuser.net,excluded,,,background (VK media)
+367,tp-link.com,excluded,,,background (routers)
+368,afternic.com,excluded,,,hosting (domain marketplace)
+369,heytapdl.com,excluded,,,background (Oppo devices)
+370,ibyteimg.com,excluded,,,background (TikTok/ByteDance)
+371,gnu.org,excluded,,,infrastructure (software distribution)
+372,easebar.com,excluded,,,background
+373,aiv-delivery.net,excluded,,,background (Prime Video streaming)
+374,espn.com,mapped,ESPN,sport,
+375,scdn.co,excluded,,,background (Spotify)
+376,vivoglobal.com,excluded,,,background (Vivo devices)
+377,myhuaweicloud.com,excluded,,,infrastructure (cloud)
+378,adsafeprotected.com,excluded,,,ads
+379,facebook.net,excluded,,,background (Facebook SDK)
+380,sc-gw.com,excluded,,,background (Snapchat app)
+381,cookielaw.org,excluded,,,background (cookie banners)
+382,ipv4only.arpa,excluded,,,infrastructure (name pattern)
+383,temu.com,mapped,Temu,shopping,
+384,pages.dev,excluded,,,infrastructure (name pattern)
+385,kwaipros.com,excluded,,,background (Kuaishou app)
+386,dell.com,mapped,Dell,tech,
+387,discord.media,excluded,,,background (Discord media)
+388,plesk.com,excluded,,,hosting
+389,aliexpress.com,mapped,AliExpress,shopping,
+390,cornell.edu,mapped,Cornell,education,
+391,nasa.gov,mapped,NASA,government,
+392,unsplash.com,mapped,Unsplash,social,
+393,nstld.com,excluded,,,infrastructure (domain registry)
+394,tiktokcdn-eu.com,excluded,,,infrastructure (name pattern)
+395,expireddomains.com,excluded,,,hosting (domain marketplace)
+396,globo.com,mapped,Globo,news,
+397,mynetname.net,excluded,,,infrastructure (router dynamic DNS)
+398,ngenix.net,excluded,,,infrastructure (CDN)
+399,amazonalexa.com,excluded,,,background (Alexa devices)
+400,businessinsider.com,mapped,Business Insider,news,
+401,telegram.org,mapped,Telegram,messaging,
+402,a-msedge.net,excluded,,,infrastructure (name pattern)
+403,indeed.com,mapped,Indeed,productivity,
+404,netangels.ru,excluded,,,hosting
+405,huawei.com,mapped,Huawei,tech,
+406,google.com.br,mapped,Google,search,
+407,wp.com,excluded,,,infrastructure (WordPress.com CDN)
+408,imcmdb.net,excluded,,,background
+409,duckduckgo.com,mapped,DuckDuckGo,search,
+410,independent.co.uk,mapped,The Independent,news,
+411,sfx.ms,excluded,,,infrastructure
+412,amazon.de,mapped,Amazon,shopping,
+413,telegram.me,mapped,Telegram,messaging,
+414,avcdn.net,excluded,,,infrastructure (name pattern)
+415,tiktokv.eu,excluded,,,background (TikTok app)
+416,adobe.net,excluded,,,background (Adobe services)
+417,pangle.io,excluded,,,ads (ByteDance)
+418,msidentity.com,excluded,,,infrastructure (Microsoft sign-in)
+419,cookiedatabase.org,excluded,,,background (cookie banners)
+420,teamviewer.com,excluded,,,background (remote-access software)
+421,taobao.com,mapped,Taobao,shopping,
+422,163.com,mapped,NetEase,news,
+423,hostgator.com,excluded,,,hosting
+424,wswebcdn.com,excluded,,,infrastructure (name pattern)
+425,steamcommunity.com,mapped,Steam,gaming,
+426,statista.com,mapped,Statista,reference,
+427,rbxcdn.com,excluded,,,background (Roblox)
+428,slideshare.net,mapped,SlideShare,reference,
+429,calendly.com,mapped,Calendly,productivity,
+430,aliyuncsslbintl.com,excluded,,,infrastructure (cloud)
+431,alicdn.com,excluded,,,infrastructure (name pattern)
+432,trustpilot.com,mapped,Trustpilot,shopping,
+433,firetvcaptiveportal.com,excluded,,,background (Fire TV)
+434,xcal.tv,excluded,,,background (Comcast TV devices)
+435,quora.com,mapped,Quora,social,
+436,duolingo.com,mapped,Duolingo,education,
+437,crpt.ru,excluded,,,background (Russian product-marking system)
+438,nflxvideo.net,excluded,,,background (Netflix)
+439,pixabay.com,mapped,Pixabay,reference,
+440,cnbc.com,mapped,CNBC,news,
+441,ipify.org,excluded,,,infrastructure (IP lookup API)
+442,namebrightdns.com,excluded,,,infrastructure (name pattern)
+443,aiv-cdn.net,excluded,,,infrastructure (name pattern)
+444,ietf.org,excluded,,,infrastructure (standards references)
+445,gamepass.com,excluded,,,background (Xbox services)
+446,aol.com,mapped,AOL,search,
+447,online-metrix.net,excluded,,,ads/fraud detection
+448,list-manage.com,excluded,,,background (Mailchimp)
+449,zendesk.com,excluded,,,background (support widgets)
+450,walmart.com,mapped,Walmart,shopping,
+451,goodreads.com,mapped,Goodreads,social,
+452,beian.gov.cn,excluded,,,background (Chinese site-registration badges)
+453,cdnvideo.ru,excluded,,,infrastructure (name pattern)
+454,foxnews.com,mapped,Fox News,news,
+455,addtoany.com,excluded,,,background (share buttons)
+456,telecid.ru,excluded,,,background
+457,worldnic.com,excluded,,,infrastructure
+458,notamedia.ru,excluded,,,background
+459,byteglb.com,excluded,,,background (ByteDance)
+460,mediatek.com,excluded,,,background (device chipsets)
+461,line.me,mapped,LINE,messaging,
+462,giphy.com,mapped,GIPHY,social,
+463,sberbank.ru,mapped,Sberbank,finance,
+464,npr.org,mapped,NPR,news,
+465,cdn20.com,excluded,,,infrastructure (name pattern)
+466,g.page,excluded,,,shortener
+467,gitlab.com,mapped,GitLab,tech,
+468,yahoo.co.jp,mapped,Yahoo! JAPAN,search,
+469,nflximg.com,excluded,,,background (Netflix)
+470,eventbrite.com,mapped,Eventbrite,shopping,
+471,speedtest.net,mapped,Speedtest,tech,
+472,elasticbeanstalk.com,excluded,,,infrastructure (cloud)
+473,kwai.net,excluded,,,background (Kuaishou app)
+474,name.com,excluded,,,hosting (registrar)
+475,hcaptcha.com,excluded,,,background (captcha widget)
+476,supercell.com,excluded,,,background (game servers)
+477,imgsmail.ru,excluded,,,background (Mail.ru images)
+478,tbcache.com,excluded,,,background (Alibaba)
+479,amplitude.com,excluded,,,analytics
+480,mcafee.com,excluded,,,background (antivirus updates)
+481,amzn.to,excluded,,,shortener
+482,qlivecdn.com,excluded,,,infrastructure (name pattern)
+483,wired.com,mapped,WIRED,news,
+484,mysql.com,excluded,,,infrastructure (software distribution)
+485,xiaomi.net,excluded,,,background (Xiaomi devices)
+486,gosuslugi.ru,mapped,Gosuslugi,government,
+487,myqcloud.com,excluded,,,infrastructure (cloud)
+488,uol.com.br,mapped,UOL,news,
+489,my.com,excluded,,,background (VK app services)
+490,nease.net,excluded,,,background (NetEase)
+491,scribd.com,mapped,Scribd,reference,
+492,indiatimes.com,mapped,The Times of India,news,
+493,2mdn.net,excluded,,,ads
+494,behance.net,mapped,Behance,social,
+495,icloud-content.com,excluded,,,background (iCloud storage)
+496,google.de,mapped,Google,search,
+497,360yield.com,excluded,,,ads
+498,telekom.net,excluded,,,telecom
+499,run.app,excluded,,,hosting (Google Cloud Run)
+500,firefox.com,excluded,,,background (Firefox services)

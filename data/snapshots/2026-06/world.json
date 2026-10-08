@@ -1,14 +1,14 @@
 {
   "board": "world",
   "label": "World",
-  "month": "2026-10",
+  "month": "2026-06",
   "generated_at": "2026-10-08T18:33:13Z",
   "metric": "Relative popularity (most visited), not search volume",
   "source": {
     "name": "Tranco",
-    "list_id": "Y83YG",
-    "list_date": "2026-10-01",
-    "window": "2026-09-02 to 2026-10-01",
+    "list_id": "334VL",
+    "list_date": "2026-06-01",
+    "window": "2026-05-03 to 2026-06-01",
     "providers": [
       "crux",
       "farsight",
@@ -16,13 +16,13 @@
       "radar",
       "umbrella"
     ],
-    "url": "https://tranco-list.eu/list/Y83YG",
+    "url": "https://tranco-list.eu/list/334VL",
     "citation": "Le Pochat et al. (2019), 'Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation', NDSS 2019. https://doi.org/10.14722/ndss.2019.23386",
     "licence_note": "Tranco aggregates Cisco Umbrella, Majestic (CC BY 3.0), Farsight, Chrome UX Report and Cloudflare Radar (CC BY-NC 4.0) rankings. Non-commercial use."
   },
   "coverage": {
-    "last_board_source_rank": 87,
-    "reviewed_through_rank": 500,
+    "last_board_source_rank": 84,
+    "reviewed_through_rank": 502,
     "unreviewed_above_cutoff": [],
     "ok": true
   },
@@ -44,12 +44,12 @@
         "google.de",
         "google.co.uk",
         "google.com.br",
-        "google.fr",
         "google.ca",
         "google.co.jp",
         "google.co.in",
-        "google.it",
-        "google.es"
+        "google.fr",
+        "google.es",
+        "google.it"
       ],
       "previous_rank": 1,
       "movement": 0,
@@ -63,7 +63,7 @@
       "category": "social",
       "group": "social_messaging",
       "source": "tranco",
-      "source_rank": 3,
+      "source_rank": 5,
       "merged_domains": [
         "facebook.com"
       ],
@@ -79,13 +79,13 @@
       "category": "productivity",
       "group": "work_money",
       "source": "tranco",
-      "source_rank": 8,
+      "source_rank": 6,
       "merged_domains": [
         "microsoft.com",
-        "office.com",
         "live.com",
-        "cloud.microsoft",
+        "office.com",
         "sharepoint.com",
+        "cloud.microsoft",
         "office365.com",
         "outlook.com",
         "microsoft365.com"
@@ -102,13 +102,13 @@
       "category": "video",
       "group": "entertainment",
       "source": "tranco",
-      "source_rank": 9,
+      "source_rank": 8,
       "merged_domains": [
         "youtube.com",
         "youtu.be"
       ],
-      "previous_rank": 4,
-      "movement": 0,
+      "previous_rank": 5,
+      "movement": 1,
       "note": "Includes youtu.be share links. Video streaming hosts (googlevideo.com, ytimg.com) are excluded."
     },
     {
@@ -124,8 +124,8 @@
         "apple.com",
         "icloud.com"
       ],
-      "previous_rank": 5,
-      "movement": 0,
+      "previous_rank": 6,
+      "movement": 1,
       "note": "Likely boosted by iPhone and Mac background traffic to apple.com and icloud.com, which DNS-based rankings can't separate from real visits."
     },
     {
@@ -140,8 +140,8 @@
       "merged_domains": [
         "instagram.com"
       ],
-      "previous_rank": 6,
-      "movement": 0,
+      "previous_rank": 7,
+      "movement": 1,
       "note": null
     },
     {
@@ -156,8 +156,8 @@
       "merged_domains": [
         "mail.ru"
       ],
-      "previous_rank": 7,
-      "movement": 0,
+      "previous_rank": 4,
+      "movement": -3,
       "note": "Russian portal and email service. Ranks unusually high partly because some of Tranco's sources are DNS-based, which can favour regional giants with large resolver footprints."
     },
     {
@@ -185,7 +185,7 @@
       "category": "news",
       "group": "news_sport",
       "source": "tranco",
-      "source_rank": 17,
+      "source_rank": 16,
       "merged_domains": [
         "dzen.ru"
       ],
@@ -201,7 +201,7 @@
       "category": "social",
       "group": "social_messaging",
       "source": "tranco",
-      "source_rank": 18,
+      "source_rank": 17,
       "merged_domains": [
         "linkedin.com"
       ],
@@ -217,7 +217,7 @@
       "category": "shopping",
       "group": "shopping",
       "source": "tranco",
-      "source_rank": 26,
+      "source_rank": 25,
       "merged_domains": [
         "amazon.com",
         "amazon.co.uk",
@@ -236,6 +236,22 @@
     },
     {
       "rank": 12,
+      "id": "wikipedia",
+      "brand": "Wikipedia",
+      "domain": "wikipedia.org",
+      "category": "reference",
+      "group": "reference_learning",
+      "source": "tranco",
+      "source_rank": 27,
+      "merged_domains": [
+        "wikipedia.org"
+      ],
+      "previous_rank": 12,
+      "movement": 0,
+      "note": null
+    },
+    {
+      "rank": 13,
       "id": "github",
       "brand": "GitHub",
       "domain": "github.com",
@@ -246,24 +262,8 @@
       "merged_domains": [
         "github.com"
       ],
-      "previous_rank": 12,
+      "previous_rank": 13,
       "movement": 0,
-      "note": null
-    },
-    {
-      "rank": 13,
-      "id": "wikipedia",
-      "brand": "Wikipedia",
-      "domain": "wikipedia.org",
-      "category": "reference",
-      "group": "reference_learning",
-      "source": "tranco",
-      "source_rank": 30,
-      "merged_domains": [
-        "wikipedia.org"
-      ],
-      "previous_rank": 14,
-      "movement": 1,
       "note": null
     },
     {
@@ -278,8 +278,8 @@
       "merged_domains": [
         "bing.com"
       ],
-      "previous_rank": 13,
-      "movement": -1,
+      "previous_rank": 14,
+      "movement": 0,
       "note": null
     },
     {
@@ -290,12 +290,12 @@
       "category": "video",
       "group": "entertainment",
       "source": "tranco",
-      "source_rank": 44,
+      "source_rank": 39,
       "merged_domains": [
         "netflix.com"
       ],
-      "previous_rank": 15,
-      "movement": 0,
+      "previous_rank": 16,
+      "movement": 1,
       "note": null
     },
     {
@@ -306,81 +306,97 @@
       "category": "social",
       "group": "social_messaging",
       "source": "tranco",
-      "source_rank": 53,
+      "source_rank": 49,
       "merged_domains": [
         "pinterest.com"
       ],
-      "previous_rank": 18,
-      "movement": 2,
+      "previous_rank": 17,
+      "movement": 1,
       "note": null
     },
     {
       "rank": 17,
-      "id": "tiktok",
-      "brand": "TikTok",
-      "domain": "tiktok.com",
-      "category": "social",
-      "group": "social_messaging",
-      "source": "tranco",
-      "source_rank": 54,
-      "merged_domains": [
-        "tiktok.com"
-      ],
-      "previous_rank": 16,
-      "movement": -1,
-      "note": null
-    },
-    {
-      "rank": 18,
       "id": "whatsapp",
       "brand": "WhatsApp",
       "domain": "whatsapp.com",
       "category": "messaging",
       "group": "social_messaging",
       "source": "tranco",
-      "source_rank": 55,
+      "source_rank": 51,
       "merged_domains": [
         "whatsapp.com",
         "wa.me"
       ],
-      "previous_rank": 17,
-      "movement": -1,
+      "previous_rank": 18,
+      "movement": 1,
       "note": "Counts whatsapp.com and wa.me links. In-app chat traffic (whatsapp.net) is excluded."
     },
     {
-      "rank": 19,
+      "rank": 18,
       "id": "yahoo",
       "brand": "Yahoo",
       "domain": "yahoo.com",
       "category": "search",
       "group": "search_portals",
       "source": "tranco",
-      "source_rank": 59,
+      "source_rank": 55,
       "merged_domains": [
         "yahoo.com"
       ],
-      "previous_rank": 20,
+      "previous_rank": 19,
       "movement": 1,
       "note": null
     },
     {
-      "rank": 20,
-      "id": "roblox",
-      "brand": "Roblox",
-      "domain": "roblox.com",
-      "category": "gaming",
-      "group": "entertainment",
+      "rank": 19,
+      "id": "tiktok",
+      "brand": "TikTok",
+      "domain": "tiktok.com",
+      "category": "social",
+      "group": "social_messaging",
       "source": "tranco",
-      "source_rank": 62,
+      "source_rank": 58,
       "merged_domains": [
-        "roblox.com"
+        "tiktok.com"
       ],
-      "previous_rank": 19,
-      "movement": -1,
+      "previous_rank": 21,
+      "movement": 2,
+      "note": null
+    },
+    {
+      "rank": 20,
+      "id": "msn",
+      "brand": "MSN",
+      "domain": "msn.com",
+      "category": "news",
+      "group": "news_sport",
+      "source": "tranco",
+      "source_rank": 61,
+      "merged_domains": [
+        "msn.com"
+      ],
+      "previous_rank": 20,
+      "movement": 0,
       "note": null
     },
     {
       "rank": 21,
+      "id": "spotify",
+      "brand": "Spotify",
+      "domain": "spotify.com",
+      "category": "music",
+      "group": "entertainment",
+      "source": "tranco",
+      "source_rank": 62,
+      "merged_domains": [
+        "spotify.com"
+      ],
+      "previous_rank": 22,
+      "movement": 1,
+      "note": null
+    },
+    {
+      "rank": 22,
       "id": "adobe",
       "brand": "Adobe",
       "domain": "adobe.com",
@@ -392,121 +408,105 @@
         "adobe.com"
       ],
       "previous_rank": 23,
-      "movement": 2,
+      "movement": 1,
       "note": "Possibly boosted by Creative Cloud apps contacting adobe.com in the background."
     },
     {
-      "rank": 22,
-      "id": "spotify",
-      "brand": "Spotify",
-      "domain": "spotify.com",
-      "category": "music",
-      "group": "entertainment",
-      "source": "tranco",
-      "source_rank": 68,
-      "merged_domains": [
-        "spotify.com"
-      ],
-      "previous_rank": 21,
-      "movement": -1,
-      "note": null
-    },
-    {
       "rank": 23,
-      "id": "msn",
-      "brand": "MSN",
-      "domain": "msn.com",
-      "category": "news",
-      "group": "news_sport",
-      "source": "tranco",
-      "source_rank": 71,
-      "merged_domains": [
-        "msn.com"
-      ],
-      "previous_rank": 22,
-      "movement": -1,
-      "note": null
-    },
-    {
-      "rank": 24,
-      "id": "zoom",
-      "brand": "Zoom",
-      "domain": "zoom.us",
-      "category": "productivity",
-      "group": "work_money",
-      "source": "tranco",
-      "source_rank": 72,
-      "merged_domains": [
-        "zoom.us"
-      ],
-      "previous_rank": 25,
-      "movement": 1,
-      "note": "Includes the Zoom app's own traffic to zoom.us as well as browser visits."
-    },
-    {
-      "rank": 25,
-      "id": "qq",
-      "brand": "QQ",
-      "domain": "qq.com",
-      "category": "messaging",
-      "group": "social_messaging",
-      "source": "tranco",
-      "source_rank": 74,
-      "merged_domains": [
-        "qq.com"
-      ],
-      "previous_rank": 28,
-      "movement": 3,
-      "note": "Tencent's portal and messaging service, hugely popular in China."
-    },
-    {
-      "rank": 26,
-      "id": "baidu",
-      "brand": "Baidu",
-      "domain": "baidu.com",
-      "category": "search",
-      "group": "search_portals",
-      "source": "tranco",
-      "source_rank": 80,
-      "merged_domains": [
-        "baidu.com"
-      ],
-      "previous_rank": 27,
-      "movement": 1,
-      "note": "China's largest search engine."
-    },
-    {
-      "rank": 27,
-      "id": "chatgpt",
-      "brand": "ChatGPT",
-      "domain": "chatgpt.com",
-      "category": "ai",
-      "group": "tech_ai",
-      "source": "tranco",
-      "source_rank": 83,
-      "merged_domains": [
-        "chatgpt.com",
-        "openai.com"
-      ],
-      "previous_rank": 24,
-      "movement": -3,
-      "note": "Merges chatgpt.com and openai.com."
-    },
-    {
-      "rank": 28,
       "id": "vimeo",
       "brand": "Vimeo",
       "domain": "vimeo.com",
       "category": "video",
       "group": "entertainment",
       "source": "tranco",
-      "source_rank": 87,
+      "source_rank": 68,
       "merged_domains": [
         "vimeo.com"
       ],
-      "previous_rank": 26,
-      "movement": -2,
+      "previous_rank": 24,
+      "movement": 1,
       "note": null
+    },
+    {
+      "rank": 24,
+      "id": "chatgpt",
+      "brand": "ChatGPT",
+      "domain": "chatgpt.com",
+      "category": "ai",
+      "group": "tech_ai",
+      "source": "tranco",
+      "source_rank": 70,
+      "merged_domains": [
+        "chatgpt.com",
+        "openai.com"
+      ],
+      "previous_rank": 15,
+      "movement": -9,
+      "note": "Merges chatgpt.com and openai.com."
+    },
+    {
+      "rank": 25,
+      "id": "roblox",
+      "brand": "Roblox",
+      "domain": "roblox.com",
+      "category": "gaming",
+      "group": "entertainment",
+      "source": "tranco",
+      "source_rank": 75,
+      "merged_domains": [
+        "roblox.com"
+      ],
+      "previous_rank": 26,
+      "movement": 1,
+      "note": null
+    },
+    {
+      "rank": 26,
+      "id": "zoom",
+      "brand": "Zoom",
+      "domain": "zoom.us",
+      "category": "productivity",
+      "group": "work_money",
+      "source": "tranco",
+      "source_rank": 77,
+      "merged_domains": [
+        "zoom.us"
+      ],
+      "previous_rank": 25,
+      "movement": -1,
+      "note": "Includes the Zoom app's own traffic to zoom.us as well as browser visits."
+    },
+    {
+      "rank": 27,
+      "id": "qq",
+      "brand": "QQ",
+      "domain": "qq.com",
+      "category": "messaging",
+      "group": "social_messaging",
+      "source": "tranco",
+      "source_rank": 81,
+      "merged_domains": [
+        "qq.com"
+      ],
+      "previous_rank": 27,
+      "movement": 0,
+      "note": "Tencent's portal and messaging service, hugely popular in China."
+    },
+    {
+      "rank": 28,
+      "id": "baidu",
+      "brand": "Baidu",
+      "domain": "baidu.com",
+      "category": "search",
+      "group": "search_portals",
+      "source": "tranco",
+      "source_rank": 84,
+      "merged_domains": [
+        "baidu.com"
+      ],
+      "previous_rank": 28,
+      "movement": 0,
+      "note": "China's largest search engine."
     }
   ],
   "dropped_out": []
