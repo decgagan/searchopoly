@@ -2,34 +2,46 @@
   import { groupOf } from "./groups.js";
   import { initials } from "./layout.js";
 
-  let { site = null, position, slot } = $props();
+  let { site = null, position, slot, selected = false, onOpen } = $props();
   const group = $derived(site ? groupOf(site.group) : null);
 </script>
 
-<div
-  class="square {position.side}"
-  class:placeholder={!site}
-  style:grid-row={position.row}
-  style:grid-column={position.col}
-  style:--set={group?.colour ?? "#c9c2b3"}
-  title={site ? `#${site.rank} ${site.brand} (${site.domain}) · ${group.label}` : "Coming soon"}
->
-  <div class="band">
-    <span class="rank">{site ? site.rank : slot + 1}</span>
-  </div>
-  <div class="body">
-    {#if site}
+{#if site}
+  <button
+    type="button"
+    class="square {position.side}"
+    class:selected
+    style:grid-row={position.row}
+    style:grid-column={position.col}
+    style:--set={group.colour}
+    aria-label={`Number ${site.rank}: ${site.brand}, ${group.label}. Open site card`}
+    aria-haspopup="dialog"
+    onclick={(e) => onOpen(site, e.currentTarget)}
+  >
+    <span class="band"><span class="rank">{site.rank}</span></span>
+    <span class="body">
       <span class="tile" aria-hidden="true">{initials(site.brand)}</span>
       <span class="text">
         <span class="brand">{site.brand}</span>
         <span class="domain">{site.domain}</span>
       </span>
-    {:else}
-      <span class="tile ghost" aria-hidden="true">?</span>
+    </span>
+  </button>
+{:else}
+  <div
+    class="square {position.side} placeholder"
+    style:grid-row={position.row}
+    style:grid-column={position.col}
+    style:--set="#c9c2b3"
+    aria-hidden="true"
+  >
+    <span class="band"><span class="rank">{slot + 1}</span></span>
+    <span class="body">
+      <span class="tile ghost">?</span>
       <span class="text"><span class="brand muted">Coming soon</span></span>
-    {/if}
+    </span>
   </div>
-</div>
+{/if}
 
 <style>
   .square {
@@ -39,6 +51,29 @@
     overflow: hidden;
     min-width: 0;
     min-height: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  }
+  button.square { cursor: pointer; }
+  button.square:hover {
+    background: color-mix(in srgb, var(--set) 7%, #fff);
+    z-index: 1;
+    box-shadow: 0 0 0 2px var(--set);
+  }
+  button.square:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: -3px;
+    z-index: 2;
+  }
+  button.square.selected {
+    background: color-mix(in srgb, var(--set) 12%, #fff);
+    box-shadow: 0 0 0 3px var(--set);
+    z-index: 2;
   }
   .square.bottom { flex-direction: column; }
   .square.top { flex-direction: column-reverse; }
@@ -94,7 +129,6 @@
     height: calc(var(--u) * 0.44);
     font-size: calc(var(--u) * 0.24);
   }
-  .bottom .brand, .top .brand { font-size: calc(var(--u) * 0.13); }
   .tile.ghost { color: #b3ab9a; background: #ece6d9; box-shadow: none; }
 
   .text { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
@@ -106,6 +140,7 @@
     overflow-wrap: anywhere;
     hyphens: auto;
   }
+  .bottom .brand, .top .brand { font-size: calc(var(--u) * 0.13); }
   .brand.muted { color: #a39b8a; font-weight: 500; }
   .domain {
     font-size: calc(var(--u) * 0.088);
