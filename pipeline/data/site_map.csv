@@ -1,0 +1,277 @@
+# Hand-curated map of user-facing websites. One row per domain; rows sharing a brand are merged.
+# Rule of thumb: include a domain if people mainly reach it on purpose (typing it, an app,
+# a link). Background traffic (CDNs, APIs, ads, telemetry) belongs in exclude.csv instead.
+domain,brand,canonical_domain,category
+# --- Search & portals ---
+google.com,Google,google.com,search
+google.co.uk,Google,google.com,search
+google.de,Google,google.com,search
+google.fr,Google,google.com,search
+google.co.in,Google,google.com,search
+google.co.jp,Google,google.com,search
+google.com.br,Google,google.com,search
+google.ca,Google,google.com,search
+google.es,Google,google.com,search
+google.it,Google,google.com,search
+google.cn,Google,google.com,search
+gmail.com,Google,google.com,search
+bing.com,Bing,bing.com,search
+yahoo.com,Yahoo,yahoo.com,search
+yahoo.co.uk,Yahoo,yahoo.com,search
+yahoo.co.jp,Yahoo! JAPAN,yahoo.co.jp,search
+aol.com,AOL,aol.com,search
+baidu.com,Baidu,baidu.com,search
+yandex.ru,Yandex,yandex.ru,search
+yandex.com,Yandex,yandex.ru,search
+duckduckgo.com,DuckDuckGo,duckduckgo.com,search
+naver.com,Naver,naver.com,search
+ecosia.org,Ecosia,ecosia.org,search
+mail.ru,Mail.ru,mail.ru,search
+# --- Social ---
+facebook.com,Facebook,facebook.com,social
+instagram.com,Instagram,instagram.com,social
+twitter.com,X (Twitter),x.com,social
+x.com,X (Twitter),x.com,social
+linkedin.com,LinkedIn,linkedin.com,social
+tiktok.com,TikTok,tiktok.com,social
+pinterest.com,Pinterest,pinterest.com,social
+pinterest.co.uk,Pinterest,pinterest.com,social
+reddit.com,Reddit,reddit.com,social
+snapchat.com,Snapchat,snapchat.com,social
+tumblr.com,Tumblr,tumblr.com,social
+vk.com,VK,vk.com,social
+vk.ru,VK,vk.com,social
+ok.ru,OK,ok.ru,social
+weibo.com,Weibo,weibo.com,social
+bsky.app,Bluesky,bsky.app,social
+threads.net,Threads,threads.com,social
+threads.com,Threads,threads.com,social
+quora.com,Quora,quora.com,social
+medium.com,Medium,medium.com,social
+substack.com,Substack,substack.com,social
+blogspot.com,Blogger,blogger.com,social
+blogger.com,Blogger,blogger.com,social
+wordpress.com,WordPress.com,wordpress.com,social
+flickr.com,Flickr,flickr.com,social
+linktr.ee,Linktree,linktr.ee,social
+goodreads.com,Goodreads,goodreads.com,social
+unsplash.com,Unsplash,unsplash.com,social
+mumsnet.com,Mumsnet,mumsnet.com,social
+# --- Messaging ---
+whatsapp.com,WhatsApp,whatsapp.com,messaging
+wa.me,WhatsApp,whatsapp.com,messaging
+t.me,Telegram,telegram.org,messaging
+telegram.org,Telegram,telegram.org,messaging
+telegram.me,Telegram,telegram.org,messaging
+discord.com,Discord,discord.com,messaging
+discord.gg,Discord,discord.com,messaging
+qq.com,QQ,qq.com,messaging
+line.me,LINE,line.me,messaging
+messenger.com,Messenger,messenger.com,messaging
+# --- Video & streaming ---
+youtube.com,YouTube,youtube.com,video
+youtu.be,YouTube,youtube.com,video
+netflix.com,Netflix,netflix.com,video
+twitch.tv,Twitch,twitch.tv,video
+vimeo.com,Vimeo,vimeo.com,video
+primevideo.com,Prime Video,primevideo.com,video
+disneyplus.com,Disney+,disneyplus.com,video
+bilibili.com,Bilibili,bilibili.com,video
+dailymotion.com,Dailymotion,dailymotion.com,video
+imdb.com,IMDb,imdb.com,video
+itv.com,ITVX,itv.com,video
+channel4.com,Channel 4,channel4.com,video
+nowtv.com,NOW,nowtv.com,video
+max.com,Max,max.com,video
+crunchyroll.com,Crunchyroll,crunchyroll.com,video
+# --- Music & audio ---
+spotify.com,Spotify,spotify.com,music
+soundcloud.com,SoundCloud,soundcloud.com,music
+deezer.com,Deezer,deezer.com,music
+# --- Gaming ---
+roblox.com,Roblox,roblox.com,gaming
+epicgames.com,Epic Games,epicgames.com,gaming
+steampowered.com,Steam,steampowered.com,gaming
+steamcommunity.com,Steam,steampowered.com,gaming
+ea.com,EA,ea.com,gaming
+playstation.com,PlayStation,playstation.com,gaming
+xbox.com,Xbox,xbox.com,gaming
+minecraft.net,Minecraft,minecraft.net,gaming
+chess.com,Chess.com,chess.com,gaming
+# --- Shopping ---
+amazon.com,Amazon,amazon.com,shopping
+amazon.co.uk,Amazon,amazon.com,shopping
+amazon.de,Amazon,amazon.com,shopping
+amazon.co.jp,Amazon,amazon.com,shopping
+amazon.fr,Amazon,amazon.com,shopping
+amazon.in,Amazon,amazon.com,shopping
+amazon.it,Amazon,amazon.com,shopping
+amazon.es,Amazon,amazon.com,shopping
+amazon.ca,Amazon,amazon.com,shopping
+amazon.com.br,Amazon,amazon.com,shopping
+ebay.com,eBay,ebay.com,shopping
+ebay.co.uk,eBay,ebay.com,shopping
+ebay.de,eBay,ebay.com,shopping
+etsy.com,Etsy,etsy.com,shopping
+temu.com,Temu,temu.com,shopping
+shein.com,Shein,shein.com,shopping
+aliexpress.com,AliExpress,aliexpress.com,shopping
+alibaba.com,Alibaba,alibaba.com,shopping
+taobao.com,Taobao,taobao.com,shopping
+walmart.com,Walmart,walmart.com,shopping
+ozon.ru,Ozon,ozon.ru,shopping
+drom.ru,Drom,drom.ru,shopping
+mobile.de,mobile.de,mobile.de,shopping
+trustpilot.com,Trustpilot,trustpilot.com,shopping
+ikea.com,IKEA,ikea.com,shopping
+tesco.com,Tesco,tesco.com,shopping
+sainsburys.co.uk,Sainsbury's,sainsburys.co.uk,shopping
+asda.com,Asda,asda.com,shopping
+ocado.com,Ocado,ocado.com,shopping
+argos.co.uk,Argos,argos.co.uk,shopping
+johnlewis.com,John Lewis,johnlewis.com,shopping
+next.co.uk,Next,next.co.uk,shopping
+asos.com,ASOS,asos.com,shopping
+boots.com,Boots,boots.com,shopping
+currys.co.uk,Currys,currys.co.uk,shopping
+vinted.co.uk,Vinted,vinted.com,shopping
+vinted.com,Vinted,vinted.com,shopping
+gumtree.com,Gumtree,gumtree.com,shopping
+autotrader.co.uk,Auto Trader,autotrader.co.uk,shopping
+rightmove.co.uk,Rightmove,rightmove.co.uk,shopping
+zoopla.co.uk,Zoopla,zoopla.co.uk,shopping
+deliveroo.co.uk,Deliveroo,deliveroo.co.uk,shopping
+just-eat.co.uk,Just Eat,just-eat.co.uk,shopping
+ubereats.com,Uber Eats,ubereats.com,shopping
+# --- News, sport, weather ---
+bbc.co.uk,BBC,bbc.co.uk,news
+bbc.com,BBC,bbc.co.uk,news
+msn.com,MSN,msn.com,news
+dzen.ru,Dzen,dzen.ru,news
+nytimes.com,The New York Times,nytimes.com,news
+theguardian.com,The Guardian,theguardian.com,news
+cnn.com,CNN,cnn.com,news
+forbes.com,Forbes,forbes.com,news
+reuters.com,Reuters,reuters.com,news
+bloomberg.com,Bloomberg,bloomberg.com,news
+wsj.com,The Wall Street Journal,wsj.com,news
+washingtonpost.com,The Washington Post,washingtonpost.com,news
+businessinsider.com,Business Insider,businessinsider.com,news
+cnbc.com,CNBC,cnbc.com,news
+npr.org,NPR,npr.org,news
+t-online.de,t-online,t-online.de,news
+globo.com,Globo,globo.com,news
+163.com,NetEase,163.com,news
+netease.com,NetEase,163.com,news
+sina.com.cn,Sina,sina.com.cn,news
+sohu.com,Sohu,sohu.com,news
+dailymail.co.uk,Daily Mail,dailymail.co.uk,news
+independent.co.uk,The Independent,independent.co.uk,news
+telegraph.co.uk,The Telegraph,telegraph.co.uk,news
+thesun.co.uk,The Sun,thesun.co.uk,news
+mirror.co.uk,The Mirror,mirror.co.uk,news
+metro.co.uk,Metro,metro.co.uk,news
+sky.com,Sky,sky.com,news
+ft.com,Financial Times,ft.com,news
+economist.com,The Economist,economist.com,news
+espn.com,ESPN,espn.com,sport
+skysports.com,Sky Sports,skysports.com,sport
+weather.com,The Weather Channel,weather.com,weather
+metoffice.gov.uk,Met Office,metoffice.gov.uk,weather
+# --- Reference, education, government ---
+wikipedia.org,Wikipedia,wikipedia.org,reference
+archive.org,Internet Archive,archive.org,reference
+fandom.com,Fandom,fandom.com,reference
+statista.com,Statista,statista.com,reference
+issuu.com,Issuu,issuu.com,reference
+pixabay.com,Pixabay,pixabay.com,reference
+nih.gov,NIH (incl. PubMed),nih.gov,education
+sciencedirect.com,ScienceDirect,sciencedirect.com,education
+researchgate.net,ResearchGate,researchgate.net,education
+springer.com,Springer,springer.com,education
+nature.com,Nature,nature.com,education
+wiley.com,Wiley,wiley.com,education
+arxiv.org,arXiv,arxiv.org,education
+mit.edu,MIT,mit.edu,education
+harvard.edu,Harvard,harvard.edu,education
+stanford.edu,Stanford,stanford.edu,education
+duolingo.com,Duolingo,duolingo.com,education
+gov.uk,GOV.UK,gov.uk,government
+nhs.uk,NHS,nhs.uk,government
+europa.eu,European Union,europa.eu,government
+who.int,World Health Organization,who.int,government
+un.org,United Nations,un.org,government
+cdc.gov,CDC,cdc.gov,government
+nasa.gov,NASA,nasa.gov,government
+# --- Tech ---
+apple.com,Apple,apple.com,tech
+icloud.com,Apple,apple.com,tech
+github.com,GitHub,github.com,tech
+gitlab.com,GitLab,gitlab.com,tech
+samsung.com,Samsung,samsung.com,tech
+xiaomi.com,Xiaomi,mi.com,tech
+mi.com,Xiaomi,mi.com,tech
+huawei.com,Huawei,huawei.com,tech
+nvidia.com,NVIDIA,nvidia.com,tech
+intel.com,Intel,intel.com,tech
+hp.com,HP,hp.com,tech
+dell.com,Dell,dell.com,tech
+oracle.com,Oracle,oracle.com,tech
+ibm.com,IBM,ibm.com,tech
+shopify.com,Shopify,shopify.com,tech
+speedtest.net,Speedtest,speedtest.net,tech
+stackoverflow.com,Stack Overflow,stackoverflow.com,tech
+bt.com,BT,bt.com,tech
+# --- AI assistants ---
+chatgpt.com,ChatGPT,chatgpt.com,ai
+openai.com,ChatGPT,chatgpt.com,ai
+claude.ai,Claude,claude.ai,ai
+perplexity.ai,Perplexity,perplexity.ai,ai
+deepseek.com,DeepSeek,deepseek.com,ai
+character.ai,Character.AI,character.ai,ai
+# --- Work & productivity ---
+microsoft.com,Microsoft,microsoft.com,productivity
+office.com,Microsoft,microsoft.com,productivity
+live.com,Microsoft,microsoft.com,productivity
+outlook.com,Microsoft,microsoft.com,productivity
+office365.com,Microsoft,microsoft.com,productivity
+microsoft365.com,Microsoft,microsoft.com,productivity
+cloud.microsoft,Microsoft,microsoft.com,productivity
+sharepoint.com,Microsoft,microsoft.com,productivity
+adobe.com,Adobe,adobe.com,productivity
+zoom.us,Zoom,zoom.us,productivity
+webex.com,Webex,webex.com,productivity
+dropbox.com,Dropbox,dropbox.com,productivity
+canva.com,Canva,canva.com,productivity
+slack.com,Slack,slack.com,productivity
+salesforce.com,Salesforce,salesforce.com,productivity
+calendly.com,Calendly,calendly.com,productivity
+notion.so,Notion,notion.so,productivity
+indeed.com,Indeed,indeed.com,productivity
+indeed.co.uk,Indeed,indeed.com,productivity
+# --- Finance & banking ---
+paypal.com,PayPal,paypal.com,finance
+intuit.com,Intuit,intuit.com,finance
+tradingview.com,TradingView,tradingview.com,finance
+hsbc.co.uk,HSBC,hsbc.co.uk,finance
+barclays.co.uk,Barclays,barclays.co.uk,finance
+lloydsbank.com,Lloyds Bank,lloydsbank.com,finance
+natwest.com,NatWest,natwest.com,finance
+santander.co.uk,Santander,santander.co.uk,finance
+nationwide.co.uk,Nationwide,nationwide.co.uk,finance
+monzo.com,Monzo,monzo.com,finance
+revolut.com,Revolut,revolut.com,finance
+moneysavingexpert.com,MoneySavingExpert,moneysavingexpert.com,finance
+# --- Travel & transport ---
+booking.com,Booking.com,booking.com,travel
+airbnb.com,Airbnb,airbnb.com,travel
+airbnb.co.uk,Airbnb,airbnb.com,travel
+tripadvisor.com,Tripadvisor,tripadvisor.com,travel
+tripadvisor.co.uk,Tripadvisor,tripadvisor.com,travel
+trainline.com,Trainline,trainline.com,travel
+nationalrail.co.uk,National Rail,nationalrail.co.uk,travel
+tfl.gov.uk,TfL,tfl.gov.uk,travel
+uber.com,Uber,uber.com,travel
+ryanair.com,Ryanair,ryanair.com,travel
+easyjet.com,easyJet,easyjet.com,travel
+ba.com,British Airways,ba.com,travel

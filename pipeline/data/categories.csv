@@ -1,0 +1,20 @@
+# Categories tag each brand. Groups are the board's colour sets (8, one per side-segment).
+category,group,label
+search,search_portals,Search & portals
+social,social_messaging,Social
+messaging,social_messaging,Messaging
+video,entertainment,Video & streaming
+music,entertainment,Music & audio
+gaming,entertainment,Gaming
+shopping,shopping,Shopping
+news,news_sport,News
+sport,news_sport,Sport
+weather,news_sport,Weather
+reference,reference_learning,Reference
+education,reference_learning,Education & research
+government,reference_learning,Government & public services
+tech,tech_ai,Tech
+ai,tech_ai,AI assistants
+productivity,work_money,Work & productivity
+finance,work_money,Finance & banking
+travel,work_money,Travel & transport

@@ -1,0 +1,281 @@
+# Domains that rank highly but aren't sites people visit on purpose, plus excluded content.
+# Anything matching the name patterns in pipeline/clean.py (cdn, dns, akamai, ...) is
+# dropped automatically and doesn't need listing here.
+domain,reason
+# --- Adult content: never shown on a board ---
+pornhub.com,adult
+xvideos.com,adult
+xnxx.com,adult
+xhamster.com,adult
+chaturbate.com,adult
+highwebmedia.com,adult
+stripchat.com,adult
+onlyfans.com,adult
+spankbang.com,adult
+phncdn.com,adult
+xvideos-cdn.com,adult
+redtube.com,adult
+youporn.com,adult
+eporner.com,adult
+bongacams.com,adult
+livejasmin.com,adult
+# --- Network, hosting and DNS infrastructure ---
+cloudflare.com,infrastructure (DNS/CDN provider; 1.1.1.1 and edge services)
+cloudflare.net,infrastructure
+one.one,infrastructure (1.1.1.1 resolver)
+domaincontrol.com,infrastructure (GoDaddy nameservers)
+gandi.net,infrastructure (registrar/nameservers)
+registrar-servers.com,infrastructure (Namecheap nameservers)
+name-services.com,infrastructure
+worldnic.com,infrastructure
+markmonitor.com,infrastructure (brand-protection registrar)
+nic.ru,infrastructure (registrar)
+reg.ru,infrastructure (registrar/hosting)
+ripn.net,infrastructure
+googledomains.com,infrastructure
+digicert.com,infrastructure (TLS certificates)
+lencr.org,infrastructure (Let's Encrypt certificates)
+pki.goog,infrastructure (certificates)
+amazontrust.com,infrastructure (certificates)
+ntp.org,infrastructure (time servers)
+nist.gov,infrastructure (time servers)
+3gppnetwork.org,infrastructure (mobile network)
+ipify.org,infrastructure (IP lookup API)
+ip-api.com,infrastructure (IP lookup API)
+example.com,infrastructure (reserved example domain)
+f5.com,infrastructure
+nginx.org,infrastructure (software distribution)
+nginx.com,infrastructure
+apache.org,infrastructure (software distribution)
+ubuntu.com,infrastructure (OS updates)
+debian.org,infrastructure (OS updates)
+gnu.org,infrastructure (software distribution)
+launchpad.net,infrastructure (software distribution)
+sourceforge.net,infrastructure (software distribution)
+php.net,infrastructure (software distribution)
+w3.org,infrastructure (schema references)
+creativecommons.org,infrastructure (licence links)
+ietf.org,infrastructure (standards references)
+doi.org,infrastructure (citation redirects)
+wordpress.org,infrastructure (WordPress update and plugin API traffic)
+wp.com,infrastructure (WordPress.com CDN)
+github.io,hosting (user-hosted pages)
+blogspot.co.uk,hosting
+wixsite.com,hosting
+weebly.com,hosting
+myshopify.com,hosting
+shopifysvc.com,infrastructure
+azurewebsites.net,hosting
+cpanel.net,hosting
+plesk.com,hosting
+hosting24.com,hosting
+hostgator.com,hosting
+bluehost.com,hosting
+godaddy.com,hosting (registrar; rank driven by DNS and parked domains)
+namecheap.com,hosting (registrar)
+name.com,hosting (registrar)
+afternic.com,hosting (domain marketplace)
+dropcatch.com,hosting (domain marketplace)
+expireddomains.com,hosting (domain marketplace)
+spaceweb.pro,hosting
+timeweb.ru,hosting
+selectel.ru,hosting
+netangels.ru,hosting
+aliyun.com,infrastructure (cloud)
+aliyuncs.com,infrastructure (cloud)
+tencent-cloud.net,infrastructure (cloud)
+myqcloud.com,infrastructure (cloud)
+hichina.com,infrastructure (cloud)
+a2z.com,infrastructure (Amazon internal)
+amazon.dev,infrastructure (Amazon internal)
+aws.dev,infrastructure (Amazon internal)
+awswaf.com,infrastructure (Amazon WAF)
+media-amazon.com,infrastructure (Amazon images)
+amazonvideo.com,infrastructure (Prime Video app/API traffic)
+vercel-dns-016.com,infrastructure
+publicnode.com,infrastructure (blockchain RPC)
+base.org,infrastructure (blockchain network)
+quickconnect.to,infrastructure (NAS remote access)
+myfritz.net,infrastructure (router remote access)
+skyhigh.cloud,infrastructure (security proxy)
+jsdelivr.net,infrastructure (CDN)
+h264.io,infrastructure
+gcdn.co,infrastructure
+skybridge.click,infrastructure
+okta.com,infrastructure (enterprise login)
+microsoftonline.com,infrastructure (Microsoft sign-in)
+office.net,infrastructure (Office service traffic)
+windows.net,infrastructure
+windows.com,infrastructure (Windows services)
+static.microsoft,infrastructure
+sfx.ms,infrastructure
+skype.com,infrastructure (Skype closed in 2025; residual app traffic)
+live-video.net,infrastructure (Twitch video)
+ttvnw.net,infrastructure (Twitch video)
+# --- Device, OS and app background traffic ---
+android.com,background (Android OS services)
+aaplimg.com,background (Apple)
+mzstatic.com,background (Apple media)
+apple-dns.net,background (Apple)
+ezviz7.com,background (security cameras)
+ezvizlife.com,background (security cameras)
+hicloudcam.com,background (security cameras)
+eye4.cn,background (security cameras)
+whatsapp.net,background (WhatsApp app traffic)
+facebook.net,background (Facebook SDK)
+fbcdn.net,background (Facebook media)
+cdninstagram.com,background (Instagram media)
+licdn.com,background (LinkedIn media)
+ytimg.com,background (YouTube images)
+youtube-nocookie.com,background (embedded YouTube)
+ggpht.com,background (Google images)
+nflxso.net,background (Netflix)
+nflximg.com,background (Netflix)
+nflxvideo.net,background (Netflix)
+netflix.net,background (Netflix)
+scdn.co,background (Spotify)
+rbxcdn.com,background (Roblox)
+tiktokv.com,background (TikTok app)
+tiktokv.us,background (TikTok app)
+tiktokv.eu,background (TikTok app)
+byteoversea.net,background (TikTok/ByteDance)
+ibyteimg.com,background (TikTok/ByteDance)
+capcutapi.com,background (CapCut app)
+pangle.io,ads (ByteDance)
+kwai-pro.com,background (Kuaishou app)
+kwaipros.com,background (Kuaishou app)
+kwai.net,background (Kuaishou app)
+userapi.com,background (VK media)
+vkuser.net,background (VK media)
+vkuserphoto.ru,background (VK media)
+yandex.net,background (Yandex services)
+yandexcloud.net,background (Yandex cloud)
+shifen.com,background (Baidu)
+tbcache.com,background (Alibaba)
+alibabadns.com,background (Alibaba)
+gvt1.com,background (Chrome/Android updates)
+gvt2.com,background (Chrome/Android updates)
+goo.gl,shortener
+g.page,shortener
+forms.gle,shortener
+bit.ly,shortener
+t.co,shortener
+tinyurl.com,shortener
+onelink.me,shortener (app links)
+gwfb.net,background
+endpoints.news,background
+pv-cdn.net,background
+appsflyersdk.com,ads/attribution SDK
+appsflyer.com,ads/attribution SDK
+app-analytics-services.com,analytics
+sentry.io,analytics (error reporting)
+statsigapi.net,analytics
+amplitude.com,analytics
+nr-data.net,analytics (New Relic)
+datadoghq.com,analytics
+browser-intake-datadoghq.com,analytics
+dynatrace.com,analytics
+launchdarkly.com,analytics
+clarity.ms,analytics (Microsoft Clarity)
+scorecardresearch.com,analytics
+demdex.net,analytics (Adobe)
+omtrdc.net,analytics (Adobe)
+adobe.io,background (Adobe services)
+adobe.net,background (Adobe services)
+macromedia.com,background (Adobe Flash legacy)
+criteo.com,ads
+2mdn.net,ads
+applovin.com,ads
+adtrafficquality.google,ads
+rubiconproject.com,ads
+vungle.com,ads
+adsafeprotected.com,ads
+mtgglobals.com,ads
+taboola.com,ads
+adnxs.com,ads
+pubmatic.com,ads
+inmobi.com,ads
+casalemedia.com,ads
+smartadserver.com,ads
+doubleverify.com,ads
+media.net,ads
+online-metrix.net,ads/fraud detection
+inner-active.mobi,ads
+forter.com,background (fraud detection)
+hcaptcha.com,background (captcha widget)
+gravatar.com,background (embedded avatars)
+addtoany.com,background (share buttons)
+list-manage.com,background (Mailchimp)
+hubspot.com,background (marketing tracking)
+zendesk.com,background (support widgets)
+cookiedatabase.org,background (cookie banners)
+ampproject.org,background (AMP)
+stripe.com,background (payments API)
+unity3d.com,background (game engine services)
+playstation.net,background (console services)
+steamserver.net,background (game servers)
+gamepass.com,background (Xbox services)
+supercell.com,background (game servers)
+roku.com,background (TV devices)
+xcal.tv,background (Comcast TV devices)
+firetvcaptiveportal.com,background (Fire TV)
+samsungcloud.com,background (Samsung devices)
+samsungqbe.com,background (Samsung devices)
+samsungcloudsolution.com,background (Samsung devices)
+miui.com,background (Xiaomi devices)
+heytapmobile.com,background (Oppo devices)
+heytapdl.com,background (Oppo devices)
+allawnos.com,background (Oppo devices)
+shalltry.com,background (Transsion devices)
+tp-link.com,background (routers)
+ui.com,background (network devices)
+meraki.com,background (network devices)
+arubanetworks.com,background (network devices)
+cisco.com,background (enterprise networking)
+dellemc.com,background (enterprise)
+paloaltonetworks.com,background (security appliances)
+checkpoint.com,background (security appliances)
+kaspersky.com,background (antivirus updates)
+kaspersky-labs.com,background (antivirus updates)
+avast.com,background (antivirus updates)
+mcafee.com,background (antivirus updates)
+opera.com,background (browser updates)
+mozilla.org,background (Firefox services)
+mozilla.com,background (Firefox services)
+brave.com,background (browser updates)
+autodesk.com,background (software licensing)
+iiko.it,background (restaurant point-of-sale)
+miit.gov.cn,background (Chinese site-registration badges)
+beian.gov.cn,background (Chinese site-registration badges)
+crpt.ru,background (Russian product-marking system)
+trueconf.net,background
+tagomi.com,background
+triplinkintl.com,background
+yuga.com,background
+imcmdb.net,background
+wsdvs.com,background
+whecloud.com,background
+dotaplabs.net,background
+prodregistryv2.org,background
+paytmfirstgames.com,background
+ailawandorder.com,background
+shiabank.com,background
+lsrelayaccess.com,background
+telecid.ru,background
+go.com,background (Disney redirect domain)
+googleblog.com,background (feeds)
+# --- Telecoms and ISPs (customer portals, not destinations) ---
+mts.ru,telecom
+spectrum.com,telecom
+comcast.net,telecom
+telekom.net,telecom
+twc.com,telecom
+virginm.net,telecom
+chinamobile.com,telecom
+mangosip.ru,telecom
+wikimedia.org,background (Wikipedia images and media)
+doctolib.net,background (Doctolib app traffic)
+aliyuncsslbintl.com,infrastructure (cloud)
+gandi-ns.fr,infrastructure (nameservers)
+byteglb.com,background (ByteDance)
+nease.net,background (NetEase)
