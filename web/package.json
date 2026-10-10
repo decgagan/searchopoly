@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "og": "node scripts/og-image.mjs",
     "icons": "node scripts/icons.mjs",
-    "test": "node --test test/"
+    "test": "node --test test/*.test.mjs"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
