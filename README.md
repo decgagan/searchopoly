@@ -11,14 +11,17 @@ sets, and a month slider shows who climbed and who fell. A "How it's made" page
 It's a data science portfolio project: the interesting part is the pipeline that turns
 messy, infrastructure-heavy domain rankings into an honest, explainable list of sites.
 
-> **Status:** all five milestones are built in code. The site goes live at
-> [searchopoly.co.uk](https://searchopoly.co.uk) once the steps in [LAUNCH.md](LAUNCH.md) are done.
+> **Status:** live at [searchopoly.co.uk](https://searchopoly.co.uk), updated automatically every month.
+> Latest addition: category boards (filter by industry).
 
 ![The October 2026 World board](docs/board.png)
 
 <p>
   <img src="docs/slider.png" alt="Month slider with movement arrows" width="62%">
   <img src="docs/mobile.png" alt="Mobile layout" width="20%">
+</p>
+<p>
+  <img src="docs/filter.png" alt="The board filtered to Shopping" width="62%">
 </p>
 <p>
   <img src="docs/card.png" alt="A site card open on the board" width="62%">
@@ -60,7 +63,7 @@ The **UK board is pending** until a Cloudflare Radar API token is added (see bel
 
 ```
 Tranco top 5,000 ──┐                       ┌─> data/snapshots/YYYY-MM/world.json
-                   ├─> classify ─> merge ──┤
+                   ├─> classify ─> merge ──┤─> data/snapshots/YYYY-MM/world_categories.json
 Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk.json
                         exclude /  + top 28 ├─> ..._ranked_top500.csv  (transparency)
                         patterns)           └─> data/latest.json       (index for the site)
@@ -82,7 +85,7 @@ Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk
    `office.com` + `live.com` + `outlook.com` → Microsoft.
 4. **Check coverage.** If any unreviewed domain outranks the 28th site, the run warns,
    because the board might be missing a real site. Every month from January to October 2026 is
-   fully reviewed to raw rank 500.
+   fully reviewed to raw rank 1,000 (the depth the category boards need, below).
 5. **Write.** Small JSON files for the front end. Each site has a stable `id` (brand slug) and an
    optional `note`, plus `previous_rank` and `movement` once there's an earlier month to compare against.
 
@@ -101,6 +104,41 @@ Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk
 [`pipeline/data/categories.csv`](pipeline/data/categories.csv):
 Search & portals · Social & messaging · Entertainment · Shopping · News & sport ·
 Reference & learning · Tech & AI · Work & money.
+
+### Category boards (filter by industry)
+
+Each colour set also gets its own board: the top 28 brands within that set, ranked 1–28 inside
+it. They come from the same classified Tranco list as the main board, with the same brand
+merging, but reach down to raw rank **1,000** (`CATEGORY_DEPTH` in `pipeline/config.py`).
+To go that deep honestly, every domain in the top 1,000 of all ten monthly lists was reviewed:
+about 540 more domains, 223 mapped to sites and 317 excluded with a reason.
+
+- **Movement** compares each set with the same set last month, so `▲3` on the Shopping
+  board means three places up *within Shopping*. Cards still show the raw Tranco rank.
+- **Vacant lots.** If a set has fewer than 28 sites in the top 1,000, the empty squares are
+  shown as vacant lots. They aren't padded with deeper or unreviewed domains. The coverage
+  check is stricter for these boards: a short board claims nothing else in the set is in the
+  top 1,000, so the run warns if *any* unreviewed domain sits inside that depth.
+- **World only.** Radar's UK ranking stops at 100 domains, too shallow for category boards.
+- **One file per month:** `world_categories.json` (about 57 KB, 9 KB gzipped) holds all eight
+  boards. Brand details are stored once and the boards list only ids and ranks, one object
+  per line so diffs stay readable. The site loads these files only when a filter is first used.
+
+| Colour set | URL | Sites (Jan–Oct 2026) | Oct 2026 | Oct top 3 |
+|---|---|---:|---:|---|
+| [Search & portals](https://searchopoly.co.uk/#world/search) | `#world/search` | 12–13 | 12 | Google, Mail.ru, Bing |
+| [Social & messaging](https://searchopoly.co.uk/#world/social) | `#world/social` | 28 | 28 | Facebook, Instagram, X (Twitter) |
+| [Entertainment](https://searchopoly.co.uk/#world/entertainment) | `#world/entertainment` | 28 | 28 | YouTube, Netflix, Roblox |
+| [Shopping](https://searchopoly.co.uk/#world/shopping) | `#world/shopping` | 28 | 28 | Amazon, eBay, Ozon |
+| [News & sport](https://searchopoly.co.uk/#world/news) | `#world/news` | 28 | 28 | Dzen, MSN, The New York Times |
+| [Reference & learning](https://searchopoly.co.uk/#world/reference) | `#world/reference` | 28 | 28 | Wikipedia, European Union, NIH (incl. PubMed) |
+| [Tech & AI](https://searchopoly.co.uk/#world/tech) | `#world/tech` | 23–26 | 26 | Apple, GitHub, ChatGPT |
+| [Work & money](https://searchopoly.co.uk/#world/work) | `#world/work` | 28 | 28 | Microsoft, Adobe, Zoom |
+
+Search & portals and Tech & AI are the thin sets. There are only a dozen or so search engines
+and portals anywhere near the top. In Tech & AI, much of what ranks highly in the raw lists is
+device and developer infrastructure, which is excluded, so fewer consumer-facing tech sites
+remain inside the top 1,000.
 
 ## Running it
 
@@ -166,6 +204,8 @@ The URL hash holds the state, so any view can be shared:
 | `#uk` | UK board ("coming soon" until `uk.json` exists) |
 | `#world/2026-06` | World board for June 2026 |
 | `#world/google`, `#world/2026-06/chatgpt` | A board with a site card open (IDs are brand slugs, e.g. `x-twitter`) |
+| `#world/shopping` | World board filtered to one colour set (`search`, `social`, `entertainment`, `shopping`, `news`, `reference`, `tech`, `work`) |
+| `#world/shopping/2026-08/amazon` | A category board for a month, with a card open |
 | `#about` | "How it's made": method, sources, curation, biases, licences, tech stack |
 
 The UK board switches on automatically as soon as the pipeline writes `uk.json` and marks it
@@ -253,6 +293,7 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 - [x] **3. Interaction.** Site cards (rank, movement, category, raw rank, merged domains, notes on known biases), keyboard support, shareable URL hashes, UK/World toggle with URL state, mobile layout.
 - [x] **4. Movement.** Month slider with play button; squares and list rows glide to their new positions (FLIP animation, off under reduced motion); ▲/▼/NEW badges, biggest climber and faller, a rank-over-time sparkline on each card; ten months of real backfilled data; monthly and CI GitHub Actions workflows.
 - [x] **5. Launch (code).** "How it's made" method page with full credits; Open Graph/Twitter tags and a share image drawn from the real board each month; favicon and app icons; Share button on site cards (Web Share API, copy-link fallback); robots.txt, sitemap, 404 page, security headers. Lighthouse: 100/100/100/100 on desktop, 99/100/100/100 on mobile.
+- [x] **6. Category boards.** Filter by industry: a top-28 board for each colour set, reviewed to raw rank 1,000, with vacant lots where a set runs out; slider, movement, cards, URLs and mobile layout all work per set.
 - [ ] **Go live.** Cloudflare Pages, custom domain, Radar token, public repo: see [LAUNCH.md](LAUNCH.md).
 
 ## Front-end design notes
@@ -278,6 +319,12 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
   pulsing outline. With `prefers-reduced-motion`, everything jumps straight to the new state.
 - **Sparkline:** each card plots the site's rank by month (D3 scales and line generator), with
   gaps for months it was off the board.
+- **Industry filter:** the colour-set legend in the centre panel doubles as the filter: nine
+  toggle buttons (`aria-pressed`): "All sites" and the eight sets. Changing set keeps the month,
+  and sites on both boards glide to their new squares (instant under reduced motion). The
+  category data loads on first hover or focus of the filter, so the switch itself is instant.
+  The site loads each category board into the same shape as a normal board, so the board,
+  mobile list, cards, badges, movers and slider needed no special cases.
 - **Sharing:** the card's Share button opens the device share sheet (Web Share API) with the
   card's URL, e.g. `searchopoly.co.uk/#world/github`. Where that isn't available it copies the
   link and says "Link copied".
