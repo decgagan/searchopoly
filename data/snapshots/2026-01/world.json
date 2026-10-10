@@ -2,7 +2,7 @@
   "board": "world",
   "label": "World",
   "month": "2026-01",
-  "generated_at": "2026-10-08T18:33:13Z",
+  "generated_at": "2026-10-10T20:15:11Z",
   "metric": "Relative popularity (most visited), not search volume",
   "source": {
     "name": "Tranco",
@@ -22,7 +22,7 @@
   },
   "coverage": {
     "last_board_source_rank": 92,
-    "reviewed_through_rank": 500,
+    "reviewed_through_rank": 1005,
     "unreviewed_above_cutoff": [],
     "ok": true
   },
@@ -42,6 +42,7 @@
         "gmail.com",
         "google.com.br",
         "google.de",
+        "google.com.hk",
         "google.co.uk",
         "google.cn",
         "google.co.jp",
@@ -88,7 +89,8 @@
       "source": "tranco",
       "source_rank": 4,
       "merged_domains": [
-        "facebook.com"
+        "facebook.com",
+        "fb.com"
       ],
       "previous_rank": null,
       "movement": null,
@@ -228,7 +230,9 @@
         "amazon.in",
         "amazon.es",
         "amazon.it",
-        "amazon.com.br"
+        "amazon.com.br",
+        "amazon.com.au",
+        "amazon.com.mx"
       ],
       "previous_rank": null,
       "movement": null,
@@ -296,7 +300,7 @@
       ],
       "previous_rank": null,
       "movement": null,
-      "note": null
+      "note": "Possibly boosted by Windows search, widgets and Edge features that contact bing.com in the background."
     },
     {
       "rank": 16,
@@ -470,7 +474,8 @@
       "source": "tranco",
       "source_rank": 83,
       "merged_domains": [
-        "zoom.us"
+        "zoom.us",
+        "zoom.com"
       ],
       "previous_rank": null,
       "movement": null,

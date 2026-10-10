@@ -167,10 +167,70 @@
       "travel"
     ]
   },
+  "category_boards": {
+    "depth": 1000,
+    "board_size": 28,
+    "filters": [
+      {
+        "id": "search",
+        "group": "search_portals",
+        "label": "Search & portals"
+      },
+      {
+        "id": "social",
+        "group": "social_messaging",
+        "label": "Social & messaging"
+      },
+      {
+        "id": "entertainment",
+        "group": "entertainment",
+        "label": "Entertainment"
+      },
+      {
+        "id": "shopping",
+        "group": "shopping",
+        "label": "Shopping"
+      },
+      {
+        "id": "news",
+        "group": "news_sport",
+        "label": "News & sport"
+      },
+      {
+        "id": "reference",
+        "group": "reference_learning",
+        "label": "Reference & learning"
+      },
+      {
+        "id": "tech",
+        "group": "tech_ai",
+        "label": "Tech & AI"
+      },
+      {
+        "id": "work",
+        "group": "work_money",
+        "label": "Work & money"
+      }
+    ],
+    "months": {
+      "world": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09",
+        "2026-10"
+      ]
+    }
+  },
   "curation": {
-    "mapped_domains": 280,
-    "brands": 228,
-    "excluded_domains": 357,
+    "mapped_domains": 503,
+    "brands": 433,
+    "excluded_domains": 674,
     "infra_patterns": 43
   }
 }
