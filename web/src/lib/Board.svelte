@@ -48,7 +48,7 @@
   {#each empty as slot (slot)}
     {@const pos = squarePosition(slot)}
     <div class="cell" style:grid-row={pos.row} style:grid-column={pos.col}>
-      <Square side={pos.side} {slot} />
+      <Square side={pos.side} {slot} vacant={!!snapshot?.filter} />
     </div>
   {/each}
 

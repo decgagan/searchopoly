@@ -5,6 +5,8 @@
   import About from "./lib/About.svelte";
   import OgCard from "./lib/OgCard.svelte";
   import { parseHash, formatHash } from "./lib/router.js";
+  import { FILTERS, filterOf } from "./lib/groups.js";
+  import { monthLabel } from "./lib/format.js";
 
   const DATA = `${import.meta.env.BASE_URL}data`;
   const MOBILE_QUERY = "(max-width: 700px)";
@@ -14,6 +16,10 @@
   let snapshots = $state({});
   let error = $state(null);
   let ready = $state(false);
+  // Category boards: categoryData[board][month] -> raw <board>_categories.json. Loaded on
+  // first use (about 9 KB gzipped per month), then cached. Raw because it's never mutated.
+  let categoryData = $state.raw({});
+  const categoryLoads = {};
 
   // URL hash is the source of truth for which board and which card are showing.
   let route = $state(parseHash(location.hash));
@@ -35,9 +41,57 @@
     return res.json();
   }
 
+  const categoryMonths = (board) => index?.category_boards?.months?.[board] ?? [];
+
+  function loadCategories(board) {
+    if (!categoryMonths(board).length) return Promise.resolve();
+    categoryLoads[board] ??= Promise.all(
+      categoryMonths(board).map((m) =>
+        getJSON(`snapshots/${m}/${board}_categories.json`).then((d) => [m, d]))
+    ).then((pairs) => {
+      categoryData = { ...categoryData, [board]: Object.fromEntries(pairs) };
+    }).catch((e) => {
+      delete categoryLoads[board];
+      error = e.message;
+    });
+    return categoryLoads[board];
+  }
+
+  // Turn one category board into the same shape as a normal snapshot, so the board, list,
+  // card, badges and movers work unchanged.
+  const hydrated = new Map();
+  function categorySnapshot(raw, key) {
+    const cacheKey = `${raw.board}/${raw.month}/${key}`;
+    if (hydrated.has(cacheKey)) return hydrated.get(cacheKey);
+    const b = raw.boards[key];
+    if (!b) return null;
+    const snap = {
+      board: raw.board,
+      month: raw.month,
+      source: raw.source,
+      has_previous_month: raw.has_previous_month,
+      filter: key,
+      filterLabel: filterOf(key)?.label ?? key,
+      depth: raw.depth,
+      vacant: b.vacant,
+      coverage: b.coverage,
+      sites: b.sites.map((s) => ({ ...raw.brands[s.id], ...s })),
+      dropped_out: b.dropped_out,
+    };
+    hydrated.set(cacheKey, snap);
+    return snap;
+  }
+
+  function snapshotFor(board, filter, m) {
+    if (!filter) return snapshots[board]?.[m] ?? null;
+    const raw = categoryData[board]?.[m];
+    return raw ? categorySnapshot(raw, filter) : null;
+  }
+
   async function load() {
     try {
       index = await getJSON("latest.json");
+      if (route.filter) await loadCategories(route.board); // deep link to a category board
       // Every month of every live board is loaded up front (a few KB each), so the month
       // slider is instant. The UK board lights up as soon as uk.json exists.
       const jobs = [];
@@ -62,11 +116,15 @@
   const months = $derived(index?.boards?.[route.board]?.months ?? []);
   const latest = $derived(months.at(-1) ?? null);
   const month = $derived(route.month && months.includes(route.month) ? route.month : latest);
-  const snapshot = $derived(snapshots[route.board]?.[month] ?? null);
+  const filtersReady = $derived(ready && categoryMonths(route.board).length > 0);
+  // Ignore a filter the board doesn't have (e.g. #uk/shopping).
+  const filter = $derived(filtersReady && route.filter ? route.filter : null);
+  const filterLoading = $derived(!!filter && !categoryData[route.board]);
+  const snapshot = $derived(snapshotFor(route.board, filter, month));
   const rankHistory = $derived(
     site ? months.map((m) => ({
       month: m,
-      rank: snapshots[route.board]?.[m]?.sites.find((s) => s.id === site.id)?.rank ?? null,
+      rank: snapshotFor(route.board, filter, m)?.sites.find((s) => s.id === site.id)?.rank ?? null,
     })) : []
   );
   const site = $derived(snapshot?.sites.find((s) => s.id === route.site) ?? null);
@@ -78,12 +136,23 @@
 
   const openSite = (s) => navigate({ site: s.id });
   const closeSite = () => navigate({ site: null });
-  const selectBoard = (board) => navigate({ page: "board", board, month: null, site: null });
+  const selectBoard = (board) => navigate({ page: "board", board, filter: null, month: null, site: null });
   // Keep the open card if the site is on the new month's board too.
   const selectMonth = (m) => {
-    const keep = route.site && snapshots[route.board]?.[m]?.sites.some((s) => s.id === route.site);
+    const keep = route.site && snapshotFor(route.board, filter, m)?.sites.some((s) => s.id === route.site);
     navigate({ month: m === latest ? null : m, site: keep ? route.site : null });
   };
+  // Switch colour set, staying on the same month. Data loads first, so the board never
+  // blanks: it animates straight from the old ranking to the new one.
+  async function selectFilter(key) {
+    if (key) await loadCategories(route.board);
+    navigate({ filter: key, site: null });
+  }
+  const prefetchFilters = () => loadCategories(route.board);
+  // A hand-edited or shared #world/<set> URL loads its data on the way in.
+  $effect(() => {
+    if (filter && !categoryData[route.board]) loadCategories(route.board);
+  });
   function step(delta) {
     const sites = snapshot.sites;
     const i = sites.findIndex((s) => s.id === route.site) + delta;
@@ -97,11 +166,13 @@
   });
 
   $effect(() => {
-    const where = route.board === "uk" ? "UK" : "World";
+    const where = (route.board === "uk" ? "UK" : "World") + (snapshot?.filterLabel ? ` ${snapshot.filterLabel}` : "");
     document.title = route.page === "about"
       ? "How Searchopoly is made · Searchopoly"
       : site
-      ? `${site.brand}: #${site.rank} on the ${where} board, ${snapshot.month} · Searchopoly`
+      ? `${site.brand}: #${site.rank} on the ${where} board, ${monthLabel(snapshot.month)} · Searchopoly`
+      : snapshot?.filterLabel
+      ? `${snapshot.filterLabel}: the most visited sites, ${monthLabel(snapshot.month)} · Searchopoly`
       : "Searchopoly: the web's most visited sites, as a board";
   });
 </script>
@@ -112,7 +183,7 @@
 <main class:mobile class:page={route.page === "about"}>
   {#if error}
     <p class="error">Couldn't load the board data ({error}).</p>
-  {:else if !ready}
+  {:else if !ready || filterLoading}
     <p class="loading">Loading the board…</p>
   {:else if index && route.page === "about"}
     <About {index} {world} />
@@ -127,6 +198,10 @@
       selectedId: site?.id ?? null,
       months,
       onSelectMonth: selectMonth,
+      filters: filtersReady ? FILTERS : [],
+      filter,
+      onSelectFilter: selectFilter,
+      onPrefetchFilters: prefetchFilters,
     }}
     {#if mobile}
       <MobileList {...props} {categoryLabels} />
@@ -139,7 +214,7 @@
 </main>
 
 {#if site && route.page === "board"}
-  {#key route.board}
+  {#key `${route.board}/${filter}`}
     <SiteCard
       {site}
       {snapshot}

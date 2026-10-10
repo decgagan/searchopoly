@@ -15,7 +15,10 @@
   const move = $derived(describeMovement(site, snapshot));
   const total = $derived(snapshot.sites.length);
   const sourceName = $derived(snapshot.source?.name ?? site.source);
-  const boardName = $derived(boardKey === "uk" ? "UK" : "World");
+  // e.g. "World" or "World Shopping" on a category board.
+  const boardName = $derived(
+    (boardKey === "uk" ? "UK" : "World") + (snapshot.filterLabel ? ` ${snapshot.filterLabel}` : "")
+  );
   const href = $derived(`https://${site.domain}`);
 
   // Open as a modal: the rest of the page becomes inert and Esc fires "cancel".

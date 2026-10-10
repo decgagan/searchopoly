@@ -22,6 +22,10 @@ export const CORNERS = [
   { id: "notfound", row: 1, col: 9, title: "404", text: "Page not found. Back to Log On", icon: "broken" },
 ];
 
+// Split camelCase brand names (DuckDuckGo, YouTube) into parts, so narrow squares wrap at
+// "DuckDuck|Go" rather than mid-letter.
+export const brandParts = (brand) => brand.split(/(?<=[a-z])(?=[A-Z])/);
+
 export function initials(brand) {
   const word = brand.replace(/[^\p{L}\p{N}\s]/gu, " ").trim().split(/\s+/)[0] ?? "?";
   return word.charAt(0).toUpperCase();

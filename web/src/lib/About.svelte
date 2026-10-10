@@ -13,6 +13,8 @@
   const curation = $derived(index?.curation ?? {});
   const source = $derived(world?.source);
   const ukLive = $derived(index?.boards?.uk?.status === "ok");
+  const cats = $derived(index?.category_boards ?? {});
+  const depth = $derived((cats.depth ?? 1000).toLocaleString("en-GB"));
 </script>
 
 <article class="about" aria-labelledby="about-title">
@@ -31,7 +33,7 @@
   <ul class="stats" aria-label="Project in numbers">
     <li><strong>{months.length}</strong><span>months tracked</span></li>
     <li><strong>28</strong><span>sites per board</span></li>
-    <li><strong>500</strong><span>raw domains reviewed per month</span></li>
+    <li><strong>{depth}</strong><span>raw domains reviewed per month</span></li>
     <li><strong>{curation.excluded_domains ?? "350+"}</strong><span>background domains filtered out</span></li>
   </ul>
 
@@ -76,7 +78,7 @@
     <ol class="steps">
       <li>
         <strong>Classify every domain.</strong> Raw lists are dominated by domains nobody visits on
-        purpose: CDNs, DNS, ad servers, telemetry and update hosts. Each of the top 500 domains is
+        purpose: CDNs, DNS, ad servers, telemetry and update hosts. Each of the top {depth} domains is
         matched against a hand-curated list of {curation.mapped_domains ?? "about 280"} real sites,
         an exclude list of {curation.excluded_domains ?? "about 350"} background domains (each with a
         reason), and {curation.infra_patterns ?? "about 40"} infrastructure name patterns.
@@ -98,6 +100,27 @@
   </section>
 
   <section>
+    <h2>Category boards</h2>
+    <p>
+      The filter under the board swaps the main ranking for one industry: the top 28 sites within a
+      single colour set, such as <a href="#world/shopping">Shopping</a> or
+      <a href="#world/news">News &amp; sport</a>. Category boards use the same cleaned list, brands and
+      monthly Tranco lists as the main board. They just reach further down it, to the top {depth} raw
+      domains, every one of which has been reviewed by hand. Ranks are positions within the set
+      (the site card still shows the raw rank), and movement compares each set with the same set
+      last month.
+    </p>
+    <p>
+      Some sets genuinely run out. Search engines and portals are few and concentrated at the very
+      top, so <a href="#world/search">Search &amp; portals</a> fills only about a dozen squares, and
+      <a href="#world/tech">Tech &amp; AI</a> usually falls a few short. Rather than pad those boards
+      with sites that didn't make the cut, or with unreviewed domains, the empty squares are shown as
+      <strong>vacant lots</strong>. Category boards are World only: Cloudflare Radar's UK ranking stops
+      at 100 domains, too shallow to fill them.
+    </p>
+  </section>
+
+  <section>
     <h2>Known biases</h2>
     <ul class="biases">
       <li>
@@ -116,8 +139,9 @@
       </li>
       <li>
         <strong>Human judgement.</strong> Deciding what counts as a "real" site is a curation call.
-        Every decision is in the open: the raw top 500 for each month, with how each domain was
-        treated, is published as a CSV in the repository.
+        Every decision is in the open: the site map and exclude list (with a reason for every
+        exclusion) are in the repository, and the raw top 500 for each month, with how each domain
+        was treated, is published as a CSV.
       </li>
     </ul>
   </section>

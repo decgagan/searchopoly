@@ -49,6 +49,12 @@
         </li>
       {/each}
     </ol>
+    {#if snapshot.vacant}
+      <p class="vacant-note">
+        <strong>{snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}.</strong>
+        No other {snapshot.filterLabel} site is in the top {snapshot.depth.toLocaleString("en-GB")} domains.
+      </p>
+    {/if}
   {:else}
     <ol class="list ghost" aria-hidden="true">
       {#each Array(6) as _, i}
@@ -59,6 +65,16 @@
 </div>
 
 <style>
+  .vacant-note {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px dashed #7a8599;
+    color: #d0d5dd;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .vacant-note strong { color: var(--paper); }
   .mobile { width: min(100%, 520px); min-width: 0; padding: 0 12px; display: flex; flex-direction: column; gap: 14px; }
   .start {
     display: flex;

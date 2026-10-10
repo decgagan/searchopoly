@@ -13,3 +13,19 @@ export const GROUPS = {
 export const FALLBACK = { label: "Other", colour: "#868e96" };
 
 export const groupOf = (key) => GROUPS[key] ?? FALLBACK;
+
+// Category boards: URL slug -> colour set, in board order. Must match CATEGORY_BOARDS in
+// pipeline/config.py (the pipeline writes the same list to latest.json).
+export const FILTERS = [
+  { id: "search", group: "search_portals" },
+  { id: "social", group: "social_messaging" },
+  { id: "entertainment", group: "entertainment" },
+  { id: "shopping", group: "shopping" },
+  { id: "news", group: "news_sport" },
+  { id: "reference", group: "reference_learning" },
+  { id: "tech", group: "tech_ai" },
+  { id: "work", group: "work_money" },
+].map((f) => ({ ...f, label: GROUPS[f.group].label, colour: GROUPS[f.group].colour }));
+
+export const FILTER_IDS = FILTERS.map((f) => f.id);
+export const filterOf = (id) => FILTERS.find((f) => f.id === id) ?? null;

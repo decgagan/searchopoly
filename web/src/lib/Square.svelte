@@ -1,8 +1,8 @@
 <script>
   import { groupOf } from "./groups.js";
-  import { initials } from "./layout.js";
+  import { initials, brandParts } from "./layout.js";
 
-  let { site = null, side, slot = 0, selected = false, hot = false, badge = null, onOpen } = $props();
+  let { site = null, side, slot = 0, selected = false, hot = false, badge = null, vacant = false, onOpen } = $props();
   const group = $derived(site ? groupOf(site.group) : null);
 </script>
 
@@ -21,12 +21,20 @@
       {#if badge}<span class="badge {badge.tone}" aria-hidden="true">{badge.text}</span>{/if}
       <span class="tile" aria-hidden="true">{initials(site.brand)}</span>
       <span class="text">
-        <span class="brand">{site.brand}</span>
+        <span class="brand">{#each brandParts(site.brand) as part, i}{#if i}<wbr />{/if}{part}{/each}</span>
         <span class="domain">{site.domain}</span>
       </span>
       <span class="sr-only">, {group.label}{badge ? `, ${badge.label}` : ""}. Open site card</span>
     </span>
   </button>
+{:else if vacant}
+  <!-- Category board with fewer sites than squares: honest gaps, not filler. -->
+  <div class="square {side} placeholder vacant" style:--set="#d7d0c1" aria-hidden="true">
+    <span class="band"></span>
+    <span class="body">
+      <span class="text"><span class="brand muted">Vacant lot</span></span>
+    </span>
+  </div>
 {:else}
   <div class="square {side} placeholder" style:--set="#c9c2b3" aria-hidden="true">
     <span class="band"><span class="rank">{slot + 1}</span></span>
@@ -153,7 +161,8 @@
     font-size: calc(var(--u) * 0.122);
     line-height: 1.15;
     color: var(--ink);
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    min-width: 0;
     hyphens: auto;
   }
   .bottom .brand, .top .brand { font-size: calc(var(--u) * 0.13); }
@@ -168,4 +177,8 @@
 
   .placeholder .band { background: repeating-linear-gradient(45deg, #d8d1c2 0 6px, #cfc7b6 6px 12px); }
   .placeholder .rank { color: #8f8777; }
+  .vacant { background: color-mix(in srgb, var(--paper) 70%, #e6dfd0); }
+  .vacant .band { background: #ddd6c7; }
+  .vacant .body { justify-content: center; }
+  .vacant .brand { font-style: italic; text-align: center; }
 </style>

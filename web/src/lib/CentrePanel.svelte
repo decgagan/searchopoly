@@ -7,7 +7,9 @@
   let {
     snapshot = null, boardKey, boardInfo, latestMonth, onSelectBoard, onOpen, mobile = false,
     months = [], onSelectMonth,
+    filters = [], filter = null, onSelectFilter = () => {}, onPrefetchFilters = () => {},
   } = $props();
+  const filterLabel = $derived(snapshot?.filterLabel ?? null);
 
   const summary = $derived(summarise(snapshot));
 
@@ -42,7 +44,19 @@
     {#if months.length > 1}
       <MonthPicker {months} month={snapshot.month} onSelect={onSelectMonth} compact={mobile} />
     {/if}
-    <p class="sub">Top {sites.length} sites{boardKey === "uk" ? " in the UK" : " worldwide"}, ranked by visits</p>
+    <p class="sub">
+      {#if filterLabel}
+        Top {sites.length} {filterLabel} sites worldwide, ranked by visits
+      {:else}
+        Top {sites.length} sites{boardKey === "uk" ? " in the UK" : " worldwide"}, ranked by visits
+      {/if}
+    </p>
+    {#if snapshot.vacant}
+      <p class="vacant">
+        {snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}: no other {filterLabel} site is in
+        the top {snapshot.depth.toLocaleString("en-GB")} domains. <a href="#about">Why?</a>
+      </p>
+    {/if}
 
     <ol class="podium" aria-label="Top three">
       {#each podium as s (s.id)}
@@ -90,15 +104,50 @@
     </div>
   {/if}
 
-  <ul class="legend" aria-label="Colour sets">
-    {#each Object.entries(GROUPS) as [key, g]}
-      <li style:--set={g.colour}>
-        <span class="swatch" aria-hidden="true"></span>
-        <span>{g.label}</span>
-        {#if snapshot}<span class="count" aria-label={`${counts[key] ?? 0} sites`}>{counts[key] ?? 0}</span>{/if}
-      </li>
-    {/each}
-  </ul>
+  {#if filters.length && snapshot}
+    <!-- The colour-set legend doubles as the industry filter. -->
+    <p class="filters-label" id="filters-label">Filter by industry</p>
+    <div
+      class="filters"
+      role="group"
+      aria-labelledby="filters-label"
+      onpointerenter={onPrefetchFilters}
+      onfocusin={onPrefetchFilters}
+    >
+      <button
+        type="button"
+        class="chip all"
+        aria-pressed={!filter}
+        onclick={() => onSelectFilter(null)}
+      >
+        <span class="swatch all" aria-hidden="true"></span>
+        <span class="label">All sites</span>
+      </button>
+      {#each filters as f (f.id)}
+        <button
+          type="button"
+          class="chip"
+          style:--set={f.colour}
+          aria-pressed={filter === f.id}
+          onclick={() => onSelectFilter(filter === f.id ? null : f.id)}
+        >
+          <span class="swatch" aria-hidden="true"></span>
+          <span class="label">{f.label}</span>
+          {#if !filter}<span class="count"><span class="sr-only">, </span>{counts[f.group] ?? 0}<span class="sr-only"> on this board</span></span>{/if}
+        </button>
+      {/each}
+    </div>
+  {:else}
+    <ul class="legend" aria-label="Colour sets">
+      {#each Object.entries(GROUPS) as [key, g]}
+        <li style:--set={g.colour}>
+          <span class="swatch" aria-hidden="true"></span>
+          <span>{g.label}</span>
+          {#if snapshot}<span class="count" aria-label={`${counts[key] ?? 0} sites`}>{counts[key] ?? 0}</span>{/if}
+        </li>
+      {/each}
+    </ul>
+  {/if}
 
   <p class="source">
     {#if snapshot?.source?.name === "Tranco"}
@@ -324,6 +373,66 @@
   .legend li { display: flex; align-items: center; gap: 0.6em; color: var(--ink); }
   .swatch { width: 1.7em; height: 1em; border-radius: 3px; background: var(--set); flex: none; }
   .count { margin-left: auto; color: var(--ink-soft); font-variant-numeric: tabular-nums; padding-left: 0.8em; }
+
+  .vacant { margin: 0; font-size: var(--fs-movers); color: var(--ink-soft); max-width: 46ch; line-height: 1.4; }
+  .vacant a { color: var(--accent-strong); font-weight: 650; }
+
+  .filters-label {
+    margin: calc(var(--gap) * 0.8) 0 calc(var(--gap) * -0.4);
+    font-size: calc(var(--fs-legend) * 0.85);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .filters {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4em;
+    font-size: var(--fs-legend);
+    width: 100%;
+    max-width: 58em;
+  }
+  .chip {
+    font: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    min-width: 0;
+    padding: 0.45em 0.7em;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(16, 24, 40, 0.1);
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
+  }
+  .chip .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chip:hover { background: var(--paper); box-shadow: inset 0 0 0 2px var(--set, var(--ink)); }
+  .chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .chip[aria-pressed="true"] {
+    background: var(--set, var(--ink));
+    color: #fff;
+    font-weight: 650;
+    box-shadow: none;
+  }
+  .chip[aria-pressed="true"] .swatch { background: #fff; }
+  .chip[aria-pressed="true"] .count { color: #fff; }
+  .chip .swatch { width: 0.85em; height: 0.85em; border-radius: 50%; }
+  .chip .swatch.all {
+    background: conic-gradient(#3b5bdb 0 12.5%, #d6336c 0 25%, #7048e8 0 37.5%, #b25900 0 50%,
+      #d42c2c 0 62.5%, #09845f 0 75%, #0d7f91 0 87.5%, #546170 0);
+  }
+  .chip.all[aria-pressed="true"] { --set: var(--ink); }
+  .chip.all[aria-pressed="true"] .swatch.all { box-shadow: 0 0 0 1.5px #fff; }
+  .chip .count { padding-left: 0.4em; }
+  .mobile .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }
+  .mobile .chip { padding: 0.6em 0.75em; }
+  .mobile .chip.all { grid-column: 1 / -1; }
+  @media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
 
   .source { margin: var(--gap) 0 0; font-size: var(--fs-source); color: var(--ink-soft); }
   .source a { color: inherit; }
