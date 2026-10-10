@@ -1,7 +1,7 @@
 {
   "board": "people",
   "month": "2026-04",
-  "generated_at": "2026-10-10T22:48:07Z",
+  "generated_at": "2026-10-10T22:53:53Z",
   "source": {"name":"Wikimedia Pageviews","project":"en.wikipedia","access":"all-access","agent":"user","month":"2026-04","url":"https://pageviews.wmcloud.org/topviews/?project=en.wikipedia.org&platform=all-access&date=2026-04&excludes=","dump":"https://dumps.wikimedia.org/other/pageview_complete/monthly/2026/2026-04/pageviews-202604-user.bz2","depth":5000,"licence":"Page views: CC0 1.0 (Wikimedia Foundation). Names, descriptions and occupations: Wikidata, CC0 1.0."},
   "depth": 5000,
   "has_previous_month": true,
@@ -508,14 +508,14 @@
         {"id":"chris-kempczinski","name":"Chris Kempczinski","previous_rank":14},
         {"id":"aristotle-onassis","name":"Aristotle Onassis","previous_rank":18},
         {"id":"lauren-bessette","name":"Lauren Bessette","previous_rank":20},
-        {"id":"altaf-khanani","name":"Altaf Khanani","previous_rank":21},
-        {"id":"larry-ellison","name":"Larry Ellison","previous_rank":22},
-        {"id":"joseph-p-kennedy-sr","name":"Joseph P. Kennedy Sr.","previous_rank":23},
-        {"id":"lachlan-murdoch","name":"Lachlan Murdoch","previous_rank":24},
-        {"id":"steve-toth","name":"Steve Toth","previous_rank":25},
-        {"id":"christian-horner","name":"Christian Horner","previous_rank":26},
-        {"id":"mark-zuckerberg","name":"Mark Zuckerberg","previous_rank":27},
-        {"id":"nikola-tesla","name":"Nikola Tesla","previous_rank":28}
+        {"id":"larry-ellison","name":"Larry Ellison","previous_rank":21},
+        {"id":"joseph-p-kennedy-sr","name":"Joseph P. Kennedy Sr.","previous_rank":22},
+        {"id":"lachlan-murdoch","name":"Lachlan Murdoch","previous_rank":23},
+        {"id":"steve-toth","name":"Steve Toth","previous_rank":24},
+        {"id":"christian-horner","name":"Christian Horner","previous_rank":25},
+        {"id":"mark-zuckerberg","name":"Mark Zuckerberg","previous_rank":26},
+        {"id":"nikola-tesla","name":"Nikola Tesla","previous_rank":27},
+        {"id":"kevin-o-leary","name":"Kevin O'Leary","previous_rank":28}
       ],
       "depth": 5000
     },

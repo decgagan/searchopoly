@@ -72,11 +72,11 @@ Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk
                         exclude /  + top 28 ├─> ..._ranked_top500.csv  (transparency)
                         patterns)           └─> data/latest.json       (index for the site)
 
-Wikimedia top 1,000 ─> drop non-articles ─> titles → Wikidata ─> humans only ─> bot check
-(en.wikipedia, month)   (Main Page,          (follows redirects,    (P31 = Q5)    (mobile share)
-                         Special:...)         merges duplicates)
-                     ─> colour set from occupations ─> data/snapshots/YYYY-MM/people.json
-                                                     └─> .../people_categories.json
+Wikimedia monthly dump ─> top 5,000 articles ─> titles → Wikidata ─> humans only ─> bot check
+(pageview complete,       (drop Main Page,         (follows redirects,    (P31 = Q5)    (mobile share)
+ en.wikipedia, user)       Special:...)             merges duplicates)
+                     ─> colour set (description, ─> data/snapshots/YYYY-MM/people.json
+                        then occupations)         └─> .../people_categories.json (deeper per set if short)
 ```
 
 1. **Fetch.** For month `YYYY-MM`, the [Tranco](https://tranco-list.eu) list dated `YYYY-MM-01`
@@ -158,35 +158,68 @@ in future.
 A second kind of board: the 28 people whose English Wikipedia articles were viewed most in a
 month. Code in [`pipeline/people.py`](pipeline/people.py).
 
-1. **Views:** the [Wikimedia Pageviews API](https://wikimedia.org/api/rest_v1/) top 1,000
-   articles for the month (`en.wikipedia`, all access methods, user agent only, so known
-   crawlers and automated agents are already removed). A month is only built once it's complete.
-2. **Articles only:** the Main Page, `Special:`, `Wikipedia:`, `File:` and other namespaces are dropped.
-3. **Titles to Wikidata:** titles are resolved in batches of 50 through the Wikipedia API,
+1. **Views:** exact monthly totals for every English Wikipedia article, from Wikimedia's
+   [pageview complete](https://dumps.wikimedia.org/other/pageview_complete/) monthly dump
+   (`pageviews-YYYYMM-user.bz2`: user traffic only, so known crawlers and automated agents are
+   already removed, the same agent type as the Pageviews API). The API's top list stops at
+   1,000 articles, too shallow for every colour set, so
+   [`pipeline/pageview_dumps.py`](pipeline/pageview_dumps.py) streams the ~6 GB file, reads only
+   the `en.wikipedia` block (stopping when it ends), adds up desktop, mobile-web and mobile-app
+   views per title and keeps the top 50,000. Nothing big touches the disk; the 1.7 MB result is
+   cached. A month is only built once it's complete and its dump is published (early in the
+   next month).
+2. **Depth:** every board starts from the month's **top 5,000 articles**. A colour set with
+   fewer than 28 people there goes deeper, to 10,000, 20,000 then 40,000 articles, for that set
+   only, and the depth reached is stored per set (`depth` in `people_categories.json`) and shown
+   under the board. The main board always uses the top 5,000.
+3. **Articles only:** the Main Page, `Special:`, `Wikipedia:`, `File:` and other namespaces are dropped.
+4. **Titles to Wikidata:** titles are resolved in batches of 50 through the Wikipedia API,
    following redirects, so a redirect and its target count as one person (views are added up).
-4. **Humans only:** one Wikidata Query Service request keeps items that are an instance of
-   human (P31 = Q5). Events, films, TV series and fictional characters drop out here.
-5. **Automated traffic:** about 60–75% of English Wikipedia views come from mobile. A page with
+5. **Humans only:** a cheap Wikidata Query Service pass keeps items that are an instance of
+   human (P31 = Q5); names, descriptions, occupations and dates are then fetched for those only. Events, films, TV series and fictional characters drop out here.
+6. **Automated traffic:** about 60–75% of English Wikipedia views come from mobile. A page with
    5% or less, or 98% or more, mobile views is left off as likely automated traffic, following
    the mobile/desktop comparison the Topviews tool and Pageviews FAQ suggest. The run report
    lists each person left off and why.
-6. **Colour sets** come from Wikidata occupations (P106), by keyword: Politics, Royalty, Sport,
-   Music, Film, TV & media, Business & tech, Other. A royal occupation (monarch, duke...) and then
+7. **Colour sets:** Politics, Royalty, Sport, Music, Film, TV & media, Business & tech, Other.
+   Wikidata's short description says what someone is known for ("English footballer",
+   "United States Secretary of the Treasury"), so it decides first: the earliest set keyword in
+   it wins. "Other" words (writer, astronaut, activist, murderer...) only count when no named
+   set matches, so "writer and comedian" is Film, TV & media. If the description matches
+   nothing, Wikidata occupations (P106) decide, by keyword: a royal occupation (monarch, duke...) and then
    politics win outright, because royals and politicians list many other occupations. Otherwise
    the set matching most occupations wins, ties go to sport, music, screen, business in that
    order, and a set must cover at least a quarter of someone's occupations. A noble title alone
    (life peers, honorifics) doesn't make someone royalty. Hand fixes go in
    [`pipeline/data/people_overrides.csv`](pipeline/data/people_overrides.csv) (category,
    exclusion, or a replacement for a wrong Wikidata description).
-7. **Adult performers** are left off, as adult sites are, but only when it's what they're known
+8. **Adult performers** are left off, as adult sites are, but only when it's what they're known
    for: an adult occupation *and* a Wikidata description that says so.
 
 Each person stores their name, Wikipedia title, views, Wikidata's short description, colour set,
 date of death if any (shown neutrally as "Died 28 August 2026") and the article's rank among all
 articles. Only CC0 data is stored: no Wikipedia article text and no images. Each colour set also
-has its own board, drawn from the whole top 1,000 (`#people/sport`); Royalty and Business & tech
-usually run short, so they show vacant lots. `people.json` is about 9.5 KB per month (3 KB
-gzipped) and `people_categories.json` about 60 KB (15 KB gzipped, loaded on first filter use).
+has its own board (`#people/sport`). `people.json` is about 10 KB per month (3 KB gzipped) and
+`people_categories.json` about 65 KB (15 KB gzipped, loaded on first filter use).
+
+**Fullness, Jan–Sep 2026:** every colour set has all 28 people in every month, with no vacant
+lots, at the first tier (top 5,000 articles), so no set has needed to go deeper yet. The 28th
+person in each set sits at these article ranks across the nine months:
+
+| Colour set | Filled | Depth used | Rank of 28th person (range) |
+|---|---|---|---|
+| Politics | 28/28 every month | 5,000 | 217–692 |
+| Royalty | 28/28 every month | 5,000 | 1,020–2,221 |
+| Sport | 28/28 every month | 5,000 | 105–615 |
+| Music | 28/28 every month | 5,000 | 356–678 |
+| Film, TV & media | 28/28 every month | 5,000 | 152–255 |
+| Business & tech | 28/28 every month | 5,000 | 972–2,707 |
+| Other | 28/28 every month | 5,000 | 415–1,353 |
+
+**Monthly job:** the workflow streams one dump (~6 GB download, a few minutes on a runner,
+almost no disk) plus a few hundred Wikidata requests, well inside its 120-minute limit. The
+aggregated results (top 50,000 titles and Wikidata answers) are kept in the Actions cache so a
+re-run of the same month doesn't stream the dump again.
 
 Requests use a descriptive User-Agent with contact URLs (Wikimedia's User-Agent policy), and raw
 API answers are cached in `.cache/`, so re-running a past month is offline and reproducible.
@@ -343,7 +376,7 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 | Source | Used for | Licence and attribution |
 |--------|----------|-------------------------|
 | [Tranco](https://tranco-list.eu) | World board | Free research ranking. Each list has a permanent ID, recorded in every snapshot. The authors ask users to cite: Victor Le Pochat, Tom Van Goethem, Samaneh Tajalizadehkhoob, Maciej Korczyński and Wouter Joosen, "Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation", *NDSS 2019*, [doi:10.14722/ndss.2019.23386](https://doi.org/10.14722/ndss.2019.23386). Tranco combines rankings from Cisco Umbrella, Majestic (CC BY 3.0), Farsight, the Chrome UX Report and Cloudflare Radar (CC BY-NC 4.0). |
-| [Wikimedia Pageviews](https://wikimedia.org/api/rest_v1/) | People board (views) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Requests follow the Wikimedia User-Agent policy. |
+| [Wikimedia page views](https://dumps.wikimedia.org/other/pageview_complete/) (monthly dumps) | People board (views) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Requests follow the Wikimedia User-Agent policy. |
 | [Wikidata](https://www.wikidata.org) | People board (names, short descriptions, occupations, dates of death) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). No Wikipedia article text (CC BY-SA) is used, and no images. |
 | [Cloudflare Radar](https://radar.cloudflare.com/domains) | UK board | API data is licensed [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/): attribution required, **non-commercial use only**, and changes must be indicated. Cloudflare's trademarks and Radar's look and feel are not licensed. |
 
@@ -365,7 +398,7 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 - [x] **4. Movement.** Month slider with play button; squares and list rows glide to their new positions (FLIP animation, off under reduced motion); ▲/▼/NEW badges, biggest climber and faller, a rank-over-time sparkline on each card; ten months of real backfilled data; monthly and CI GitHub Actions workflows.
 - [x] **5. Launch (code).** "How it's made" method page with full credits; Open Graph/Twitter tags and a share image drawn from the real board each month; favicon and app icons; Share button on site cards (Web Share API, copy-link fallback); robots.txt, sitemap, 404 page, security headers. Lighthouse: 100/100/100/100 on desktop, 99/100/100/100 on mobile.
 - [x] **6. Category boards.** Filter by industry: a top-28 board for each colour set, reviewed to raw rank 1,000, with vacant lots where a set runs out; slider, movement, cards, URLs and mobile layout all work per set.
-- [x] **7. People board.** Most viewed people on English Wikipedia (Wikimedia Pageviews + Wikidata, CC0): humans only, redirects merged, automated traffic filtered, seven occupation-based colour sets with their own boards, Jan–Sep 2026 backfilled. Also merged Search & portals and Tech & AI into Search & tech.
+- [x] **7. People board.** Most viewed people on English Wikipedia (Wikimedia page views + Wikidata, CC0): humans only, redirects merged, automated traffic filtered, seven colour sets with their own boards, Jan–Sep 2026 backfilled. Later ranked from the monthly page-view dump, 5,000 articles deep (deeper per set if needed), so every set is full. Also merged Search & portals and Tech & AI into Search & tech.
 - [ ] **Go live.** Cloudflare Pages, custom domain, Radar token, public repo: see [LAUNCH.md](LAUNCH.md).
 
 ## Front-end design notes

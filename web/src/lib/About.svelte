@@ -71,7 +71,7 @@
         </dd>
       </div>
       <div>
-        <dt>People board: <a href="https://wikimedia.org/api/rest_v1/" target="_blank" rel="noopener">Wikimedia page views</a> and <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a></dt>
+        <dt>People board: <a href="https://dumps.wikimedia.org/other/pageview_complete/" target="_blank" rel="noopener">Wikimedia page views</a> and <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a></dt>
         <dd>
           Monthly views of English Wikipedia articles (all devices, human readers), and Wikidata for
           who is a person, their name, a one-line description and occupations. Both are public
@@ -134,8 +134,11 @@
     <h2>The People board</h2>
     <p>
       <a href="#people">Most viewed people</a> is a second kind of board: the 28 people whose English
-      Wikipedia articles were read most in a month. It starts from Wikimedia's list of the month's
-      1,000 most viewed articles, which already excludes known crawlers and automated agents. Pages
+      Wikipedia articles were read most in a month. It ranks every English Wikipedia article by its
+      exact monthly views, from Wikimedia's monthly page-view file for human readers (known crawlers
+      and automated agents are already excluded), and starts from the <strong>top 5,000
+      articles</strong>. Wikimedia's ready-made top list stops at 1,000, which left some fields
+      short. Pages
       that aren't articles (the Main Page, search, special pages) are dropped. Each title is matched
       to its Wikidata item, following redirects so two titles for one person count once, and only
       items that Wikidata records as humans stay. Events, films and fictional characters drop out.
@@ -147,12 +150,14 @@
       suggests. Adult performers are left off, as adult sites are.
     </p>
     <p>
-      Colours come from each person's Wikidata occupations: Politics, Royalty, Sport, Music, Film,
-      TV &amp; media, Business &amp; tech, or Other when no single field fits. Royal and political
-      roles win over the many other occupations royals and politicians list, and a field has to cover
-      at least a quarter of someone's occupations. Each field has its own board drawn from the
-      whole top 1,000, for example <a href="#people/sport">Sport</a>. Royalty and Business &amp; tech
-      often have vacant lots. A few hand fixes live in a small overrides file.
+      Colours (Politics, Royalty, Sport, Music, Film, TV &amp; media, Business &amp; tech, or Other)
+      come first from Wikidata's one-line description, which says what someone is known for
+      ("English footballer", "United States Secretary of the Treasury"), and otherwise from their
+      listed occupations. A few hand fixes live in a small overrides file. Each field has its own
+      board, for example <a href="#people/sport">Sport</a>, with all 28 squares filled: if a field
+      ever has fewer than 28 people in the top 5,000, that field alone looks deeper (10,000, then
+      20,000, then 40,000 articles) and the board says how deep it went. So far every field,
+      including Royalty and Business &amp; tech, fills from the top 5,000 in every month.
     </p>
     <p>
       Page views measure attention, not approval. Deaths, trials and true-crime dramas move people up
@@ -224,7 +229,7 @@
       </li>
       <li>
         People data: page views from the
-        <a href="https://wikimedia.org/api/rest_v1/" target="_blank" rel="noopener">Wikimedia Pageviews API</a>
+        <a href="https://dumps.wikimedia.org/other/pageview_complete/" target="_blank" rel="noopener">Wikimedia's monthly page-view files</a>
         and names, short descriptions, occupations and dates from
         <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>, both
         <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>.
