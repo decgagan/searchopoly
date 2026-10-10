@@ -7,14 +7,16 @@
   import { parseHash, formatHash } from "./lib/router.js";
   import { filtersFor, filterOf, PEOPLE_GROUPS } from "./lib/groups.js";
   import { monthLabel, compactNumber } from "./lib/format.js";
-
-  const DATA = `${import.meta.env.BASE_URL}data`;
+  import { getJSON, indexProblems, adaptLegacyCategories } from "./lib/data.js";
   const MOBILE_QUERY = "(max-width: 700px)";
 
   let index = $state(null);
   // snapshots[board][month] -> snapshot JSON
   let snapshots = $state({});
   let error = $state(null);
+  // Data older than this code (e.g. a cached latest.json from before a deploy), even after
+  // re-fetching it past the cache. Shown as a "refresh" message, never as "coming soon".
+  let stale = $state(null);
   let ready = $state(false);
   // Category boards: categoryData[board][month] -> raw <board>_categories.json. Loaded on
   // first use (about 9 KB gzipped per month), then cached. Raw because it's never mutated.
@@ -44,22 +46,32 @@
   let mobile = $state(media.matches);
   media.addEventListener("change", (e) => (mobile = e.matches));
 
-  async function getJSON(path) {
-    const res = await fetch(`${DATA}/${path}`);
-    if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
-    return res.json();
-  }
-
   const categoryMonths = (board) => index?.category_boards?.months?.[board] ?? [];
+
+  // Every colour set this bundle knows must be in every month's file. Files from before a
+  // change are adapted where possible (old "search" + "tech" -> "search-tech"), otherwise
+  // fetched again past the cache, and only then reported as stale.
+  const missingSets = (board, byMonth) =>
+    Object.entries(byMonth).filter(([, raw]) => filtersFor(board).some((f) => !raw.boards?.[f.id])).map(([m]) => m);
+
+  async function fetchCategories(board, months, reload = false) {
+    const pairs = await Promise.all(months.map((m) =>
+      getJSON(`snapshots/${m}/${board}_categories.json`, { reload }).then((d) => [m, d])));
+    return adaptLegacyCategories(Object.fromEntries(pairs));
+  }
 
   function loadCategories(board) {
     if (!categoryMonths(board).length) return Promise.resolve();
-    categoryLoads[board] ??= Promise.all(
-      categoryMonths(board).map((m) =>
-        getJSON(`snapshots/${m}/${board}_categories.json`).then((d) => [m, d]))
-    ).then((pairs) => {
-      categoryData = { ...categoryData, [board]: Object.fromEntries(pairs) };
-    }).catch((e) => {
+    categoryLoads[board] ??= (async () => {
+      const byMonth = await fetchCategories(board, categoryMonths(board));
+      let bad = missingSets(board, byMonth);
+      if (bad.length) {
+        Object.assign(byMonth, await fetchCategories(board, bad, true));
+        bad = missingSets(board, adaptLegacyCategories(byMonth));
+      }
+      if (bad.length) stale = [`${board} category boards for ${bad.join(", ")}`];
+      categoryData = { ...categoryData, [board]: byMonth };
+    })().catch((e) => {
       delete categoryLoads[board];
       error = e.message;
     });
@@ -120,6 +132,12 @@
   async function load() {
     try {
       index = await getJSON("latest.json");
+      if (indexProblems(index).length) {
+        // Probably a cached copy from before a deploy: fetch it once more, past the cache.
+        index = await getJSON("latest.json", { reload: true });
+        const problems = indexProblems(index);
+        if (problems.length) stale = problems;
+      }
       if (route.filter) await loadCategories(route.board); // deep link to a category board
       // Every month of every live board is loaded up front (a few KB each), so the month
       // slider is instant. The UK board lights up as soon as uk.json exists.
@@ -222,6 +240,12 @@
 <main class:mobile class:page={route.page === "about"}>
   {#if error}
     <p class="error">Couldn't load the board data ({error}).</p>
+  {:else if stale && route.page === "board"}
+    <div class="stale" role="alert">
+      <p class="stale-title">Searchopoly has just been updated</p>
+      <p>Your browser loaded an older copy of the board data. Refresh the page to get the latest boards.</p>
+      <button type="button" onclick={() => location.reload()}>Refresh</button>
+    </div>
   {:else if !ready || filterLoading}
     <p class="loading">Loading the board…</p>
   {:else if index && route.page === "about"}
@@ -313,6 +337,29 @@
   main.mobile { place-items: start center; padding: 14px 0 24px; min-height: 0; }
   main.page { place-items: start center; padding: 40px 0; }
   .loading, .error { color: var(--paper); opacity: 0.8; }
+  .stale {
+    max-width: 420px;
+    margin: 0 16px;
+    padding: 24px 26px;
+    border-radius: 16px;
+    background: var(--paper);
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.5;
+  }
+  .stale p { margin: 0 0 12px; }
+  .stale-title { font-family: var(--display); font-weight: 700; font-size: 22px; }
+  .stale button {
+    font: inherit;
+    font-weight: 650;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 0;
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+  }
+  .stale button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
   footer {
     max-width: 880px;
     margin: 0 auto;

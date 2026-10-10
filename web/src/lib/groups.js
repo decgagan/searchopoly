@@ -24,7 +24,10 @@ export const PEOPLE_GROUPS = {
   other: { label: "Other", colour: "#5c6370" },
 };
 
-export const groupOf = (key) => GROUPS[key] ?? PEOPLE_GROUPS[key] ?? FALLBACK;
+// Group keys from before the merge, in case older data turns up next to this code.
+const GROUP_ALIASES = { search_portals: "search_tech", tech_ai: "search_tech" };
+
+export const groupOf = (key) => GROUPS[GROUP_ALIASES[key] ?? key] ?? PEOPLE_GROUPS[key] ?? FALLBACK;
 export const groupsFor = (board) => (board === "people" ? PEOPLE_GROUPS : GROUPS);
 
 // Category boards: URL slug -> colour set, in board order. Must match CATEGORY_BOARDS in
