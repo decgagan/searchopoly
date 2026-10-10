@@ -86,8 +86,8 @@ def test_report_lists_category_boards_and_flags_gaps(tmp_path, monkeypatch):
     )
     assert report.category_warnings(result) == ["mystery.com"]
     text = report.publish([result])
-    assert "| Search & tech | 1 | 27 | Google |" in text
-    assert "| News & sport | 0 | 28 | - |" in text
+    assert "| Search & tech | 1 | 27 | 1,000 | Google |" in text
+    assert "| News & sport | 0 | 28 | 1,000 | - |" in text
     assert "1 unreviewed domains rank inside the category-board depth" in text
 
 

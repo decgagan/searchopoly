@@ -125,18 +125,18 @@ def people_months(months: list[str], today: str, include_previous: bool,
 
 def build_people(month: str, board_size: int) -> report.BoardResult:
     try:
-        board, categories, skipped, source = people.build_month(month, board_size)
+        board, categories, skipped, source, depths = people.build_month(month, board_size)
     except people.PeopleUnavailable as exc:
         log.warning("People %s pending: %s", month, exc)
         return report.BoardResult("people", month, "pending", message=str(exc))
-    except requests.RequestException as exc:
+    except (requests.RequestException, OSError, EOFError) as exc:
         log.warning("People %s pending: Wikimedia request failed: %s", month, exc)
         return report.BoardResult("people", month, "pending", message=f"Wikimedia request failed ({exc}).")
     if len(board) < board_size:
         log.warning("People %s: only %d people found", month, len(board))
     payload = snapshot.people_payload(board, month, source, skipped)
     changed = snapshot.write_json(config.SNAPSHOT_DIR / month / "people.json", payload, compact=True)
-    cats = snapshot.people_category_payload(categories, month, source, board_size)
+    cats = snapshot.people_category_payload(categories, month, source, board_size, depths)
     cats_changed = snapshot.write_json(config.SNAPSHOT_DIR / month / "people_categories.json", cats,
                                        compact=True)
     return report.BoardResult("people", month, "ok", source=f"Wikimedia Pageviews, en.wikipedia, {month}",

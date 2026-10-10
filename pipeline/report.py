@@ -110,12 +110,14 @@ def render(results: list[BoardResult]) -> str:
             labels = {k: label for k, (_, label) in config.CATEGORY_BOARDS.items()}
             if r.board == "people":
                 labels = dict(people.PEOPLE_CATEGORIES)
-            depth = cp["depth"] if isinstance(cp["depth"], str) else f"raw top {cp['depth']}"
+            depth = (f"top {cp['depth']:,} articles, deeper where a set needed it"
+                     if r.board == "people" else f"raw top {cp['depth']}")
             lines += [
                 f"**Category boards** (top {cp.get('board_size', config.BOARD_SIZE)} per colour set, "
                 f"from the {depth}; file {'updated' if r.categories['changed'] else 'unchanged'}):", "",
-                "| Colour set | Entries | Vacant | #1 |", "|---|---:|---:|---|",
+                "| Colour set | Entries | Vacant | Depth | #1 |", "|---|---:|---:|---:|---|",
                 *[f"| {labels.get(k, k)} | {len(b['sites'])} | {b['vacant']} | "
+                  f"{b.get('depth', cp['depth']):,} | "
                   f"{_name(cp['brands'][b['sites'][0]['id']]) if b['sites'] else '-'} |"
                   for k, b in cp["boards"].items()],
                 "",

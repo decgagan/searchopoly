@@ -116,7 +116,7 @@ def test_build_people_keeps_humans_merges_redirects_and_drops_bots():
     assert alice["views"] == 1000 and alice["source_rank"] == 4
     assert alice["merged_titles"] == ["Alice_Smith", "Alice_smith_(redirect)"]
     assert board.iloc[1]["died"] == "2026-03-01" and board.iloc[1]["category"] == "politics"
-    assert skipped == [{"qid": "Q9", "name": "Bot Target", "views": 550,
+    assert skipped == [{"qid": "Q9", "name": "Bot Target", "views": 550, "category": "screen",
                         "reason": "likely automated traffic (0% mobile)"}]
 
 
@@ -182,3 +182,27 @@ def test_people_category_payload_shares_people_and_tracks_movement(tmp_path, mon
     assert sport["sites"][0] == {"rank": 1, "id": "b", "previous_rank": 2, "movement": 1}
     assert sport["dropped_out"] == [{"id": "a", "name": "A", "previous_rank": 1}]
     assert set(second["brands"]) == {"b", "c"} and second["brands"]["b"]["name"] == "B"
+
+
+def test_tiers_go_deeper_only_for_short_sets():
+    # 4 articles: two singers near the top, one royal only in the deeper tier, one bot.
+    top = pd.DataFrame([
+        (1, "Singer_A", 900, 300), (2, "Singer_B", 800, 300), (3, "Bot_Royal", 700, 700),
+        (4, "Royal_C", 50, 20),
+    ], columns=["rank", "article", "views", "desktop"])
+    humans = {"Q1": P("Q1", "Singer A", "singer"), "Q2": P("Q2", "Singer B", "singer"),
+              "Q3": P("Q3", "Bot Royal", "monarch"), "Q4": P("Q4", "Royal C", "monarch")}
+    asked = []
+
+    def resolve(titles):
+        asked.append(len(titles))
+        q = {t: {"title": t, "qid": f"Q{i + 1}"} for i, t in enumerate(top["article"]) if t in titles}
+        return q, {v["qid"]: humans[v["qid"]] for v in q.values()}
+
+    board, cats, skipped, depths = people.build_tiered(top, resolve, board_size=1, tiers=(3, 4, 10))
+    assert asked == [3, 4]                       # stopped once every set was full or the list ran out
+    assert board["name"].tolist() == ["Singer A"]
+    assert depths["music"] == 3 and cats["music"]["name"].tolist() == ["Singer A"]
+    assert depths["royalty"] == 4 and cats["royalty"]["name"].tolist() == ["Royal C"]
+    assert [s["name"] for s in skipped] == ["Bot Royal"]   # 100% desktop, listed once
+    assert cats["royalty"].iloc[0]["source_rank"] == 4

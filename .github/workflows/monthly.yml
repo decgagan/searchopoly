@@ -22,7 +22,8 @@ concurrency:
 jobs:
   snapshot:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # The People board streams a ~6 GB Wikimedia page-view dump (about 15-25 minutes per month).
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v7
 

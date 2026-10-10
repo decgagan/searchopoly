@@ -2,17 +2,20 @@
 
 Steps for one month:
 
-1. Wikimedia Pageviews API: the month's top 1,000 en.wikipedia articles (all access methods,
-   user agent only, so known crawlers and automated traffic are already removed).
-2. Drop non-articles (Main Page, Special:, Wikipedia:, File: and other namespaces).
-3. Resolve titles to Wikidata items in batches, following redirects, so two titles for the
-   same person merge (their views are added together).
-4. Keep humans only (Wikidata P31 = Q5) using one Wikidata Query Service request. Fictional
-   characters, events, films and so on drop out here.
-5. Drop pages whose mobile share is implausible for English Wikipedia (5% or less, or 98% or
-   more): the mobile/desktop comparison Wikimedia's Topviews tool and Pageviews FAQ suggest
-   for spotting automated traffic.
-6. Give each person a colour set from their Wikidata occupations (see ``categorise``), with
+1. Exact monthly views for every English Wikipedia page come from Wikimedia's "pageview
+   complete" monthly dump (user traffic only, so known crawlers and automated agents are
+   already removed); see ``pipeline/pageview_dumps.py``. Non-articles (Main Page, Special:,
+   Wikipedia:, File: and other namespaces) are dropped and the rest ranked.
+2. Depth: every board starts from the month's top 5,000 articles (DEPTH_TIERS[0]). A colour
+   set with fewer than 28 people there looks deeper, tier by tier (10,000, 20,000, 40,000),
+   and only that set's board uses the deeper pool. The depth each set needed is recorded.
+3. Titles are resolved to Wikidata items in batches, following redirects, so two titles for
+   the same person merge (their exact monthly views are added together).
+4. Humans only (Wikidata P31 = Q5), via the Wikidata Query Service. Fictional characters,
+   events, films and so on drop out here.
+5. Pages whose mobile share is implausible for English Wikipedia (5% or less, or 98% or
+   more) are dropped as likely automated traffic, using the dump's desktop/mobile split.
+6. Each person gets a colour set from their Wikidata occupations (see ``categorise``), with
    hand overrides in ``pipeline/data/people_overrides.csv``.
 
 Only CC0 data is stored: view counts (Wikimedia), names, short descriptions, occupations and
@@ -31,14 +34,14 @@ from urllib.parse import quote
 import pandas as pd
 import requests
 
-from . import config
+from . import config, pageview_dumps
 
 log = logging.getLogger(__name__)
 
 PROJECT = "en.wikipedia"
-TOP_URL = "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/{project}/all-access/{y}/{m:02d}/all-days"
-PER_ARTICLE_URL = ("https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{project}/"
-                   "{access}/user/{title}/monthly/{start}/{end}")
+# Articles considered per month: every board starts at the first tier; a colour set short of
+# 28 people moves to the next tier, and so on (only that set's board uses the deeper pool).
+DEPTH_TIERS = (5_000, 10_000, 20_000, 40_000)
 WIKI_API = "https://en.wikipedia.org/w/api.php"
 SPARQL_URL = "https://query.wikidata.org/sparql"
 BATCH = 50
@@ -157,22 +160,18 @@ def _cached_json(name: str, fetch):
 
 # --- Fetching -----------------------------------------------------------------------------
 
-def top_articles(month: str, session=None) -> pd.DataFrame:
-    """The month's top 1,000 articles as a DataFrame (rank, article, views)."""
-    y, m = map(int, month.split("-"))
-    url = TOP_URL.format(project=PROJECT, y=y, m=m)
-
-    def fetch():
-        res = _get(session or _session(), url)
-        if res.status_code == 404:
-            raise PeopleUnavailable(f"Wikimedia hasn't published page views for {month} yet.")
-        if not res.ok:
-            raise PeopleUnavailable(f"Wikimedia Pageviews API returned HTTP {res.status_code}.")
-        return res.json()
-
-    data = _cached_json(f"pageviews_top_{PROJECT}_{month}.json", fetch)
-    articles = data["items"][0]["articles"]
-    return pd.DataFrame(articles)[["rank", "article", "views"]]
+def top_articles(month: str, session=None, keep: int = DEPTH_TIERS[-1]) -> pd.DataFrame:
+    """The month's top ``keep`` articles: rank (among articles), article, views, desktop."""
+    try:
+        # The dump's top 50,000 titles include a few thousand non-articles (Special:, File:...),
+        # which still leaves more than the deepest tier's 40,000 articles.
+        rows = pageview_dumps.monthly_top(month, session=session or _session())
+    except pageview_dumps.DumpUnavailable as exc:
+        raise PeopleUnavailable(str(exc)) from exc
+    df = pd.DataFrame(rows, columns=["article", "views", "desktop"])
+    df = df[df["article"].map(is_article)].head(keep).reset_index(drop=True)
+    df.insert(0, "rank", range(1, len(df) + 1))
+    return df
 
 
 def is_article(title: str) -> bool:
@@ -186,41 +185,54 @@ def is_article(title: str) -> bool:
     return True
 
 
+def _load(name: str, default):
+    path = config.CACHE_DIR / name
+    return json.loads(path.read_text()) if path.exists() else default
+
+
+def _save(name: str, data) -> None:
+    path = config.CACHE_DIR / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False))
+
+
 def resolve_qids(titles: list[str], session=None, month: str = "") -> dict[str, dict]:
     """Map each title to {'title': canonical title, 'qid': Wikidata id or None}.
 
-    Follows redirects, so a redirect and its target resolve to the same item.
+    Follows redirects, so a redirect and its target resolve to the same item. Answers are
+    cached per month and only new titles are looked up, so going a tier deeper is cheap.
     """
     session = session or _session()
+    cache_name = f"wiki_qids_{month}.json"
+    out = _load(cache_name, {}) if month else {}
+    todo = [t for t in dict.fromkeys(titles) if t not in out]
+    for i in range(0, len(todo), BATCH):
+        batch = todo[i:i + BATCH]
+        res = _get(session, WIKI_API, params={
+            "action": "query", "format": "json", "formatversion": 2, "redirects": 1,
+            "prop": "pageprops", "ppprop": "wikibase_item", "titles": "|".join(batch),
+        })
+        res.raise_for_status()
+        q = res.json().get("query", {})
+        hop = {n["from"]: n["to"] for n in q.get("normalized", [])}
+        hop.update({r["from"]: r["to"] for r in q.get("redirects", [])})
+        pages = {p["title"]: p for p in q.get("pages", [])}
+        for t in batch:
+            cur, seen = t, set()
+            while cur in hop and cur not in seen:
+                seen.add(cur)
+                cur = hop[cur]
+            page = pages.get(cur, {})
+            qid = (page.get("pageprops") or {}).get("wikibase_item")
+            out[t] = {"title": cur.replace(" ", "_"), "qid": qid}
+        if month and (i // BATCH) % 20 == 19:
+            _save(cache_name, out)  # keep progress on long runs
+    if month and todo:
+        _save(cache_name, out)
+    return {t: out[t] for t in titles if t in out}
 
-    def fetch():
-        out = {}
-        for i in range(0, len(titles), BATCH):
-            batch = titles[i:i + BATCH]
-            res = _get(session, WIKI_API, params={
-                "action": "query", "format": "json", "formatversion": 2, "redirects": 1,
-                "prop": "pageprops", "ppprop": "wikibase_item", "titles": "|".join(batch),
-            })
-            res.raise_for_status()
-            q = res.json().get("query", {})
-            hop = {}
-            for n in q.get("normalized", []):
-                hop[n["from"]] = n["to"]
-            for r in q.get("redirects", []):
-                hop[r["from"]] = r["to"]
-            pages = {p["title"]: p for p in q.get("pages", [])}
-            for t in batch:
-                cur, seen = t, set()
-                while cur in hop and cur not in seen:
-                    seen.add(cur)
-                    cur = hop[cur]
-                page = pages.get(cur, {})
-                qid = (page.get("pageprops") or {}).get("wikibase_item")
-                out[t] = {"title": cur.replace(" ", "_"), "qid": qid}
-        return out
 
-    return _cached_json(f"wiki_qids_{month or 'adhoc'}.json", fetch) if month else fetch()
-
+HUMANS_ONLY = "SELECT ?item WHERE { VALUES ?item { %s } ?item wdt:P31 wd:Q5 . }"
 
 # One row per human: occupations joined with "|", so the answer stays small.
 SPARQL = """
@@ -243,23 +255,37 @@ GROUP BY ?item
 
 
 def fetch_humans(qids: list[str], session=None, month: str = "") -> dict[str, Person]:
-    """Wikidata details for the items that are humans (instance of Q5); others are dropped."""
+    """Wikidata details for the items that are humans (instance of Q5); others are dropped.
+
+    Two passes: a cheap "which of these are humans?" query in big batches, then the detailed
+    query (labels, occupations, dates) for the humans only. Cached per month; only items not
+    asked about before are queried, so going a tier deeper only costs the new items.
+    """
     session = session or _session()
     qids = sorted(set(q for q in qids if q and re.fullmatch(r"Q\d+", q)))
+    cache_name = f"wikidata_humans_v2_{month}.json"
+    cache = _load(cache_name, {"queried": [], "rows": []}) if month else {"queried": [], "rows": []}
+    asked = set(cache["queried"])
+    todo = [q for q in qids if q not in asked]
 
-    def fetch():
-        rows = []
-        for i in range(0, len(qids), 200):
-            values = " ".join(f"wd:{q}" for q in qids[i:i + 200])
-            res = _get(session, SPARQL_URL, method="POST", data={"query": SPARQL % values},
-                       headers={"Accept": "application/sparql-results+json"})
-            res.raise_for_status()
-            rows += res.json()["results"]["bindings"]
-            time.sleep(1)  # be gentle with the query service
-        return rows
+    def sparql(query):
+        res = _get(session, SPARQL_URL, method="POST", data={"query": query},
+                   headers={"Accept": "application/sparql-results+json"})
+        res.raise_for_status()
+        time.sleep(0.5)  # be gentle with the query service
+        return res.json()["results"]["bindings"]
 
-    rows = _cached_json(f"wikidata_humans_{month}.json", fetch) if month else fetch()
-    return parse_humans(rows)
+    for i in range(0, len(todo), 1000):
+        batch = todo[i:i + 1000]
+        found = [r["item"]["value"].rsplit("/", 1)[-1]
+                 for r in sparql(HUMANS_ONLY % " ".join(f"wd:{q}" for q in batch))]
+        for j in range(0, len(found), 200):
+            cache["rows"] += sparql(SPARQL % " ".join(f"wd:{q}" for q in found[j:j + 200]))
+        cache["queried"] += batch
+        if month:
+            _save(cache_name, cache)
+    wanted = set(qids)
+    return {q: p for q, p in parse_humans(cache["rows"]).items() if q in wanted}
 
 
 def parse_humans(rows: list[dict]) -> dict[str, Person]:
@@ -286,18 +312,6 @@ def _date(value: str, precision) -> str:
     date = value.lstrip("+").split("T")[0]
     prec = int(precision) if precision else 11
     return date if prec >= 11 else date[:7] if prec == 10 else date[:4]
-
-
-def desktop_views(title: str, month: str, session=None) -> int:
-    y, m = map(int, month.split("-"))
-    last = calendar.monthrange(y, m)[1]
-    url = PER_ARTICLE_URL.format(project=PROJECT, access="desktop", title=quote(title, safe=""),
-                                 start=f"{y}{m:02d}0100", end=f"{y}{m:02d}{last}00")
-    res = _get(session or _session(), url)
-    if res.status_code == 404:
-        return 0
-    res.raise_for_status()
-    return sum(i["views"] for i in res.json().get("items", []))
 
 
 # --- Classification -----------------------------------------------------------------------
@@ -416,7 +430,8 @@ def build_people(top: pd.DataFrame, qids: dict[str, dict], humans: dict[str, Per
             if share is not None and not (MOBILE_SHARE_MIN < share < MOBILE_SHARE_MAX):
                 reason = f"likely automated traffic ({share:.0%} mobile)"
         if reason:
-            skipped.append({"qid": person.qid, "name": person.name, "views": row["views"], "reason": reason})
+            skipped.append({"qid": person.qid, "name": person.name, "views": row["views"],
+                            "category": category, "reason": reason})
             continue
         # Wikidata has no English or multilingual label for a few people: use the title.
         name = person.name if not re.fullmatch(r"Q\d+", person.name) else row["title"].replace("_", " ")
@@ -459,35 +474,59 @@ def attribution(month: str) -> dict:
         "agent": "user",
         "month": month,
         "url": f"https://pageviews.wmcloud.org/topviews/?project=en.wikipedia.org&platform=all-access&date={y}-{m}&excludes=",
-        "api": TOP_URL.format(project=PROJECT, y=int(y), m=int(m)),
+        "dump": pageview_dumps.dump_url(month),
+        "depth": DEPTH_TIERS[0],
         "licence": "Page views: CC0 1.0 (Wikimedia Foundation). Names, descriptions and occupations: Wikidata, CC0 1.0.",
     }
 
 
-def build_month(month: str, board_size: int = config.BOARD_SIZE, session=None):
-    """Fetch and build one month. Returns (board, category_boards, skipped, source)."""
-    session = session or _session()
-    top = top_articles(month, session)
-    titles = [t for t in top["article"] if is_article(t)]
-    qids = resolve_qids(titles, session, month)
-    humans = fetch_humans([v["qid"] for v in qids.values()], session, month)
-    views_by_title = dict(zip(top["article"], top["views"]))
-    share_cache_path = config.CACHE_DIR / f"pageviews_desktop_{month}.json"
-    share_cache = json.loads(share_cache_path.read_text()) if share_cache_path.exists() else {}
+def build_tiered(top: pd.DataFrame, resolve, board_size: int = config.BOARD_SIZE,
+                 overrides: Overrides | None = None, tiers=DEPTH_TIERS):
+    """Build the boards, going deeper only for colour sets that are short of people.
+
+    ``top`` has rank, article, views, desktop. ``resolve(titles)`` returns (qids, humans) for
+    those titles. Returns (board, category_boards, skipped, depths) where depths[set] is the
+    article depth that set's board drew on.
+
+    Views are always summed over every resolved title, so a person's total is the same on
+    every board they appear on.
+    """
+    desktop = dict(zip(top["article"], top["desktop"]))
 
     def mobile_share(titles, total):
-        desktop = 0
-        for t in titles:
-            if t not in share_cache:
-                share_cache[t] = desktop_views(t, month, session)
-                time.sleep(0.05)
-            desktop += share_cache[t]
-        return 1 - desktop / total if total else None
+        return 1 - sum(desktop.get(t, 0) for t in titles) / total if total else None
 
-    try:
-        board, categories, skipped = build_people(top, qids, humans, mobile_share, board_size,
-                                                  load_overrides())
-    finally:
-        share_cache_path.parent.mkdir(parents=True, exist_ok=True)
-        share_cache_path.write_text(json.dumps(share_cache))
-    return board, categories, skipped, attribution(month)
+    depths, chosen, skipped_by_set = {}, {}, {}
+    board = first_skipped = None
+    for depth in tiers:
+        pool = top.head(depth)
+        titles = pool["article"].tolist()
+        qids, humans = resolve(titles)
+        b, cats, skipped = build_people(pool, qids, humans, mobile_share, board_size, overrides)
+        if board is None:
+            board, first_skipped = b, skipped
+        for key, df in cats.items():
+            if key not in chosen or len(chosen[key]) < board_size:
+                chosen[key], depths[key] = df, depth
+                skipped_by_set[key] = [s for s in skipped if s.get("category") == key]
+        if all(len(df) >= board_size for df in chosen.values()) or len(top) <= depth:
+            break
+    # Main-board skips, plus anyone left off a deeper set board.
+    seen = {s["qid"] for s in first_skipped}
+    extra = [s for k in skipped_by_set for s in skipped_by_set[k]
+             if depths[k] > tiers[0] and s["qid"] not in seen and not seen.add(s["qid"])]
+    return board, chosen, first_skipped + extra, depths
+
+
+def build_month(month: str, board_size: int = config.BOARD_SIZE, session=None):
+    """Fetch and build one month. Returns (board, category_boards, skipped, source, depths)."""
+    session = session or _session()
+    top = top_articles(month, session)
+
+    def resolve(titles):
+        qids = resolve_qids(titles, session, month)
+        humans = fetch_humans([v["qid"] for v in qids.values()], session, month)
+        return qids, humans
+
+    board, cats, skipped, depths = build_tiered(top, resolve, board_size, load_overrides())
+    return board, cats, skipped, attribution(month), depths

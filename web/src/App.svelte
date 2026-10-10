@@ -110,7 +110,7 @@
       has_previous_month: raw.has_previous_month,
       filter: key,
       filterLabel: filterOf(key, raw.board)?.label ?? key,
-      depth: raw.depth,
+      depth: b.depth ?? raw.depth,  // People sets can each reach a different depth
       vacant: b.vacant,
       coverage: b.coverage,
       sites: b.sites.map((s) => (people ? person({ id: s.id, ...brands[s.id], ...s }) : { ...brands[s.id], ...s })),

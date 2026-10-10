@@ -70,7 +70,7 @@
     {/if}
     <p class="sub">
       {#if people && filterLabel}
-        Top {sites.length} {sites.length === 1 ? "person" : "people"} in {filterLabel}, ranked by page views
+        Top {sites.length} {sites.length === 1 ? "person" : "people"} in {filterLabel}, ranked by page views{#if snapshot.depth > 5000}<span class="depth"> · from the top {snapshot.depth.toLocaleString("en-GB")} articles</span>{/if}
       {:else if people}
         Top {sites.length} people, ranked by Wikipedia page views
       {:else if filterLabel}
@@ -82,7 +82,7 @@
     {#if snapshot.vacant && people}
       <p class="vacant">
         {snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}: nobody else in {filterLabel} is in
-        the month's top 1,000 articles. <a href="#about">Why?</a>
+        the month's top {(snapshot.depth ?? 0).toLocaleString("en-GB")} articles. <a href="#about">Why?</a>
       </p>
     {:else if snapshot.vacant}
       <p class="vacant">

@@ -53,7 +53,7 @@
       <p class="vacant-note">
         <strong>{snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}.</strong>
         {#if snapshot.board === "people"}
-          Nobody else in {snapshot.filterLabel} is in the month's top 1,000 English Wikipedia articles.
+          Nobody else in {snapshot.filterLabel} is in the month's top {(snapshot.depth ?? 0).toLocaleString("en-GB")} English Wikipedia articles.
         {:else}
           No other {snapshot.filterLabel} site is in the top {snapshot.depth.toLocaleString("en-GB")} domains.
         {/if}

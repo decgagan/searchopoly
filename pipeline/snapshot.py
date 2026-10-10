@@ -200,7 +200,8 @@ def people_payload(board: pd.DataFrame, month: str, source: dict, skipped: list[
 
 
 def people_category_payload(boards: dict[str, pd.DataFrame], month: str, source: dict,
-                            board_size: int = config.BOARD_SIZE) -> dict:
+                            board_size: int = config.BOARD_SIZE,
+                            depths: dict[str, int] | None = None) -> dict:
     """People category boards in the same shape as <board>_categories.json: each person once
     under "brands", then each board as ranks and ids."""
     prev = _previous_file("people_categories.json", month) or {}
@@ -214,12 +215,14 @@ def people_category_payload(boards: dict[str, pd.DataFrame], month: str, source:
                       for s in prev_boards.get(key, {}).get("sites", [])]
         sites, dropped = _ranked(board, prev_sites, full=False)
         out[key] = {"sites": sites, "vacant": max(0, board_size - len(sites)), "dropped_out": dropped}
+        if depths and key in depths:
+            out[key]["depth"] = depths[key]  # articles this set's board drew on
     return {
         "board": "people",
         "month": month,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source": source,
-        "depth": "top 1,000 English Wikipedia articles",
+        "depth": min(depths.values()) if depths else None,
         "has_previous_month": bool(prev),
         "brands": dict(sorted(brands.items())),
         "boards": out,
