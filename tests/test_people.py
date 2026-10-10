@@ -231,3 +231,9 @@ def test_description_beats_a_stray_occupation():
     pele = P("Q12897", "Pelé", "association football player", "politician", desc="Brazilian footballer (1940–2022)")
     assert people.categorise(pele) == "sport"          # occupations alone would say politics
     assert people.categorise(P("Q1", "X", "politician", desc="no keywords here")) == "politics"
+
+
+def test_crime_occupations_never_land_in_a_field():
+    p = P("Q1317", "Osama bin Laden", "businessperson", "civil engineer", "terrorist",
+          desc="founder of al-Qaeda (1957–2011)")
+    assert people.categorise(p) == "other"

@@ -374,6 +374,11 @@ DESCRIPTION_RULES = {
 }
 
 
+CRIME_OCCUPATIONS = ["terrorist", "jihadist", "serial killer", "murderer", "mass murderer",
+                     "criminal", "drug trafficker", "drug lord", "gangster", "mobster", "hijacker",
+                     "assassin", "spree killer", "fraudster", "sex offender"]
+
+
 def describe_category(description: str | None) -> str | None:
     """Colour set from the Wikidata description: the earliest matching keyword wins."""
     text = (description or "").lower()
@@ -406,6 +411,9 @@ def categorise(person: Person, overrides: dict[str, str] | None = None) -> str:
     if from_description:
         return from_description
     labels = [o.lower() for o in person.occupations]
+    # Someone Wikidata lists as a terrorist or killer isn't put in a field for their day job.
+    if any(_matches(l, k) for l in labels for k in CRIME_OCCUPATIONS):
+        return "other"
     hits = {cat: sum(any(_matches(l, k) for k in kws) for l in labels)
             for cat, kws in OCCUPATION_RULES.items()}
     if hits["royalty"]:
