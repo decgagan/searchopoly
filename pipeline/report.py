@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
-from . import config
+from . import config, people
 
 log = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ def category_warnings(result: "BoardResult") -> list[str]:
         return []
     seen = []
     for b in result.categories["payload"]["boards"].values():
-        for d in b["coverage"].get("unreviewed_above_cutoff", []):
+        for d in b.get("coverage", {}).get("unreviewed_above_cutoff", []):
             if d not in seen:
                 seen.append(d)
     return seen
@@ -49,21 +49,25 @@ def unreviewed_domains(classified: pd.DataFrame, top_n: int = config.RAW_TOP_N) 
     return [(int(r), d) for r, d in zip(rows["rank"], rows["domain"])]
 
 
+def _name(site: dict) -> str:
+    return site.get("brand") or site.get("name") or site.get("id", "?")
+
+
 def _movers(payload: dict) -> str:
     if not payload.get("has_previous_month"):
         return "First month on record, so no movement yet."
     sites = payload["sites"]
     moved = [s for s in sites if s.get("movement")]
-    new = [s["brand"] for s in sites if s.get("previous_rank") is None]
-    out = [s["brand"] for s in payload.get("dropped_out", [])]
+    new = [_name(s) for s in sites if s.get("previous_rank") is None]
+    out = [_name(s) for s in payload.get("dropped_out", [])]
     parts = []
     if moved:
         up = max(moved, key=lambda s: s["movement"])
         down = min(moved, key=lambda s: s["movement"])
         if up["movement"] > 0:
-            parts.append(f"biggest climber **{up['brand']}** (+{up['movement']})")
+            parts.append(f"biggest climber **{_name(up)}** (+{up['movement']})")
         if down["movement"] < 0:
-            parts.append(f"biggest faller **{down['brand']}** ({down['movement']})")
+            parts.append(f"biggest faller **{_name(down)}** ({down['movement']})")
     if new:
         parts.append("new: " + ", ".join(new))
     if out:
@@ -79,18 +83,21 @@ def render(results: list[BoardResult]) -> str:
         if r.status != "ok":
             lines += [title, "", f"**{r.status.title()}:** {r.message}", ""]
             continue
-        top = ", ".join(s["brand"] for s in r.payload["sites"][:5])
+        top = ", ".join(_name(s) for s in r.payload["sites"][:5])
         lines += [
             title, "",
             f"- Source: {r.source}",
             f"- File: {'updated' if r.changed else 'unchanged'}",
             f"- Top 5: {top}",
             f"- Movement: {_movers(r.payload)}",
-            f"- Reviewed through raw rank {r.coverage['reviewed_through_rank']} "
-            f"(28th board site is at raw rank {r.coverage['last_board_source_rank']})",
-            "",
         ]
-        if r.coverage["unreviewed_above_cutoff"]:
+        if r.coverage:
+            lines.append(f"- Reviewed through raw rank {r.coverage['reviewed_through_rank']} "
+                         f"(28th board site is at raw rank {r.coverage['last_board_source_rank']})")
+        for s in r.payload.get("skipped", []):
+            lines.append(f"- Left off: {s['name']} ({s['views']:,} views): {s['reason']}")
+        lines.append("")
+        if r.coverage and r.coverage["unreviewed_above_cutoff"]:
             lines += [
                 "> [!WARNING]",
                 "> These unreviewed domains rank above the last board site, so a real site may be "
@@ -101,12 +108,15 @@ def render(results: list[BoardResult]) -> str:
         if r.categories:
             cp = r.categories["payload"]
             labels = {k: label for k, (_, label) in config.CATEGORY_BOARDS.items()}
+            if r.board == "people":
+                labels = dict(people.PEOPLE_CATEGORIES)
+            depth = cp["depth"] if isinstance(cp["depth"], str) else f"raw top {cp['depth']}"
             lines += [
-                f"**Category boards** (top {cp['board_size']} per colour set, from the raw top "
-                f"{cp['depth']}; file {'updated' if r.categories['changed'] else 'unchanged'}):", "",
-                "| Colour set | Sites | Vacant | #1 |", "|---|---:|---:|---|",
+                f"**Category boards** (top {cp.get('board_size', config.BOARD_SIZE)} per colour set, "
+                f"from the {depth}; file {'updated' if r.categories['changed'] else 'unchanged'}):", "",
+                "| Colour set | Entries | Vacant | #1 |", "|---|---:|---:|---|",
                 *[f"| {labels.get(k, k)} | {len(b['sites'])} | {b['vacant']} | "
-                  f"{cp['brands'][b['sites'][0]['id']]['brand'] if b['sites'] else '-'} |"
+                  f"{_name(cp['brands'][b['sites'][0]['id']]) if b['sites'] else '-'} |"
                   for k, b in cp["boards"].items()],
                 "",
             ]

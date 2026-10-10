@@ -8,11 +8,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import config
+from . import config, people
 
 log = logging.getLogger(__name__)
 
-BOARD_LABELS = {"world": "World", "uk": "United Kingdom"}
+BOARD_LABELS = {"world": "World", "uk": "United Kingdom", "people": "People"}
 
 
 def _previous_sites(board_name: str, month: str) -> list[dict]:
@@ -137,6 +137,95 @@ def category_payload(boards: dict[str, pd.DataFrame], coverage: dict[str, dict],
     }
 
 
+def _present(v) -> bool:
+    """False for None, NaN and empty values (pandas turns missing cells into NaN)."""
+    if v is None:
+        return False
+    if isinstance(v, float) and v != v:
+        return False
+    if isinstance(v, (list, str)) and not v:
+        return False
+    return True
+
+
+def _person(row: dict) -> dict:
+    person = {
+        "id": row["id"],
+        "qid": row["qid"],
+        "name": row["name"],
+        "title": row["title"],
+        "views": int(row["views"]),
+        "category": row["category"],
+        "source_rank": int(row["source_rank"]),
+    }
+    for key in ("description", "died", "merged_titles"):
+        if _present(row.get(key)):
+            person[key] = row[key]
+    return person
+
+
+def _ranked(board: pd.DataFrame, prev_sites: list[dict], full: bool) -> tuple[list, list]:
+    """Board rows with movement against last month, and who dropped out."""
+    prev_rank = {s["id"]: s["rank"] for s in prev_sites}
+    out = []
+    for row in board.to_dict("records"):
+        previous = prev_rank.get(row["id"])
+        site = {"rank": int(row["rank"]), **(_person(row) if full else {"id": row["id"]})}
+        site["previous_rank"] = previous
+        site["movement"] = (previous - site["rank"]) if previous else None
+        out.append(site)
+    ids = {s["id"] for s in out}
+    dropped = [{"id": s["id"], "name": s.get("name", s["id"]), "previous_rank": s["rank"]}
+               for s in sorted(prev_sites, key=lambda s: s["rank"]) if s["id"] not in ids]
+    return out, dropped
+
+
+def people_payload(board: pd.DataFrame, month: str, source: dict, skipped: list[dict]) -> dict:
+    """The People board for one month. Optional fields are left out when empty."""
+    prev = _previous_file("people.json", month)
+    sites, dropped = _ranked(board, (prev or {}).get("sites", []), full=True)
+    return {
+        "board": "people",
+        "label": BOARD_LABELS["people"],
+        "month": month,
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "metric": "Page views of English Wikipedia articles about people (user traffic)",
+        "source": source,
+        "has_previous_month": prev is not None,
+        "sites": sites,
+        "dropped_out": dropped,
+        # Left off despite enough views, and why (automated traffic, adult content, override).
+        "skipped": skipped,
+    }
+
+
+def people_category_payload(boards: dict[str, pd.DataFrame], month: str, source: dict,
+                            board_size: int = config.BOARD_SIZE) -> dict:
+    """People category boards in the same shape as <board>_categories.json: each person once
+    under "brands", then each board as ranks and ids."""
+    prev = _previous_file("people_categories.json", month) or {}
+    prev_boards = prev.get("boards", {})
+    prev_brands = prev.get("brands", {})
+    brands, out = {}, {}
+    for key, board in boards.items():
+        for row in board.to_dict("records"):
+            brands.setdefault(row["id"], {k: v for k, v in _person(row).items() if k != "id"})
+        prev_sites = [{**s, "name": prev_brands.get(s["id"], {}).get("name", s["id"])}
+                      for s in prev_boards.get(key, {}).get("sites", [])]
+        sites, dropped = _ranked(board, prev_sites, full=False)
+        out[key] = {"sites": sites, "vacant": max(0, board_size - len(sites)), "dropped_out": dropped}
+    return {
+        "board": "people",
+        "month": month,
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "source": source,
+        "depth": "top 1,000 English Wikipedia articles",
+        "has_previous_month": bool(prev),
+        "brands": dict(sorted(brands.items())),
+        "boards": out,
+    }
+
+
 VOLATILE_KEYS = {"generated_at"}
 
 
@@ -203,7 +292,7 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict],
     months = sorted({p.name for p in config.SNAPSHOT_DIR.iterdir() if p.is_dir()})
     latest = months[-1] if months else None
     boards = {}
-    for name in ("world", "uk"):
+    for name in ("world", "uk", "people"):
         available = [m for m in months if (config.SNAPSHOT_DIR / m / f"{name}.json").exists()]
         entry = {
             "label": BOARD_LABELS[name],
@@ -221,7 +310,7 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict],
     groups = (categories.groupby("group", sort=False)["category"].apply(list).to_dict())
     category_months = {
         name: [m for m in months if (config.SNAPSHOT_DIR / m / f"{name}_categories.json").exists()]
-        for name in ("world", "uk")
+        for name in ("world", "uk", "people")
     }
     category_boards = {
         "depth": config.CATEGORY_DEPTH,
@@ -229,6 +318,9 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict],
         "filters": [{"id": k, "group": g, "label": label}
                     for k, (g, label) in config.CATEGORY_BOARDS.items()],
         "months": {k: v for k, v in category_months.items() if v},
+        # The People board's colour sets come from Wikidata occupations (pipeline/people.py).
+        "people_filters": [{"id": k, "group": k, "label": label}
+                           for k, label in people.PEOPLE_CATEGORIES.items()],
     }
     index = {
         "project": "Searchopoly",

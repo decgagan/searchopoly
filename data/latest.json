@@ -37,12 +37,28 @@
       "latest": null,
       "status": "pending",
       "reason": "CLOUDFLARE_API_TOKEN is not set, so Cloudflare Radar was skipped."
+    },
+    "people": {
+      "label": "People",
+      "months": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+      ],
+      "latest": "snapshots/2026-09/people.json",
+      "status": "ok"
     }
   },
   "categories": [
     {
       "category": "search",
-      "group": "search_portals",
+      "group": "search_tech",
       "label": "Search & portals"
     },
     {
@@ -107,12 +123,12 @@
     },
     {
       "category": "tech",
-      "group": "tech_ai",
+      "group": "search_tech",
       "label": "Tech"
     },
     {
       "category": "ai",
-      "group": "tech_ai",
+      "group": "search_tech",
       "label": "AI assistants"
     },
     {
@@ -132,8 +148,10 @@
     }
   ],
   "groups": {
-    "search_portals": [
-      "search"
+    "search_tech": [
+      "search",
+      "tech",
+      "ai"
     ],
     "social_messaging": [
       "social",
@@ -157,10 +175,6 @@
       "education",
       "government"
     ],
-    "tech_ai": [
-      "tech",
-      "ai"
-    ],
     "work_money": [
       "productivity",
       "finance",
@@ -172,9 +186,9 @@
     "board_size": 28,
     "filters": [
       {
-        "id": "search",
-        "group": "search_portals",
-        "label": "Search & portals"
+        "id": "search-tech",
+        "group": "search_tech",
+        "label": "Search & tech"
       },
       {
         "id": "social",
@@ -202,11 +216,6 @@
         "label": "Reference & learning"
       },
       {
-        "id": "tech",
-        "group": "tech_ai",
-        "label": "Tech & AI"
-      },
-      {
         "id": "work",
         "group": "work_money",
         "label": "Work & money"
@@ -224,8 +233,56 @@
         "2026-08",
         "2026-09",
         "2026-10"
+      ],
+      "people": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
       ]
-    }
+    },
+    "people_filters": [
+      {
+        "id": "politics",
+        "group": "politics",
+        "label": "Politics"
+      },
+      {
+        "id": "royalty",
+        "group": "royalty",
+        "label": "Royalty"
+      },
+      {
+        "id": "sport",
+        "group": "sport",
+        "label": "Sport"
+      },
+      {
+        "id": "music",
+        "group": "music",
+        "label": "Music"
+      },
+      {
+        "id": "screen",
+        "group": "screen",
+        "label": "Film, TV & media"
+      },
+      {
+        "id": "business",
+        "group": "business",
+        "label": "Business & tech"
+      },
+      {
+        "id": "other",
+        "group": "other",
+        "label": "Other"
+      }
+    ]
   },
   "curation": {
     "mapped_domains": 503,

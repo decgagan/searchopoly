@@ -15,7 +15,7 @@ def _board(*brands):
         "id": [b.lower() for b in brands],
         "brand": list(brands),
         "domain": [f"{b.lower()}.com" for b in brands],
-        "category": "tech", "group": "tech_ai",
+        "category": "tech", "group": "search_tech",
         "source_rank": range(1, len(brands) + 1),
         "merged_domains": [[f"{b.lower()}.com"] for b in brands],
         "note": None,
@@ -73,9 +73,9 @@ def test_report_lists_category_boards_and_flags_gaps(tmp_path, monkeypatch):
         "board_size": 28, "depth": 1000,
         "brands": {"google": {"brand": "Google"}},
         "boards": {
-            "search": {"sites": [{"id": "google", "rank": 1}], "vacant": 27,
+            "search-tech": {"sites": [{"id": "google", "rank": 1}], "vacant": 27,
                        "coverage": {"unreviewed_above_cutoff": ["mystery.com"], "ok": False}},
-            "tech": {"sites": [], "vacant": 28, "coverage": {"unreviewed_above_cutoff": ["mystery.com"]}},
+            "news": {"sites": [], "vacant": 28, "coverage": {"unreviewed_above_cutoff": ["mystery.com"]}},
         }}}
     result = report.BoardResult(
         "world", "2026-10", "ok", source="Tranco list X",
@@ -86,6 +86,18 @@ def test_report_lists_category_boards_and_flags_gaps(tmp_path, monkeypatch):
     )
     assert report.category_warnings(result) == ["mystery.com"]
     text = report.publish([result])
-    assert "| Search & portals | 1 | 27 | Google |" in text
-    assert "| Tech & AI | 0 | 28 | - |" in text
+    assert "| Search & tech | 1 | 27 | Google |" in text
+    assert "| News & sport | 0 | 28 | - |" in text
     assert "1 unreviewed domains rank inside the category-board depth" in text
+
+
+def test_people_boards_only_for_complete_months():
+    assert run.people_months(["2026-09", "2026-10"], "2026-10", include_previous=False) == ["2026-09"]
+    # The plain monthly run on 3 November builds October's People board.
+    assert run.people_months(["2026-11"], "2026-11", include_previous=True) == ["2026-10"]
+    assert run.people_months(["2027-01"], "2027-01", include_previous=True) == ["2026-12"]
+
+
+def test_plain_run_catches_up_on_missed_people_months():
+    have = lambda m: m != "2026-09"  # Wikimedia was late in early October
+    assert run.people_months(["2026-11"], "2026-11", True, have=have) == ["2026-09", "2026-10"]

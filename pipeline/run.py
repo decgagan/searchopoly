@@ -8,6 +8,10 @@ Each month's World board uses the Tranco list dated the 1st of that month (cover
 previous 30 days), so months are comparable and every snapshot is reproducible from its list
 ID. The UK board uses Cloudflare Radar (location=GB) for the same date; it needs
 CLOUDFLARE_API_TOKEN and is skipped (marked pending) without it.
+
+The People board (Wikipedia page views) needs a *complete* month, so it's built for each
+requested month that has ended, and a plain run (no --month/--backfill) also builds the
+previous month: the run on 3 November builds October's People board.
 """
 from __future__ import annotations
 
@@ -17,7 +21,9 @@ import re
 import sys
 from datetime import datetime, timezone
 
-from . import clean, config, radar, report, snapshot, tranco
+import requests
+
+from . import clean, config, people, radar, report, snapshot, tranco
 
 log = logging.getLogger("pipeline")
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
@@ -94,13 +100,59 @@ def build_uk(rules: clean.Rules, month: str, board_size: int) -> report.BoardRes
     )
 
 
+def _month_before(month: str) -> str:
+    y, m = map(int, month.split("-"))
+    return f"{y - 1:04d}-12" if m == 1 else f"{y:04d}-{m - 1:02d}"
+
+
+def people_months(months: list[str], today: str, include_previous: bool,
+                  have=lambda m: True, catch_up: int = 3) -> list[str]:
+    """Complete months (strictly before ``today``'s month) to build People boards for.
+
+    A plain monthly run builds last month, plus any of the last ``catch_up`` complete months
+    with no People board yet (``have(month)`` is False), e.g. if Wikimedia was late last time.
+    """
+    done = {m for m in months if m < today}
+    if include_previous:
+        prev = _month_before(today)
+        done.add(prev)
+        for _ in range(catch_up - 1):
+            prev = _month_before(prev)
+            if not have(prev):
+                done.add(prev)
+    return sorted(done)
+
+
+def build_people(month: str, board_size: int) -> report.BoardResult:
+    try:
+        board, categories, skipped, source = people.build_month(month, board_size)
+    except people.PeopleUnavailable as exc:
+        log.warning("People %s pending: %s", month, exc)
+        return report.BoardResult("people", month, "pending", message=str(exc))
+    except requests.RequestException as exc:
+        log.warning("People %s pending: Wikimedia request failed: %s", month, exc)
+        return report.BoardResult("people", month, "pending", message=f"Wikimedia request failed ({exc}).")
+    if len(board) < board_size:
+        log.warning("People %s: only %d people found", month, len(board))
+    payload = snapshot.people_payload(board, month, source, skipped)
+    changed = snapshot.write_json(config.SNAPSHOT_DIR / month / "people.json", payload, compact=True)
+    cats = snapshot.people_category_payload(categories, month, source, board_size)
+    cats_changed = snapshot.write_json(config.SNAPSHOT_DIR / month / "people_categories.json", cats,
+                                       compact=True)
+    return report.BoardResult("people", month, "ok", source=f"Wikimedia Pageviews, en.wikipedia, {month}",
+                              payload=payload, changed=changed,
+                              categories={"payload": cats, "changed": cats_changed})
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Searchopoly board snapshots.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--month", help="Snapshot month as YYYY-MM (default: current month, UTC)")
     group.add_argument("--backfill", metavar="FROM:TO", help="Build every month in a range, oldest first")
     parser.add_argument("--board-size", type=int, default=config.BOARD_SIZE)
+    parser.add_argument("--skip-people", action="store_true", help="Don't build People boards")
     args = parser.parse_args(argv)
+    this_month = datetime.now(timezone.utc).strftime("%Y-%m")
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
@@ -110,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
             parser.error("--backfill needs FROM:TO as YYYY-MM:YYYY-MM")
         months = month_range(start, end)
     else:
-        month = args.month or datetime.now(timezone.utc).strftime("%Y-%m")
+        month = args.month or this_month
         if not MONTH_RE.match(month):
             parser.error("--month needs YYYY-MM")
         months = [month]
@@ -120,6 +172,11 @@ def main(argv: list[str] | None = None) -> int:
     for month in months:  # oldest first, so movement is computed against the month before
         results.append(build_world(rules, month, args.board_size))
         results.append(build_uk(rules, month, args.board_size))
+    if not args.skip_people:
+        plain_run = not (args.month or args.backfill)
+        have = lambda m: (config.SNAPSHOT_DIR / m / "people.json").exists()
+        for month in people_months(months, this_month, include_previous=plain_run, have=have):
+            results.append(build_people(month, args.board_size))
 
     last = {r.board: r for r in results}
     status = {

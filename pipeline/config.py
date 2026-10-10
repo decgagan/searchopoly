@@ -6,6 +6,7 @@ PIPELINE_DATA = ROOT / "pipeline" / "data"
 SITE_MAP_CSV = PIPELINE_DATA / "site_map.csv"
 EXCLUDE_CSV = PIPELINE_DATA / "exclude.csv"
 CATEGORIES_CSV = PIPELINE_DATA / "categories.csv"
+PEOPLE_OVERRIDES_CSV = PIPELINE_DATA / "people_overrides.csv"
 
 OUTPUT_DIR = ROOT / "data"
 SNAPSHOT_DIR = OUTPUT_DIR / "snapshots"
@@ -29,6 +30,9 @@ RADAR_LIMIT = 100
 
 HTTP_TIMEOUT = 60
 USER_AGENT = "Searchopoly-pipeline/0.1 (+https://github.com/decgagan/searchopoly)"
+# Wikimedia's User-Agent policy asks for a tool name and a way to make contact.
+WIKIMEDIA_USER_AGENT = ("Searchopoly-pipeline/0.7 (https://searchopoly.co.uk; "
+                        "https://github.com/decgagan/searchopoly/issues) python-requests")
 
 # Category boards: the top sites within each colour set. They reach deeper into the list
 # than the main board, so every domain down to this raw rank must be reviewed (mapped or
@@ -37,13 +41,13 @@ USER_AGENT = "Searchopoly-pipeline/0.1 (+https://github.com/decgagan/searchopoly
 CATEGORY_DEPTH = 1000
 
 # URL slug -> colour-set group (pipeline/data/categories.csv) and label, in board order.
+# Old slugs "search" and "tech" (before the two sets merged) redirect to "search-tech" in the site.
 CATEGORY_BOARDS = {
-    "search": ("search_portals", "Search & portals"),
+    "search-tech": ("search_tech", "Search & tech"),
     "social": ("social_messaging", "Social & messaging"),
     "entertainment": ("entertainment", "Entertainment"),
     "shopping": ("shopping", "Shopping"),
     "news": ("news_sport", "News & sport"),
     "reference": ("reference_learning", "Reference & learning"),
-    "tech": ("tech_ai", "Tech & AI"),
     "work": ("work_money", "Work & money"),
 }
