@@ -1,18 +1,19 @@
 # Searchopoly
 
-**An interactive board game-style map of the web's most visited websites, for the UK and the world, updated every month.**
+**An interactive board game-style map of the web's most visited websites, for the UK and the world, and of the most viewed people on Wikipedia, updated every month.**
 
 Searchopoly takes public website popularity rankings, strips out the background noise
 (CDNs, ad servers, telemetry), merges sibling domains into the brands people actually
 recognise, and lays the top 28 out as squares on a game board. Categories are the colour
-sets, and a month slider shows who climbed and who fell. A "How it's made" page
-(`#about`) explains the method, the known biases and the credits.
+sets, and a month slider shows who climbed and who fell. A second mode, **Most viewed people**,
+ranks the 28 people whose English Wikipedia articles got the most views each month. A
+"How it's made" page (`#about`) explains the method, the known biases and the credits.
 
 It's a data science portfolio project: the interesting part is the pipeline that turns
 messy, infrastructure-heavy domain rankings into an honest, explainable list of sites.
 
 > **Status:** live at [searchopoly.co.uk](https://searchopoly.co.uk), updated automatically every month.
-> Latest addition: category boards (filter by industry).
+> Latest addition: the People board (most viewed people on Wikipedia), with its own colour sets.
 
 ![The October 2026 World board](docs/board.png)
 
@@ -22,6 +23,9 @@ messy, infrastructure-heavy domain rankings into an honest, explainable list of 
 </p>
 <p>
   <img src="docs/filter.png" alt="The board filtered to Shopping" width="62%">
+</p>
+<p>
+  <img src="docs/people.png" alt="The People board filtered to Sport, September 2026" width="62%">
 </p>
 <p>
   <img src="docs/card.png" alt="A site card open on the board" width="62%">
@@ -67,6 +71,12 @@ Tranco top 5,000 ──┐                       ┌─> data/snapshots/YYYY-MM/
 Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk.json
                         exclude /  + top 28 ├─> ..._ranked_top500.csv  (transparency)
                         patterns)           └─> data/latest.json       (index for the site)
+
+Wikimedia top 1,000 ─> drop non-articles ─> titles → Wikidata ─> humans only ─> bot check
+(en.wikipedia, month)   (Main Page,          (follows redirects,    (P31 = Q5)    (mobile share)
+                         Special:...)         merges duplicates)
+                     ─> colour set from occupations ─> data/snapshots/YYYY-MM/people.json
+                                                     └─> .../people_categories.json
 ```
 
 1. **Fetch.** For month `YYYY-MM`, the [Tranco](https://tranco-list.eu) list dated `YYYY-MM-01`
@@ -100,10 +110,15 @@ Radar top 100 (GB)─┘   (map /     brands   ├─> data/snapshots/YYYY-MM/uk
 
 ### Categories and colour sets
 
-18 categories roll up into 8 colour groups, defined in
+18 categories roll up into 7 colour groups, defined in
 [`pipeline/data/categories.csv`](pipeline/data/categories.csv):
-Search & portals · Social & messaging · Entertainment · Shopping · News & sport ·
-Reference & learning · Tech & AI · Work & money.
+Search & tech · Social & messaging · Entertainment · Shopping · News & sport ·
+Reference & learning · Work & money.
+
+Search & tech used to be two sets, Search & portals and Tech & AI. They were merged in
+October 2026 because neither could fill a category board alone (about 12 and 23–26 sites in
+the top 1,000). Together they fill all 28 squares every month. Old links (`#world/search...`,
+`#world/tech...`) redirect to `#world/search-tech...`.
 
 ### Category boards (filter by industry)
 
@@ -120,25 +135,76 @@ about 540 more domains, 223 mapped to sites and 317 excluded with a reason.
   check is stricter for these boards: a short board claims nothing else in the set is in the
   top 1,000, so the run warns if *any* unreviewed domain sits inside that depth.
 - **World only.** Radar's UK ranking stops at 100 domains, too shallow for category boards.
-- **One file per month:** `world_categories.json` (about 57 KB, 9 KB gzipped) holds all eight
+- **One file per month:** `world_categories.json` (about 55 KB, 9 KB gzipped) holds all seven
   boards. Brand details are stored once and the boards list only ids and ranks, one object
   per line so diffs stay readable. The site loads these files only when a filter is first used.
 
 | Colour set | URL | Sites (Jan–Oct 2026) | Oct 2026 | Oct top 3 |
 |---|---|---:|---:|---|
-| [Search & portals](https://searchopoly.co.uk/#world/search) | `#world/search` | 12–13 | 12 | Google, Mail.ru, Bing |
+| [Search & tech](https://searchopoly.co.uk/#world/search-tech) | `#world/search-tech` | 28 | 28 | Google, Apple, Mail.ru |
 | [Social & messaging](https://searchopoly.co.uk/#world/social) | `#world/social` | 28 | 28 | Facebook, Instagram, X (Twitter) |
 | [Entertainment](https://searchopoly.co.uk/#world/entertainment) | `#world/entertainment` | 28 | 28 | YouTube, Netflix, Roblox |
 | [Shopping](https://searchopoly.co.uk/#world/shopping) | `#world/shopping` | 28 | 28 | Amazon, eBay, Ozon |
 | [News & sport](https://searchopoly.co.uk/#world/news) | `#world/news` | 28 | 28 | Dzen, MSN, The New York Times |
 | [Reference & learning](https://searchopoly.co.uk/#world/reference) | `#world/reference` | 28 | 28 | Wikipedia, European Union, NIH (incl. PubMed) |
-| [Tech & AI](https://searchopoly.co.uk/#world/tech) | `#world/tech` | 23–26 | 26 | Apple, GitHub, ChatGPT |
 | [Work & money](https://searchopoly.co.uk/#world/work) | `#world/work` | 28 | 28 | Microsoft, Adobe, Zoom |
 
-Search & portals and Tech & AI are the thin sets. There are only a dozen or so search engines
-and portals anywhere near the top. In Tech & AI, much of what ranks highly in the raw lists is
-device and developer infrastructure, which is excluded, so fewer consumer-facing tech sites
-remain inside the top 1,000.
+Every set is now full in every month. The merged Search & tech board's 28th site sits between
+raw rank 550 (August) and 659 (January). Vacant lots stay in the code in case a set thins out
+in future.
+
+### People board (most viewed people on Wikipedia)
+
+A second kind of board: the 28 people whose English Wikipedia articles were viewed most in a
+month. Code in [`pipeline/people.py`](pipeline/people.py).
+
+1. **Views:** the [Wikimedia Pageviews API](https://wikimedia.org/api/rest_v1/) top 1,000
+   articles for the month (`en.wikipedia`, all access methods, user agent only, so known
+   crawlers and automated agents are already removed). A month is only built once it's complete.
+2. **Articles only:** the Main Page, `Special:`, `Wikipedia:`, `File:` and other namespaces are dropped.
+3. **Titles to Wikidata:** titles are resolved in batches of 50 through the Wikipedia API,
+   following redirects, so a redirect and its target count as one person (views are added up).
+4. **Humans only:** one Wikidata Query Service request keeps items that are an instance of
+   human (P31 = Q5). Events, films, TV series and fictional characters drop out here.
+5. **Automated traffic:** about 60–75% of English Wikipedia views come from mobile. A page with
+   5% or less, or 98% or more, mobile views is left off as likely automated traffic, following
+   the mobile/desktop comparison the Topviews tool and Pageviews FAQ suggest. The run report
+   lists each person left off and why.
+6. **Colour sets** come from Wikidata occupations (P106), by keyword: Politics, Royalty, Sport,
+   Music, Film, TV & media, Business & tech, Other. A royal occupation (monarch, duke...) and then
+   politics win outright, because royals and politicians list many other occupations. Otherwise
+   the set matching most occupations wins, ties go to sport, music, screen, business in that
+   order, and a set must cover at least a quarter of someone's occupations. A noble title alone
+   (life peers, honorifics) doesn't make someone royalty. Hand fixes go in
+   [`pipeline/data/people_overrides.csv`](pipeline/data/people_overrides.csv) (category,
+   exclusion, or a replacement for a wrong Wikidata description).
+7. **Adult performers** are left off, as adult sites are, but only when it's what they're known
+   for: an adult occupation *and* a Wikidata description that says so.
+
+Each person stores their name, Wikipedia title, views, Wikidata's short description, colour set,
+date of death if any (shown neutrally as "Died 28 August 2026") and the article's rank among all
+articles. Only CC0 data is stored: no Wikipedia article text and no images. Each colour set also
+has its own board, drawn from the whole top 1,000 (`#people/sport`); Royalty and Business & tech
+usually run short, so they show vacant lots. `people.json` is about 9.5 KB per month (3 KB
+gzipped) and `people_categories.json` about 60 KB (15 KB gzipped, loaded on first filter use).
+
+Requests use a descriptive User-Agent with contact URLs (Wikimedia's User-Agent policy), and raw
+API answers are cached in `.cache/`, so re-running a past month is offline and reproducible.
+
+| Month | #1 | #2 | #3 | #4 | #5 |
+|---|---|---|---|---|---|
+| 2026-01 | Nicolás Maduro | Catherine O'Hara | Donald Trump | Ajit Pawar | Bruce Lee |
+| 2026-02 | Jeffrey Epstein | Alysa Liu | Bad Bunny | Eric Dane | James Van Der Beek |
+| 2026-03 | Ali Khamenei | Chuck Norris | Mojtaba Khamenei | Benjamin Netanyahu | Carolyn Bessette-Kennedy |
+| 2026-04 | Michael Jackson | Jaafar Jackson | Donald Trump | Eric Swalwell | Rory McIlroy |
+| 2026-05 | Michael Jackson | C. Joseph Vijay | Kyle Busch | David Attenborough | Jaafar Jackson |
+| 2026-06 | Oliver Tree | Lionel Messi | Jalen Brunson | Cristiano Ronaldo | Daveigh Chase |
+| 2026-07 | Erling Haaland | Lamine Yamal | Lionel Messi | Lindsey Graham | Jude Bellingham |
+| 2026-08 | Hayden Panettiere | Dolly Parton | Tim Curry | Jason Arday | Zendaya |
+| 2026-09 | Lizzie Borden | Christa Pike | Elizabeth Holmes | Ted Kaczynski | Aileen Wuornos |
+
+Page views measure attention, not approval: true-crime dramas, deaths and trials push people
+up as much as achievements do. The board reports the numbers without comment.
 
 ## Running it
 
@@ -204,8 +270,10 @@ The URL hash holds the state, so any view can be shared:
 | `#uk` | UK board ("coming soon" until `uk.json` exists) |
 | `#world/2026-06` | World board for June 2026 |
 | `#world/google`, `#world/2026-06/chatgpt` | A board with a site card open (IDs are brand slugs, e.g. `x-twitter`) |
-| `#world/shopping` | World board filtered to one colour set (`search`, `social`, `entertainment`, `shopping`, `news`, `reference`, `tech`, `work`) |
+| `#world/shopping` | World board filtered to one colour set (`search-tech`, `social`, `entertainment`, `shopping`, `news`, `reference`, `work`). Old `#world/search` and `#world/tech` links redirect to `#world/search-tech` |
 | `#world/shopping/2026-08/amazon` | A category board for a month, with a card open |
+| `#people` | Most viewed people on Wikipedia, latest complete month |
+| `#people/sport/2026-07/lionel-messi` | A People colour set (`politics`, `royalty`, `sport`, `music`, `screen`, `business`, `other`) for a month, with a card open |
 | `#about` | "How it's made": method, sources, curation, biases, licences, tech stack |
 
 The UK board switches on automatically as soon as the pipeline writes `uk.json` and marks it
@@ -275,6 +343,8 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 | Source | Used for | Licence and attribution |
 |--------|----------|-------------------------|
 | [Tranco](https://tranco-list.eu) | World board | Free research ranking. Each list has a permanent ID, recorded in every snapshot. The authors ask users to cite: Victor Le Pochat, Tom Van Goethem, Samaneh Tajalizadehkhoob, Maciej Korczyński and Wouter Joosen, "Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation", *NDSS 2019*, [doi:10.14722/ndss.2019.23386](https://doi.org/10.14722/ndss.2019.23386). Tranco combines rankings from Cisco Umbrella, Majestic (CC BY 3.0), Farsight, the Chrome UX Report and Cloudflare Radar (CC BY-NC 4.0). |
+| [Wikimedia Pageviews](https://wikimedia.org/api/rest_v1/) | People board (views) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Requests follow the Wikimedia User-Agent policy. |
+| [Wikidata](https://www.wikidata.org) | People board (names, short descriptions, occupations, dates of death) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). No Wikipedia article text (CC BY-SA) is used, and no images. |
 | [Cloudflare Radar](https://radar.cloudflare.com/domains) | UK board | API data is licensed [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/): attribution required, **non-commercial use only**, and changes must be indicated. Cloudflare's trademarks and Radar's look and feel are not licensed. |
 
 **What this means for Searchopoly:**
@@ -282,7 +352,8 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
   the site shouldn't carry ads or be monetised without first checking with the data owners.
 - The data has been **modified**: infrastructure domains removed, sibling domains merged and
   categories added. The method page (`#about`) says so alongside the credits.
-- Searchopoly is not affiliated with or endorsed by Tranco, Cloudflare, or any site shown.
+- Searchopoly is not affiliated with or endorsed by Tranco, Cloudflare, the Wikimedia
+  Foundation, or any site or person shown.
   Brand names belong to their owners and are used only to identify the sites.
 - The board design is original. Searchopoly is not affiliated with any board game publisher.
 
@@ -294,6 +365,7 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
 - [x] **4. Movement.** Month slider with play button; squares and list rows glide to their new positions (FLIP animation, off under reduced motion); ▲/▼/NEW badges, biggest climber and faller, a rank-over-time sparkline on each card; ten months of real backfilled data; monthly and CI GitHub Actions workflows.
 - [x] **5. Launch (code).** "How it's made" method page with full credits; Open Graph/Twitter tags and a share image drawn from the real board each month; favicon and app icons; Share button on site cards (Web Share API, copy-link fallback); robots.txt, sitemap, 404 page, security headers. Lighthouse: 100/100/100/100 on desktop, 99/100/100/100 on mobile.
 - [x] **6. Category boards.** Filter by industry: a top-28 board for each colour set, reviewed to raw rank 1,000, with vacant lots where a set runs out; slider, movement, cards, URLs and mobile layout all work per set.
+- [x] **7. People board.** Most viewed people on English Wikipedia (Wikimedia Pageviews + Wikidata, CC0): humans only, redirects merged, automated traffic filtered, seven occupation-based colour sets with their own boards, Jan–Sep 2026 backfilled. Also merged Search & portals and Tech & AI into Search & tech.
 - [ ] **Go live.** Cloudflare Pages, custom domain, Radar token, public repo: see [LAUNCH.md](LAUNCH.md).
 
 ## Front-end design notes
@@ -319,12 +391,19 @@ would be misleading (most UK traffic goes to `.com` sites), so there's no fake f
   pulsing outline. With `prefers-reduced-motion`, everything jumps straight to the new state.
 - **Sparkline:** each card plots the site's rank by month (D3 scales and line generator), with
   gaps for months it was off the board.
-- **Industry filter:** the colour-set legend in the centre panel doubles as the filter: nine
-  toggle buttons (`aria-pressed`): "All sites" and the eight sets. Changing set keeps the month,
+- **Industry filter:** the colour-set legend in the centre panel doubles as the filter: eight
+  toggle buttons (`aria-pressed`): "All sites" and the seven sets. Changing set keeps the month,
   and sites on both boards glide to their new squares (instant under reduced motion). The
   category data loads on first hover or focus of the filter, so the switch itself is instant.
   The site loads each category board into the same shape as a normal board, so the board,
   mobile list, cards, badges, movers and slider needed no special cases.
+- **Sites / People:** the line above the title is the mode switch ("Most visited sites ·
+  Most viewed people", shortened to "Websites · People" on mobile). People mode reuses the
+  board, slider, badges, cards, filter chips and URL state. The site turns each person into the
+  usual snapshot shape: name as the brand, a compact view count ("8.5M views") where the domain
+  goes. Person cards show the Wikidata description, views, field, date of death if any, and a
+  "Read on Wikipedia" link. No photos, no commentary notes. Long "New" and "Dropped out" lists
+  are capped ("... and 20 more"), because people churn far more than sites.
 - **Sharing:** the card's Share button opens the device share sheet (Web Share API) with the
   card's URL, e.g. `searchopoly.co.uk/#world/github`. Where that isn't available it copies the
   link and says "Link copied".
@@ -353,7 +432,7 @@ web/
   src/lib/Square.svelte # one property square
   src/lib/Corner.svelte # the four corner squares
   src/lib/layout.js     # square positions, corner names
-  src/lib/groups.js     # the 8 colour sets
+  src/lib/groups.js     # colour sets: 7 for sites, 7 for people
   scripts/copy-data.mjs # copies data/ into the build
   scripts/og-image.mjs  # npm run og: screenshots #og into public/og.png
   scripts/icons.mjs     # npm run icons: PNG icons from favicon.svg
@@ -362,14 +441,15 @@ pipeline/
   run.py          # entry point: python -m pipeline.run
   tranco.py       # Tranco list metadata and download
   radar.py        # Cloudflare Radar ranking API client
+  people.py       # People board: Wikimedia page views + Wikidata
   clean.py        # classify, merge brands, coverage check
   snapshot.py     # JSON/CSV writers and the latest.json index
   report.py       # run report, job summary and warnings
-  data/           # hand-curated site_map.csv, exclude.csv, categories.csv
+  data/           # hand-curated site_map.csv, exclude.csv, categories.csv, people_overrides.csv
 data/
   latest.json     # index the front end loads first
   snapshots/YYYY-MM/
-tests/            # pytest suite: cleaning, Radar client, movement, run report
+tests/            # pytest suite: cleaning, Radar client, movement, category and People boards, run report
 .github/workflows # monthly snapshot job and CI
 ```
 

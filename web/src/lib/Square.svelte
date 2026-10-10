@@ -24,7 +24,7 @@
         <span class="brand">{#each brandParts(site.brand) as part, i}{#if i}<wbr />{/if}{part}{/each}</span>
         <span class="domain">{site.domain}</span>
       </span>
-      <span class="sr-only">, {group.label}{badge ? `, ${badge.label}` : ""}. Open site card</span>
+      <span class="sr-only">, {group.label}{badge ? `, ${badge.label}` : ""}. Open {site.kind === "person" ? "card" : "site card"}</span>
     </span>
   </button>
 {:else if vacant}

@@ -1,5 +1,5 @@
 <script>
-  import { GROUPS } from "./groups.js";
+  import { groupOf, groupsFor } from "./groups.js";
   import { monthLabel, dayLabel } from "./format.js";
   import { summarise } from "./movement.js";
   import MonthPicker from "./MonthPicker.svelte";
@@ -19,12 +19,35 @@
   );
   const podium = $derived(sites.slice(0, 3));
   const boardLabel = (key) => (key === "world" ? "World" : "UK");
+  const people = $derived(boardKey === "people");
+  const legendGroups = $derived(groupsFor(boardKey));
+  // Sites boards: switching back from People goes to the World board.
+  const modes = [
+    { key: "sites", label: "Most visited sites", short: "Websites", board: "world" },
+    { key: "people", label: "Most viewed people", short: "People", board: "people" },
+  ];
+  // People churn a lot month to month: name the first few, count the rest.
+  const few = (list) =>
+    list.length > 5 ? `${list.slice(0, 4).join(", ")} and ${list.length - 4} more` : list.join(", ");
 </script>
 
 <section class="centre" class:mobile aria-labelledby="board-title">
-  <p class="kicker">The web's most visited sites</p>
+  <!-- Two kinds of board: websites (World, UK) and people (Wikipedia page views). -->
+  <div class="modes" role="group" aria-label="What the board ranks">
+    {#each modes as m (m.key)}
+      <button
+        type="button"
+        aria-pressed={(m.key === "people") === people}
+        class:active={(m.key === "people") === people}
+        onclick={() => { if ((m.key === "people") !== people) onSelectBoard(m.board); }}
+      >{mobile ? m.short : m.label}</button>
+    {/each}
+  </div>
   <h1 id="board-title">Search<span>opoly</span></h1>
 
+  {#if people}
+    <p class="toggle-note">On English Wikipedia</p>
+  {:else}
   <div class="toggle" role="group" aria-label="Choose a board">
     {#each ["world", "uk"] as key}
       <button
@@ -38,6 +61,7 @@
       </button>
     {/each}
   </div>
+  {/if}
 
   {#if snapshot}
     <p class="month" aria-live="polite">{monthLabel(snapshot.month)}</p>
@@ -45,13 +69,22 @@
       <MonthPicker {months} month={snapshot.month} onSelect={onSelectMonth} compact={mobile} />
     {/if}
     <p class="sub">
-      {#if filterLabel}
+      {#if people && filterLabel}
+        Top {sites.length} {sites.length === 1 ? "person" : "people"} in {filterLabel}, ranked by page views
+      {:else if people}
+        Top {sites.length} people, ranked by Wikipedia page views
+      {:else if filterLabel}
         Top {sites.length} {filterLabel} sites worldwide, ranked by visits
       {:else}
         Top {sites.length} sites{boardKey === "uk" ? " in the UK" : " worldwide"}, ranked by visits
       {/if}
     </p>
-    {#if snapshot.vacant}
+    {#if snapshot.vacant && people}
+      <p class="vacant">
+        {snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}: nobody else in {filterLabel} is in
+        the month's top 1,000 articles. <a href="#about">Why?</a>
+      </p>
+    {:else if snapshot.vacant}
       <p class="vacant">
         {snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}: no other {filterLabel} site is in
         the top {snapshot.depth.toLocaleString("en-GB")} domains. <a href="#about">Why?</a>
@@ -60,7 +93,7 @@
 
     <ol class="podium" aria-label="Top three">
       {#each podium as s (s.id)}
-        <li style:--set={GROUPS[s.group]?.colour}>
+        <li style:--set={groupOf(s.group).colour}>
           <button type="button" onclick={(e) => onOpen(s, e.currentTarget)}>
             <span class="pos">{s.rank}</span>
             <span class="name">{s.brand}</span>
@@ -81,10 +114,10 @@
           </button>
         {/if}
         {#if summary.newcomers.length}
-          <span class="mover new"><span class="tag">New</span> {summary.newcomers.map((s) => s.brand).join(", ")}</span>
+          <span class="mover new"><span class="tag">New</span> {few(summary.newcomers.map((s) => s.brand))}</span>
         {/if}
         {#if summary.dropped.length}
-          <span class="mover out"><span class="tag">Dropped out</span> {summary.dropped.map((s) => s.brand).join(", ")}</span>
+          <span class="mover out"><span class="tag">Dropped out</span> {few(summary.dropped.map((s) => s.brand))}</span>
         {/if}
         {#if !summary.climber && !summary.faller && !summary.newcomers.length}
           <span class="mover out">No change from last month</span>
@@ -106,7 +139,7 @@
 
   {#if filters.length && snapshot}
     <!-- The colour-set legend doubles as the industry filter. -->
-    <p class="filters-label" id="filters-label">Filter by industry</p>
+    <p class="filters-label" id="filters-label">{people ? "Filter by field" : "Filter by industry"}</p>
     <div
       class="filters"
       role="group"
@@ -121,7 +154,7 @@
         onclick={() => onSelectFilter(null)}
       >
         <span class="swatch all" aria-hidden="true"></span>
-        <span class="label">All sites</span>
+        <span class="label">{people ? "All people" : "All sites"}</span>
       </button>
       {#each filters as f (f.id)}
         <button
@@ -139,7 +172,7 @@
     </div>
   {:else}
     <ul class="legend" aria-label="Colour sets">
-      {#each Object.entries(GROUPS) as [key, g]}
+      {#each Object.entries(legendGroups) as [key, g]}
         <li style:--set={g.colour}>
           <span class="swatch" aria-hidden="true"></span>
           <span>{g.label}</span>
@@ -150,7 +183,10 @@
   {/if}
 
   <p class="source">
-    {#if snapshot?.source?.name === "Tranco"}
+    {#if snapshot?.source?.name === "Wikimedia Pageviews"}
+      Data: <a href={snapshot.source.url} target="_blank" rel="noopener">Wikimedia page views</a>,
+      English Wikipedia, {monthLabel(snapshot.month)}; descriptions from Wikidata (both CC0)
+    {:else if snapshot?.source?.name === "Tranco"}
       Data: Tranco list <a href={snapshot.source.url} target="_blank" rel="noopener">{snapshot.source.list_id}</a>,
       {dayLabel(snapshot.source.window?.split(" to ")[0])} to {dayLabel(snapshot.source.list_date)}
     {:else if snapshot}
@@ -209,13 +245,36 @@
     width: 100%;
   }
 
-  .kicker {
-    margin: 0;
+  /* Sites / People: the kicker line doubles as the switch between the two kinds of board. */
+  .modes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2em 1.4em;
     font-size: var(--fs-kicker);
-    font-weight: 600;
-    letter-spacing: 0.22em;
+  }
+  .modes button {
+    font: inherit;
+    font-weight: 650;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--ink-soft);
+    background: none;
+    border: 0;
+    padding: 0.35em 0 0.3em;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+  }
+  .modes button:hover:not(.active) { color: var(--ink); border-bottom-color: #c9c2b3; }
+  .modes button.active { color: var(--ink); border-bottom-color: var(--accent); cursor: default; }
+  .modes button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  .centre.mobile .modes { font-size: 11.5px; gap: 0.2em 1.1em; }
+  .centre.mobile .modes button { padding: 0.7em 0 0.6em; }  /* bigger touch target */
+  .toggle-note {
+    margin: 0;
+    font-size: var(--fs-toggle);
+    color: var(--ink-soft);
+    padding: 0.35em 0;
   }
   h1 {
     margin: 0;
@@ -388,7 +447,7 @@
   .filters {
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.4em;
     font-size: var(--fs-legend);
     width: 100%;
@@ -423,15 +482,15 @@
   .chip[aria-pressed="true"] .count { color: #fff; }
   .chip .swatch { width: 0.85em; height: 0.85em; border-radius: 50%; }
   .chip .swatch.all {
-    background: conic-gradient(#3b5bdb 0 12.5%, #d6336c 0 25%, #7048e8 0 37.5%, #b25900 0 50%,
-      #d42c2c 0 62.5%, #09845f 0 75%, #0d7f91 0 87.5%, #546170 0);
+    background: conic-gradient(#3b5bdb 0 14.3%, #d6336c 0 28.6%, #7048e8 0 42.9%, #b25900 0 57.1%,
+      #d42c2c 0 71.4%, #09845f 0 85.7%, #546170 0);
   }
   .chip.all[aria-pressed="true"] { --set: var(--ink); }
   .chip.all[aria-pressed="true"] .swatch.all { box-shadow: 0 0 0 1.5px #fff; }
   .chip .count { padding-left: 0.4em; }
   .mobile .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }
   .mobile .chip { padding: 0.6em 0.75em; }
-  .mobile .chip.all { grid-column: 1 / -1; }
+  .mobile .chip.all { grid-column: auto; }
   @media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
 
   .source { margin: var(--gap) 0 0; font-size: var(--fs-source); color: var(--ink-soft); }

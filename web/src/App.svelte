@@ -5,8 +5,8 @@
   import About from "./lib/About.svelte";
   import OgCard from "./lib/OgCard.svelte";
   import { parseHash, formatHash } from "./lib/router.js";
-  import { FILTERS, filterOf } from "./lib/groups.js";
-  import { monthLabel } from "./lib/format.js";
+  import { filtersFor, filterOf, PEOPLE_GROUPS } from "./lib/groups.js";
+  import { monthLabel, compactNumber } from "./lib/format.js";
 
   const DATA = `${import.meta.env.BASE_URL}data`;
   const MOBILE_QUERY = "(max-width: 700px)";
@@ -22,8 +22,17 @@
   const categoryLoads = {};
 
   // URL hash is the source of truth for which board and which card are showing.
-  let route = $state(parseHash(location.hash));
-  window.addEventListener("hashchange", () => (route = parseHash(location.hash)));
+  // Rewrites old or non-canonical hashes (e.g. #world/tech -> #world/search-tech) in place.
+  function readHash() {
+    const r = parseHash(location.hash);
+    const canonical = formatHash(r);
+    if (r.page === "board" && location.hash && canonical !== location.hash) {
+      history.replaceState(null, "", canonical || location.pathname + location.search);
+    }
+    return r;
+  }
+  let route = $state(readHash());
+  window.addEventListener("hashchange", () => (route = readHash()));
 
   function navigate(next) {
     route = { ...route, ...next };
@@ -57,6 +66,21 @@
     return categoryLoads[board];
   }
 
+  // People use the same board as sites: the name goes where the brand goes, the view count
+  // where the domain goes, and the colour set comes from the Wikidata-based category.
+  const person = (p) => ({ ...p, brand: p.name, domain: `${compactNumber(p.views)} views`, group: p.category, kind: "person" });
+  const peopleSnaps = new WeakMap();
+  function peopleSnapshot(raw) {
+    if (!peopleSnaps.has(raw)) {
+      peopleSnaps.set(raw, {
+        ...raw,
+        sites: raw.sites.map(person),
+        dropped_out: raw.dropped_out.map((d) => ({ ...d, brand: d.name })),
+      });
+    }
+    return peopleSnaps.get(raw);
+  }
+
   // Turn one category board into the same shape as a normal snapshot, so the board, list,
   // card, badges and movers work unchanged.
   const hydrated = new Map();
@@ -65,25 +89,30 @@
     if (hydrated.has(cacheKey)) return hydrated.get(cacheKey);
     const b = raw.boards[key];
     if (!b) return null;
+    const people = raw.board === "people";
+    const brands = raw.brands;
     const snap = {
       board: raw.board,
       month: raw.month,
       source: raw.source,
       has_previous_month: raw.has_previous_month,
       filter: key,
-      filterLabel: filterOf(key)?.label ?? key,
+      filterLabel: filterOf(key, raw.board)?.label ?? key,
       depth: raw.depth,
       vacant: b.vacant,
       coverage: b.coverage,
-      sites: b.sites.map((s) => ({ ...raw.brands[s.id], ...s })),
-      dropped_out: b.dropped_out,
+      sites: b.sites.map((s) => (people ? person({ id: s.id, ...brands[s.id], ...s }) : { ...brands[s.id], ...s })),
+      dropped_out: people ? b.dropped_out.map((d) => ({ ...d, brand: d.name })) : b.dropped_out,
     };
     hydrated.set(cacheKey, snap);
     return snap;
   }
 
   function snapshotFor(board, filter, m) {
-    if (!filter) return snapshots[board]?.[m] ?? null;
+    if (!filter) {
+      const raw = snapshots[board]?.[m] ?? null;
+      return raw && board === "people" ? peopleSnapshot(raw) : raw;
+    }
     const raw = categoryData[board]?.[m];
     return raw ? categorySnapshot(raw, filter) : null;
   }
@@ -117,8 +146,10 @@
   const latest = $derived(months.at(-1) ?? null);
   const month = $derived(route.month && months.includes(route.month) ? route.month : latest);
   const filtersReady = $derived(ready && categoryMonths(route.board).length > 0);
-  // Ignore a filter the board doesn't have (e.g. #uk/shopping).
-  const filter = $derived(filtersReady && route.filter ? route.filter : null);
+  // Ignore a filter the board doesn't have (e.g. #uk/shopping or #people/shopping).
+  const filter = $derived(
+    filtersReady && filterOf(route.filter, route.board) ? route.filter : null
+  );
   const filterLoading = $derived(!!filter && !categoryData[route.board]);
   const snapshot = $derived(snapshotFor(route.board, filter, month));
   const rankHistory = $derived(
@@ -129,7 +160,10 @@
   );
   const site = $derived(snapshot?.sites.find((s) => s.id === route.site) ?? null);
   const categoryLabels = $derived(
-    Object.fromEntries((index?.categories ?? []).map((c) => [c.category, c.label]))
+    Object.fromEntries([
+      ...(index?.categories ?? []).map((c) => [c.category, c.label]),
+      ...Object.entries(PEOPLE_GROUPS).map(([k, g]) => [k, g.label]),
+    ])
   );
   const world = $derived(snapshot?.board === "world" ? snapshot : snapshots.world?.[index?.boards?.world?.months?.at(-1)]);
   const ukReady = $derived(index?.boards?.uk?.status === "ok");
@@ -166,9 +200,14 @@
   });
 
   $effect(() => {
-    const where = (route.board === "uk" ? "UK" : "World") + (snapshot?.filterLabel ? ` ${snapshot.filterLabel}` : "");
+    const where = ({ uk: "UK", people: "People" }[route.board] ?? "World") + (snapshot?.filterLabel ? ` ${snapshot.filterLabel}` : "");
+    const people = route.board === "people";
     document.title = route.page === "about"
       ? "How Searchopoly is made · Searchopoly"
+      : people && site
+      ? `${site.brand}: #${site.rank} on the ${where} board, ${monthLabel(snapshot.month)} · Searchopoly`
+      : people && snapshot
+      ? `${snapshot.filterLabel ? `${snapshot.filterLabel}: the` : "The"} most viewed people on Wikipedia, ${monthLabel(snapshot.month)} · Searchopoly`
       : site
       ? `${site.brand}: #${site.rank} on the ${where} board, ${monthLabel(snapshot.month)} · Searchopoly`
       : snapshot?.filterLabel
@@ -198,7 +237,7 @@
       selectedId: site?.id ?? null,
       months,
       onSelectMonth: selectMonth,
-      filters: filtersReady ? FILTERS : [],
+      filters: filtersReady ? filtersFor(route.board) : [],
       filter,
       onSelectFilter: selectFilter,
       onPrefetchFilters: prefetchFilters,
@@ -244,9 +283,19 @@
     <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>.
     Tranco also includes Radar data. Data modified as described above.
   </p>
+  <p>
+    People data:
+    <a href="https://wikimedia.org/api/rest_v1/" target="_blank" rel="noopener">Wikimedia page views</a>
+    for English Wikipedia and
+    <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>
+    (names, descriptions, occupations), both
+    <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>.
+    Links go to the person's Wikipedia article.
+  </p>
   <p><a href="#about">How it's made: sources, method and known biases</a></p>
   <p class="small">
-    Not affiliated with any board game publisher, or with Tranco, Cloudflare or any site shown.
+    Not affiliated with any board game publisher, or with Tranco, Cloudflare, the Wikimedia
+    Foundation, or any site or person shown.
     Brand names belong to their owners. Code
     <a href="https://github.com/decgagan/searchopoly" target="_blank" rel="noopener">on GitHub</a> (MIT).
   </p>

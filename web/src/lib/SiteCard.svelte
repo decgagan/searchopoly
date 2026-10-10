@@ -3,6 +3,7 @@
   import { groupOf } from "./groups.js";
   import { initials } from "./layout.js";
   import { describeMovement } from "./movement.js";
+  import { monthLabel, dateLabel } from "./format.js";
   import Sparkline from "./Sparkline.svelte";
 
   let { site, snapshot, boardKey, categoryLabels = {}, history = [], onClose, onStep } = $props();
@@ -15,11 +16,14 @@
   const move = $derived(describeMovement(site, snapshot));
   const total = $derived(snapshot.sites.length);
   const sourceName = $derived(snapshot.source?.name ?? site.source);
-  // e.g. "World" or "World Shopping" on a category board.
+  const person = $derived(site.kind === "person");
+  // e.g. "World", "World Shopping" on a category board, or "People Sport".
   const boardName = $derived(
-    (boardKey === "uk" ? "UK" : "World") + (snapshot.filterLabel ? ` ${snapshot.filterLabel}` : "")
+    ({ uk: "UK", people: "People" }[boardKey] ?? "World") + (snapshot.filterLabel ? ` ${snapshot.filterLabel}` : "")
   );
-  const href = $derived(`https://${site.domain}`);
+  const href = $derived(
+    person ? `https://en.wikipedia.org/wiki/${encodeURIComponent(site.title)}` : `https://${site.domain}`
+  );
 
   // Open as a modal: the rest of the page becomes inert and Esc fires "cancel".
   $effect(() => {
@@ -41,7 +45,9 @@
   let shareStatus = $state("");
   async function share() {
     const url = location.href;
-    const text = `${site.brand} is #${site.rank} on the ${boardName} board of the web's most visited sites`;
+    const text = person
+      ? `${site.brand} is #${site.rank} on the ${boardName} board of the most viewed people on Wikipedia`
+      : `${site.brand} is #${site.rank} on the ${boardName} board of the web's most visited sites`;
     try {
       if (navigator.share) {
         await navigator.share({ title: `${site.brand} · Searchopoly`, text, url });
@@ -90,13 +96,17 @@
       <span class="watermark" aria-hidden="true">{initials(site.brand)}</span>
       <div class="top">
         <span class="set">{group.label}</span>
-        <button bind:this={closeBtn} type="button" class="close" onclick={close} aria-label="Close site card">
+        <button bind:this={closeBtn} type="button" class="close" onclick={close} aria-label={person ? "Close card" : "Close site card"}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
         </button>
       </div>
       <p class="rank"><span>#{site.rank}</span> of {total} · {boardName}</p>
       <h2 id="card-title">{site.brand}</h2>
-      <p class="domain">{site.domain}</p>
+      {#if person}
+        {#if site.description}<p class="domain description">{site.description}</p>{/if}
+      {:else}
+        <p class="domain">{site.domain}</p>
+      {/if}
     </header>
 
     <div class="content">
@@ -125,6 +135,18 @@
       {/if}
 
       <dl class="facts">
+        {#if person}
+          <div><dt>Page views</dt><dd>{site.views.toLocaleString("en-GB")} in {monthLabel(snapshot.month)}</dd></div>
+          <div><dt>Field</dt><dd>{categoryLabels[site.category] ?? site.category}</dd></div>
+          {#if site.died}<div><dt>Died</dt><dd>{dateLabel(site.died)}</dd></div>{/if}
+          <div><dt>All articles</dt><dd>#{site.source_rank} of all English Wikipedia articles</dd></div>
+          {#if site.merged_titles?.length > 1}
+            <div class="domains">
+              <dt>Titles counted</dt>
+              <dd>{#each site.merged_titles as t}<span class="chip">{t.replaceAll("_", " ")}</span>{/each}</dd>
+            </div>
+          {/if}
+        {:else}
         <div><dt>Category</dt><dd>{categoryLabels[site.category] ?? site.category}</dd></div>
         <div><dt>Raw rank</dt><dd>#{site.source_rank} in {sourceName}{snapshot.source?.list_id ? ` list ${snapshot.source.list_id}` : ""}</dd></div>
         {#if site.merged_domains?.length > 1}
@@ -134,6 +156,7 @@
               {#each site.merged_domains as d}<span class="chip">{d}</span>{/each}
             </dd>
           </div>
+        {/if}
         {/if}
       </dl>
 
@@ -147,7 +170,7 @@
 
     <footer>
       <a class="visit" {href} target="_blank" rel="noopener noreferrer">
-        Visit {site.domain}
+        {person ? "Read on Wikipedia" : `Visit ${site.domain}`}
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
       </a>
       <button type="button" class="share" onclick={share} aria-describedby="share-status">
@@ -156,14 +179,15 @@
       </button>
       <span id="share-status" class="status" role="status">{shareStatus}</span>
       <div class="steps">
-        <button type="button" onclick={() => onStep(-1)} disabled={site.rank === 1} aria-label="Previous site">‹</button>
-        <button type="button" onclick={() => onStep(1)} disabled={site.rank === total} aria-label="Next site">›</button>
+        <button type="button" onclick={() => onStep(-1)} disabled={site.rank === 1} aria-label={person ? "Previous person" : "Previous site"}>‹</button>
+        <button type="button" onclick={() => onStep(1)} disabled={site.rank === total} aria-label={person ? "Next person" : "Next site"}>›</button>
       </div>
     </footer>
   </div>
 </dialog>
 
 <style>
+  .description { font-weight: 450; line-height: 1.35; max-width: 32ch; }
   .card {
     padding: 0;
     border: 0;

@@ -70,6 +70,15 @@
           wrong, as most UK traffic goes to <code>.com</code> sites.
         </dd>
       </div>
+      <div>
+        <dt>People board: <a href="https://wikimedia.org/api/rest_v1/" target="_blank" rel="noopener">Wikimedia page views</a> and <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a></dt>
+        <dd>
+          Monthly views of English Wikipedia articles (all devices, human readers), and Wikidata for
+          who is a person, their name, a one-line description and occupations. Both are public
+          domain (CC0). A month appears once it's complete, so the latest People board is usually a
+          month behind the website boards.
+        </dd>
+      </div>
     </dl>
   </section>
 
@@ -111,12 +120,44 @@
       last month.
     </p>
     <p>
-      Some sets genuinely run out. Search engines and portals are few and concentrated at the very
-      top, so <a href="#world/search">Search &amp; portals</a> fills only about a dozen squares, and
-      <a href="#world/tech">Tech &amp; AI</a> usually falls a few short. Rather than pad those boards
-      with sites that didn't make the cut, or with unreviewed domains, the empty squares are shown as
-      <strong>vacant lots</strong>. Category boards are World only: Cloudflare Radar's UK ranking stops
-      at 100 domains, too shallow to fill them.
+      Search engines and portals were once a set of their own, but there are only about a dozen
+      near the top, and Tech &amp; AI loses most of its high-ranking domains to the infrastructure
+      filter. Neither filled a board, so they're now one set,
+      <a href="#world/search-tech">Search &amp; tech</a>, which fills all 28 squares every month. If
+      a set ever runs short, the empty squares show as <strong>vacant lots</strong> rather than being
+      padded with sites that didn't make the cut or unreviewed domains. Category boards are World
+      only: Cloudflare Radar's UK ranking stops at 100 domains, too shallow to fill them.
+    </p>
+  </section>
+
+  <section>
+    <h2>The People board</h2>
+    <p>
+      <a href="#people">Most viewed people</a> is a second kind of board: the 28 people whose English
+      Wikipedia articles were read most in a month. It starts from Wikimedia's list of the month's
+      1,000 most viewed articles, which already excludes known crawlers and automated agents. Pages
+      that aren't articles (the Main Page, search, special pages) are dropped. Each title is matched
+      to its Wikidata item, following redirects so two titles for one person count once, and only
+      items that Wikidata records as humans stay. Events, films and fictional characters drop out.
+    </p>
+    <p>
+      Some pages still get bursts of automated traffic. About two-thirds of English Wikipedia
+      views come from phones, so a page with almost no mobile views (5% or less), or almost nothing
+      else (98% or more), is left off as likely automated, the check Wikimedia's own Topviews tool
+      suggests. Adult performers are left off, as adult sites are.
+    </p>
+    <p>
+      Colours come from each person's Wikidata occupations: Politics, Royalty, Sport, Music, Film,
+      TV &amp; media, Business &amp; tech, or Other when no single field fits. Royal and political
+      roles win over the many other occupations royals and politicians list, and a field has to cover
+      at least a quarter of someone's occupations. Each field has its own board drawn from the
+      whole top 1,000, for example <a href="#people/sport">Sport</a>. Royalty and Business &amp; tech
+      often have vacant lots. A few hand fixes live in a small overrides file.
+    </p>
+    <p>
+      Page views measure attention, not approval. Deaths, trials and true-crime dramas move people up
+      as much as achievements do. Cards show Wikidata's one-line description and, where it applies,
+      the date of death, without comment, photos or article text.
     </p>
   </section>
 
@@ -181,9 +222,18 @@
         and also feeds into Tranco, so Searchopoly is strictly non-commercial. The data has been
         modified: background domains removed, sibling domains merged and categories added.
       </li>
+      <li>
+        People data: page views from the
+        <a href="https://wikimedia.org/api/rest_v1/" target="_blank" rel="noopener">Wikimedia Pageviews API</a>
+        and names, short descriptions, occupations and dates from
+        <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>, both
+        <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>.
+        No Wikipedia article text or images are used; each card links to the article.
+      </li>
       <li>Code: MIT licence. Fonts: Space Grotesk and Inter (SIL Open Font Licence), self-hosted.</li>
       <li>
-        Not affiliated with any board game publisher, or with Tranco, Cloudflare or any site shown.
+        Not affiliated with any board game publisher, or with Tranco, Cloudflare, the Wikimedia
+        Foundation, or any site or person shown.
         Brand names belong to their owners and are used only to identify the sites.
       </li>
     </ul>

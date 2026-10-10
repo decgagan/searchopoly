@@ -20,7 +20,7 @@
       <svg viewBox="0 0 48 48"><path d="M10 24h28m0 0L27 13m11 11L27 35" /></svg>
       <span><strong>Log On</strong> · every visit starts here</span>
     </div>
-    <ol class="list" aria-label={`Top ${sites.length} sites`}>
+    <ol class="list" aria-label={`Top ${sites.length} ${snapshot.board === "people" ? "people" : "sites"}`}>
       {#each sites as site (site.id)}
         {@const g = groupOf(site.group)}
         {@const badge = badgeFor(site, snapshot)}
@@ -42,7 +42,7 @@
               <span class="brand">{site.brand}</span>
               <span class="meta">{site.domain} · {categoryLabels[site.category] ?? site.category}</span>
             </span>
-            <span class="sr-only">{badge ? `, ${badge.label}` : ""}. Open site card</span>
+            <span class="sr-only">{badge ? `, ${badge.label}` : ""}. Open {site.kind === "person" ? "card" : "site card"}</span>
             {#if badge}<span class="badge {badge.tone}" aria-hidden="true">{badge.text}</span>{/if}
             <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
           </button>
@@ -52,7 +52,11 @@
     {#if snapshot.vacant}
       <p class="vacant-note">
         <strong>{snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}.</strong>
-        No other {snapshot.filterLabel} site is in the top {snapshot.depth.toLocaleString("en-GB")} domains.
+        {#if snapshot.board === "people"}
+          Nobody else in {snapshot.filterLabel} is in the month's top 1,000 English Wikipedia articles.
+        {:else}
+          No other {snapshot.filterLabel} site is in the top {snapshot.depth.toLocaleString("en-GB")} domains.
+        {/if}
       </p>
     {/if}
   {:else}
