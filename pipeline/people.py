@@ -82,6 +82,8 @@ OCCUPATION_RULES = {
                  "civil servant", "revolutionary", "military leader", "mayor"],
     "sport": ["player", "athlete", "footballer", "cricketer", "boxer", "wrestler", "racing driver",
               "golfer", "swimmer", "cyclist", "sprinter", "runner", "jockey", "martial artist",
+              "formula one driver", "rally driver", "racecar driver", "motorcycle racer",
+              "nascar driver", "racing automobile driver",
               "fighter", "skater", "skier", "gymnast", "tennis", "coach", "football manager",
               "association football manager", "sports manager", "sportsperson",
               "racer", "rugby", "chess player", "darts", "snooker", "basketball", "baseball",
@@ -327,8 +329,70 @@ def _matches(label: str, keyword: str) -> bool:
     return re.search(rf"(^|\b){re.escape(keyword)}(\b|$)", label) is not None
 
 
+# The Wikidata short description says what someone is known for ("English footballer",
+# "President of the United States"), so it decides first: the earliest keyword in it wins.
+# "other" words (writer, astronaut, activist...) only count when no named set matches, so
+# "writer and comedian" is screen but "writer" alone is other.
+DESCRIPTION_RULES = {
+    "royalty": ["king", "queen", "prince", "princess", "emperor", "empress", "shah of", "consort",
+                "monarch", "royal family", "duke", "duchess", "pharaoh", "khan of", "heir apparent",
+                "noblewoman", "nobleman", "aristocrat", "countess", "earl", "peer", "ruler",
+                "crown princess", "crown prince", "archduchess", "archduke", "sultan"],
+    "politics": ["politician", "president of", "prime minister", "chief minister", "minister of",
+                 "foreign minister", "governor", "senator", "mayor", "secretary of", "supreme leader",
+                 "chancellor", "dictator", "head of state", "political", "congressman",
+                 "congresswoman", "representative", "attorney general", "diplomat", "first lady",
+                 "vice president", "director of the federal bureau", "speaker of", "statesman",
+                 "politic"],
+    "sport": ["footballer", "football player", "soccer player", "football manager", "football coach",
+              "quarterback", "athlete", "skater", "skier", "swimmer", "boxer", "wrestler",
+              "racing driver", "race car driver", "racecar driver", "formula one driver",
+              "cricketer", "golfer", "sprinter", "gymnast", "jockey", "tennis player",
+              "basketball player", "baseball player", "ice hockey player", "hockey player",
+              "rugby", "cyclist", "snowboarder", "sportsperson", "mixed martial artist",
+              "chess player", "darts player", "snooker player", "coach", "olympian",
+              "head coach", "pitcher", "linebacker", "running back", "wide receiver", "sports executive"],
+    "music": ["singer", "rapper", "musician", "songwriter", "band", "composer", "guitarist",
+              "drummer", "pianist", "disc jockey", "record producer", "vocalist", "dj", "girl group",
+              "boy band", "conductor"],
+    "screen": ["actor", "actress", "filmmaker", "film director", "television director", "comedian",
+               "presenter", "television", "youtuber", "streamer", "influencer", "model",
+               "journalist", "broadcaster", "podcaster", "talk show host", "screenwriter",
+               "film producer", "internet personality", "media personality", "reality"],
+    "business": ["businessman", "businesswoman", "businessperson", "entrepreneur", "executive",
+                 "investor", "ceo", "chief executive", "industrialist", "magnate", "billionaire",
+                 "engineer", "computer scientist", "inventor", "financier", "banker",
+                 "venture capitalist", "co-founder of", "programmer", "technologist", "tycoon"],
+    "other": ["writer", "author", "novelist", "poet", "astronaut", "activist", "murderer",
+              "serial killer", "killer", "criminal", "gangster", "drug lord", "terrorist",
+              "hijacker", "cleric", "religious", "saint", "pope", "scientist", "physicist",
+              "mathematician", "physician", "graffiti artist", "visual artist", "street artist", "painter", "designer", "photographer",
+              "cartoonist", "philosopher", "historian", "socialite", "whistleblower", "linguist",
+              "sex offender", "murder suspect", "prisoner", "mountaineer", "prophet", "theologian",
+              "explorer", "psychologist", "economist", "chef", "aviator", "spiritual", "guru",
+              "monk", "nun", "priest", "rabbi", "imam", "survivor", "victim", "spy"],
+}
+
+
+def describe_category(description: str | None) -> str | None:
+    """Colour set from the Wikidata description: the earliest matching keyword wins."""
+    text = (description or "").lower()
+    best = None
+    for cat, words in ((c, w) for c, w in DESCRIPTION_RULES.items() if c != "other"):
+        for w in words:
+            m = re.search(rf"\b{re.escape(w)}\b", text)
+            if m and (best is None or m.start() < best[0] or (m.start() == best[0] and len(w) > best[2])):
+                best = (m.start(), cat, len(w))
+    if best:
+        return best[1]
+    if any(re.search(rf"\b{re.escape(w)}\b", text) for w in DESCRIPTION_RULES["other"]):
+        return "other"
+    return None
+
+
 def categorise(person: Person, overrides: dict[str, str] | None = None) -> str:
-    """Colour set from Wikidata occupations.
+    """Colour set: hand override, else the Wikidata description (``describe_category``),
+    else Wikidata occupations as below.
 
     A royal occupation (monarch, duke...) and then politics win outright, because royals and
     politicians often list many other occupations. Otherwise the set with the most matching
@@ -338,6 +402,9 @@ def categorise(person: Person, overrides: dict[str, str] | None = None) -> str:
     """
     if overrides and person.qid in overrides:
         return overrides[person.qid]
+    from_description = describe_category(person.description)
+    if from_description:
+        return from_description
     labels = [o.lower() for o in person.occupations]
     hits = {cat: sum(any(_matches(l, k) for k in kws) for l in labels)
             for cat, kws in OCCUPATION_RULES.items()}

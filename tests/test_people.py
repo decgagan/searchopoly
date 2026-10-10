@@ -206,3 +206,28 @@ def test_tiers_go_deeper_only_for_short_sets():
     assert depths["royalty"] == 4 and cats["royalty"]["name"].tolist() == ["Royal C"]
     assert [s["name"] for s in skipped] == ["Bot Royal"]   # 100% desktop, listed once
     assert cats["royalty"].iloc[0]["source_rank"] == 4
+
+
+@pytest.mark.parametrize("description,expected", [
+    ("English footballer (born 1975)", "sport"),
+    ("President of the United States (2017–2021; since 2025)", "politics"),
+    ("United States Secretary of the Treasury", "politics"),
+    ("president and co-founder of Anthropic", "business"),      # "president of" only
+    ("American attorney and sixth director of the FBI", None),   # not a film director
+    ("Hong Kong–American martial artist and actor", "screen"),   # "artist" isn't a set word
+    ("American writer and political aide", "politics"),          # named sets beat "other" words
+    ("American writer (born 1972)", "other"),
+    ("American astronaut (born 1979)", "other"),
+    ("member of the British royal family and Princess of Wales", "royalty"),
+    ("Australian-American actress, producer, and model", "screen"),
+    ("Brazilian racing driver (1960–1994)", "sport"),
+    ("", None), (None, None),
+])
+def test_description_decides_first(description, expected):
+    assert people.describe_category(description) == expected
+
+
+def test_description_beats_a_stray_occupation():
+    pele = P("Q12897", "Pelé", "association football player", "politician", desc="Brazilian footballer (1940–2022)")
+    assert people.categorise(pele) == "sport"          # occupations alone would say politics
+    assert people.categorise(P("Q1", "X", "politician", desc="no keywords here")) == "politics"
