@@ -364,3 +364,321 @@ deepintent.com,ads
 360yield.com,ads
 branch.io,ads/attribution SDK
 amzn.to,shortener
+# Category boards (Oct 2026): reviewed down to rank 1,000 of each month's list.
+stbid.ru,ads
+indexww.com,ads
+aboutads.info,ads
+yieldmo.com,ads
+lijit.com,ads
+tiktokpangle.us,ads
+stackadapt.com,ads
+smaato.net,ads
+agkn.com,ads
+outbrain.com,ads
+crwdcntrl.net,ads
+dotomi.com,ads
+tapad.com,ads
+1rx.io,ads
+quantserve.com,ads
+liftoff.io,ads
+bidr.io,ads
+aniview.com,ads
+liadm.com,ads
+criteo.net,ads
+gumgum.com,ads
+networkadvertising.org,ads
+adform.net,ads
+everesttech.net,ads
+ad-tech.ru,ads
+33across.com,ads
+a-mo.net,ads
+bidmachine.io,ads
+teads.tv,ads
+turn.com,ads
+zemanta.com,ads
+moloco.com,ads
+fwmrm.net,ads
+onetag-sys.com,ads
+unrulymedia.com,ads
+flashtalking.com,ads
+cootlogix.com,ads
+adgrx.com,ads
+rayjump.com,ads
+eu-1-id5-sync.com,ads
+richaudience.com,ads
+dv.tech,ads
+seedtag.com,ads
+btloader.com,ads
+smilewanted.com,ads
+presage.io,ads
+attn.tv,ads
+tsyndicate.com,ads
+kueezrtb.com,ads
+4dex.io,ads
+ad-delivery.net,ads
+kargo.com,ads
+app-ads-services.com,ads
+intentiq.com,ads
+liftoff-creatives.io,ads
+youronlinechoices.com,ads
+admanmedia.com,ads
+adobedtm.com,analytics
+braze.com,analytics
+hotjar.com,analytics
+optimizely.com,analytics
+klaviyo.com,analytics
+conviva.com,analytics
+pendo.io,analytics
+bugsnag.com,analytics
+contentsquare.net,analytics
+imrworldwide.com,analytics
+mixpanel.com,analytics
+singular.net,analytics
+adjust.com,analytics
+go-mpulse.net,analytics
+segment.io,analytics
+gtm-a2b2.com,analytics
+split.io,analytics
+dynatracelabs.com,analytics
+erome.com,adult
+faphouse.com,adult
+xhamster46.desi,adult
+xhamster.desi,adult
+thinkific.com,hosting
+ovh.net,hosting
+squarespace.com,hosting
+wix.com,hosting
+dreamhost.com,hosting
+cafe24.com,hosting
+appspot.com,hosting
+webempresa.eu,hosting
+vercel.app,hosting
+hostgator.com.br,hosting
+hstgr.net,hosting
+porkbun.com,hosting
+websitewelcome.com,hosting
+herokuapp.com,hosting
+beget.ru,hosting
+webhostbox.net,hosting
+superhosting.bg,hosting
+jimdo.com,hosting
+mybluehost.me,hosting
+netlify.app,hosting
+one.com,hosting
+mihanwebhost.com,hosting
+namecheaphosting.com,hosting
+jquery.com,infrastructure
+on.aws,infrastructure
+he.net,infrastructure
+verisign.com,infrastructure
+googlezip.net,infrastructure
+nic.network,infrastructure
+telephony.goog,infrastructure
+gtld.biz,infrastructure
+fontawesome.com,infrastructure
+typekit.net,infrastructure
+nic.io,infrastructure
+bunnyinfra.net,infrastructure
+afilias-nst.info,infrastructure
+afilias-nst.org,infrastructure
+icanhazip.com,infrastructure
+usercontent.goog,infrastructure
+nel.goog,infrastructure
+globalsign.com,infrastructure
+it.com,infrastructure
+no-ip.com,infrastructure
+ci-servers.net,infrastructure
+ci-servers.org,infrastructure
+usgovcloudapi.net,infrastructure
+cloudinary.com,infrastructure
+kunluncan.com,infrastructure
+queniuaa.com,infrastructure
+unpkg.com,infrastructure
+recaptcha.net,infrastructure
+zpath.net,infrastructure
+firebaseio.com,infrastructure
+cloudsink.net,infrastructure
+docker.io,infrastructure
+akahost.net,infrastructure
+opera-api.com,infrastructure
+wsglb0.com,infrastructure
+eu.com,infrastructure
+mozilla.net,infrastructure
+agora.io,infrastructure
+epicgames.dev,infrastructure
+volcgslb.com,infrastructure
+nelreports.net,infrastructure
+px-cloud.net,infrastructure
+vegalb.com,infrastructure
+onesignal.com,infrastructure
+spamhaus.org,infrastructure
+umbrella.com,infrastructure
+wscvip.cn,infrastructure
+msftauth.net,infrastructure
+microsoftpersonalcontent.com,infrastructure
+digitaloceanspaces.com,infrastructure
+sportradar.com,infrastructure
+arcgis.com,infrastructure
+uk.com,infrastructure
+digitalocean.com,infrastructure (cloud)
+oraclecloud.com,infrastructure (cloud)
+linode.com,infrastructure (cloud)
+rackspace.net,infrastructure (cloud)
+rackspace.com,infrastructure (cloud)
+blxrbdn.com,infrastructure (blockchain RPC)
+twimg.com,infrastructure (site assets)
+pinimg.com,infrastructure (site assets)
+yimg.com,infrastructure (site assets)
+redditstatic.com,infrastructure (site assets)
+steamstatic.com,infrastructure (site assets)
+wbbasket.ru,infrastructure (site assets)
+ozone.ru,infrastructure (site assets)
+ssl-images-amazon.com,infrastructure (site assets)
+shopeemobile.com,infrastructure (site assets)
+furycloud.io,infrastructure (site assets)
+yximgs.com,infrastructure (site assets)
+githubusercontent.com,infrastructure (site assets)
+fbsbx.com,infrastructure (site assets)
+fbpigeon.com,infrastructure (site assets)
+snapkit.com,infrastructure (site assets)
+amemv.com,infrastructure (site assets)
+tiktokw.us,infrastructure (site assets)
+bitdefender.net,background (antivirus and security)
+trendmicro.com,background (antivirus and security)
+sophos.com,background (antivirus and security)
+360safe.com,background (antivirus and security)
+360.cn,background (antivirus and security)
+sentinelone.net,background (antivirus and security)
+rapid7.com,background (antivirus and security)
+watchlist-internet.at,background (antivirus and security)
+adblockplus.org,background (antivirus and security)
+ys7.com,"background (smart home, TVs and cameras)"
+vidaahub.com,"background (smart home, TVs and cameras)"
+tplinkcloud.com,"background (smart home, TVs and cameras)"
+samsungacr.com,"background (smart home, TVs and cameras)"
+ring.com,"background (smart home, TVs and cameras)"
+lgtvcommon.com,"background (smart home, TVs and cameras)"
+nextlgsdp.com,"background (smart home, TVs and cameras)"
+smartthings.com,"background (smart home, TVs and cameras)"
+samsungiotcloud.com,"background (smart home, TVs and cameras)"
+immedia-semi.com,"background (smart home, TVs and cameras)"
+leiniao.com,"background (smart home, TVs and cameras)"
+easy4ipcloud.com,"background (smart home, TVs and cameras)"
+lge.com,"background (smart home, TVs and cameras)"
+eeroup.com,background (routers and network devices)
+miwifi.com,background (routers and network devices)
+tplinknbu.com,background (routers and network devices)
+ubnt.com,background (routers and network devices)
+netgear.com,background (routers and network devices)
+tendawifi.com,background (routers and network devices)
+synology.com,background (routers and network devices)
+starlink.com,background (routers and network devices)
+palmplaystore.com,background (phone vendor services)
+hicloud.com,background (phone vendor services)
+vivo.com.cn,background (phone vendor services)
+samsungapps.com,background (phone vendor services)
+hihonorcloud.com,background (phone vendor services)
+dbankcloud.ru,background (phone vendor services)
+dbankcloud.com,background (phone vendor services)
+dbankcloud.cn,background (phone vendor services)
+samsungosp.com,background (phone vendor services)
+samsungcloudsolution.net,background (phone vendor services)
+heytapmobi.com,background (phone vendor services)
+transsion-os.com,background (phone vendor services)
+samsungelectronics.com,background (phone vendor services)
+blackberry.com,background (phone vendor services)
+blackberry.net,background (phone vendor services)
+goskope.com,background (enterprise)
+eurofins.com,background (enterprise)
+intercom.io,background (enterprise)
+salesforceliveagent.com,background (enterprise)
+appcenter.ms,background (enterprise)
+mobolize.com,background (enterprise)
+visma.com,background (enterprise)
+service-now.com,background (enterprise)
+auvik.com,background (enterprise)
+nexthink.cloud,background (enterprise)
+onlinepbx.ru,background (enterprise)
+edna.ru,background (enterprise)
+force.com,background (enterprise)
+xerox.com,background (enterprise)
+onetrust.com,background (cookie consent)
+privacy-mgmt.com,background (cookie consent)
+allaboutcookies.org,background (cookie consent)
+live.net,background (apps and launchers)
+adobedc.net,background (apps and launchers)
+grammarly.io,background (apps and launchers)
+pvp.net,background (apps and launchers)
+nintendo.net,background (apps and launchers)
+playrix.com,background (apps and launchers)
+utorrent.com,background (apps and launchers)
+jetbrains.com,background (apps and launchers)
+cursor.sh,background (apps and launchers)
+anydesk.com,background (apps and launchers)
+rustdesk.com,background (apps and launchers)
+tailscale.com,background (apps and launchers)
+adguard-vpn.online,background (apps and launchers)
+life360.com,background (apps and launchers)
+gdemoideti.ru,background (apps and launchers)
+wpguardian.io,background (apps and launchers)
+wpguardian.com,background (apps and launchers)
+themeforest.net,background (apps and launchers)
+visualstudio.com,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+withgoogle.com,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+translate.goog,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+me.com,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+meta.com,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+1drv.com,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+tencent.com,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+anthropic.com,"background (Apple, Google, Meta and Microsoft services; the main brand is counted elsewhere)"
+disqus.com,background (embedded widgets)
+myspace.com,background (embedded widgets)
+rt.ru,telecom
+comcast.com,telecom
+free.fr,telecom
+xfinity.com,telecom
+buitengewoonglasvezel.nl,telecom
+caiway.net,telecom
+singtelchina.cn,telecom
+megafon.ru,telecom
+verizon.com,telecom
+mailchimp.com,email marketing (tracking links)
+mailchi.mp,email marketing (tracking links)
+share.google,shortener
+g.co,shortener
+heylink.me,shortener
+abovedomains.com,domain parking
+parklogic.com,domain parking
+sedo.com,domain parking
+buydomains.com,domain parking
+hugedomains.com,domain parking
+mckinsey.com,corporate (mostly staff and email traffic)
+deloitte.com,corporate (mostly staff and email traffic)
+gartner.com,corporate (mostly staff and email traffic)
+epam.com,corporate (mostly staff and email traffic)
+corebridgefinancial.com,corporate (mostly staff and email traffic)
+maricopa.gov,unexplained traffic (not a general destination)
+dkttc.ac.th,unexplained traffic (not a general destination)
+chatgpt.site,lookalike domain (not OpenAI)
+dtkn.ru,unidentified (no public website)
+nmrodam.com,unidentified (no public website)
+dfn.nl,unidentified (no public website)
+gofin.io,unidentified (no public website)
+dyingbirds.com,unidentified (no public website)
+archive-it.group,unidentified (no public website)
+blackhub.team,unidentified (no public website)
+vtwenty.com,unidentified (no public website)
+zenecn.net,unidentified (no public website)
+gafg.com,unidentified (no public website)
+gkdionis.ru,unidentified (no public website)
+yellowblue.io,unidentified (no public website)
+internetwarriors.net,unidentified (no public website)
+pccc.com,unidentified (no public website)
+thenai.org,unidentified (no public website)
+netcraze.io,unidentified (no public website)
+kslawin.com,unidentified (no public website)
+afafb.com,unidentified (no public website)
+hath.network,infrastructure (peer-to-peer network)
+omnitagjs.com,ads
+garmin.com,background (device sync)
+rfc-editor.org,unexplained traffic (not a general destination)
