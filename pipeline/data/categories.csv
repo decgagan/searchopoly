@@ -1,6 +1,7 @@
-# Categories tag each brand. Groups are the board's colour sets (8, one per side-segment).
+# Categories tag each brand. Groups are the board's colour sets (7).
+# search_tech merges what were two sets (search & portals, tech & AI), since neither filled a category board alone.
 category,group,label
-search,search_portals,Search & portals
+search,search_tech,Search & portals
 social,social_messaging,Social
 messaging,social_messaging,Messaging
 video,entertainment,Video & streaming
@@ -13,8 +14,8 @@ weather,news_sport,Weather
 reference,reference_learning,Reference
 education,reference_learning,Education & research
 government,reference_learning,Government & public services
-tech,tech_ai,Tech
-ai,tech_ai,AI assistants
+tech,search_tech,Tech
+ai,search_tech,AI assistants
 productivity,work_money,Work & productivity
 finance,work_money,Finance & banking
 travel,work_money,Travel & transport

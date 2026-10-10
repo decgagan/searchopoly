@@ -1,12 +1,13 @@
 """Category boards: the top sites within each colour set."""
 import json
+import re
 
 import pandas as pd
 import pytest
 
 from pipeline import clean, config, snapshot
 
-GROUPS = {"video": "entertainment", "news": "news_sport", "search": "search_portals"}
+GROUPS = {"video": "entertainment", "news": "news_sport", "search": "search_tech"}
 
 
 @pytest.fixture
@@ -27,7 +28,7 @@ def rules():
     )
     excludes = pd.DataFrame([("cloudflare.com", "infrastructure")], columns=["domain", "reason"])
     categories = pd.DataFrame(
-        [("search", "search_portals", "Search"), ("video", "entertainment", "Video"),
+        [("search", "search_tech", "Search"), ("video", "entertainment", "Video"),
          ("music", "entertainment", "Music"), ("news", "news_sport", "News"),
          ("sport", "news_sport", "Sport")],
         columns=["category", "group", "label"],
@@ -129,7 +130,7 @@ def test_category_board_slugs_cover_every_colour_set_once():
     # Slugs share the URL with brand ids (#world/shopping/amazon), so they mustn't clash.
     brand_ids = set(rules.site_map["brand"].map(clean.slugify))
     assert not (set(config.CATEGORY_BOARDS) & brand_ids)
-    assert all(s.isalpha() and s.islower() for s in config.CATEGORY_BOARDS)
+    assert all(re.fullmatch(r"[a-z]+(-[a-z]+)*", s) for s in config.CATEGORY_BOARDS)
 
 
 def test_published_category_boards_are_complete_and_fully_reviewed():

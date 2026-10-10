@@ -23,8 +23,8 @@ def rules():
         columns=["domain", "reason"],
     )
     categories = pd.DataFrame(
-        [("search", "search_portals", "Search"), ("video", "entertainment", "Video"),
-         ("news", "news_sport", "News"), ("tech", "tech_ai", "Tech"),
+        [("search", "search_tech", "Search"), ("video", "entertainment", "Video"),
+         ("news", "news_sport", "News"), ("tech", "search_tech", "Tech"),
          ("government", "reference_learning", "Government")],
         columns=["category", "group", "label"],
     )
