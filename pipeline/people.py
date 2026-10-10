@@ -137,7 +137,14 @@ def _session() -> requests.Session:
 
 def _get(session, url, retries=4, method="GET", **kw) -> requests.Response:
     for attempt in range(retries):
-        res = session.request(method, url, timeout=config.HTTP_TIMEOUT, **kw)
+        try:
+            res = session.request(method, url, timeout=config.HTTP_TIMEOUT, **kw)
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            if attempt == retries - 1:
+                raise
+            log.info("Wikimedia: %s, retrying in %ds", type(exc).__name__, 5 * 2 ** attempt)
+            time.sleep(5 * 2 ** attempt)
+            continue
         if res.status_code in (429, 500, 502, 503, 504) and attempt < retries - 1:
             wait = float(res.headers.get("Retry-After") or 2 ** attempt)
             log.info("Wikimedia: HTTP %s, retrying in %.0fs", res.status_code, wait)
