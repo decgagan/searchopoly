@@ -39,6 +39,20 @@ jobs:
       - name: Run tests
         run: pytest -q
 
+      # Aggregated Wikimedia results (top 50,000 titles per month from the ~6 GB page-view
+      # dump, plus Wikidata answers: a few MB a month). The dump itself is streamed and never
+      # written to disk, so the runner needs no extra space; this cache only spares a re-run
+      # of the same month from streaming the dump again.
+      - name: Restore Wikimedia cache
+        uses: actions/cache@v6
+        with:
+          path: |
+            .cache/pageview_dump_top_*.json
+            .cache/wiki_qids_*.json
+            .cache/wikidata_humans_v2_*.json
+          key: wikimedia-${{ github.run_id }}
+          restore-keys: wikimedia-
+
       - name: Build snapshot
         env:
           # Optional. Without it the UK board stays "pending" and the run still succeeds.
