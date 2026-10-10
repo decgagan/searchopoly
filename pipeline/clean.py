@@ -149,8 +149,8 @@ def classify(ranked: pd.DataFrame, rules: Rules) -> pd.DataFrame:
     return out
 
 
-def build_board(classified: pd.DataFrame, board_size: int = config.BOARD_SIZE) -> pd.DataFrame:
-    """Merge mapped domains into brands and keep the top ``board_size``.
+def build_board(classified: pd.DataFrame, board_size: int | None = config.BOARD_SIZE) -> pd.DataFrame:
+    """Merge mapped domains into brands and keep the top ``board_size`` (all if None).
 
     A brand takes the best (lowest) rank of any of its domains.
     """
@@ -171,7 +171,7 @@ def build_board(classified: pd.DataFrame, board_size: int = config.BOARD_SIZE) -
         )
         .reset_index()
         .sort_values("source_rank", kind="stable")
-        .head(board_size)
+        .head(board_size if board_size is not None else len(mapped))
         .reset_index(drop=True)
     )
     agg.insert(0, "rank", range(1, len(agg) + 1))
@@ -190,6 +190,47 @@ def coverage_check(classified: pd.DataFrame, board: pd.DataFrame) -> dict:
     blocking = unreviewed[unreviewed["rank"] <= last_rank]["domain"].tolist()
     return {
         "last_board_source_rank": last_rank,
+        "reviewed_through_rank": (first_unreviewed - 1) if first_unreviewed else int(classified["rank"].max()),
+        "unreviewed_above_cutoff": blocking,
+        "ok": not blocking,
+    }
+
+
+def build_category_boards(classified: pd.DataFrame, groups: dict[str, str],
+                          board_size: int = config.BOARD_SIZE,
+                          depth: int = config.CATEGORY_DEPTH) -> dict[str, pd.DataFrame]:
+    """Top ``board_size`` brands within each colour-set group, ranked 1..n inside the group.
+
+    ``groups`` maps a board key (URL slug) to a group. Brands are merged exactly as on the
+    main board, then only brands whose best raw rank is within ``depth`` are eligible.
+    """
+    every = build_board(classified, board_size=None)
+    every = every[every["source_rank"] <= depth]
+    boards = {}
+    for key, group in groups.items():
+        sub = every[every["group"] == group].head(board_size).reset_index(drop=True)
+        sub["rank"] = range(1, len(sub) + 1)
+        boards[key] = sub
+    return boards
+
+
+def category_coverage(classified: pd.DataFrame, board: pd.DataFrame,
+                      board_size: int = config.BOARD_SIZE,
+                      depth: int = config.CATEGORY_DEPTH) -> dict:
+    """Like ``coverage_check``, for a category board.
+
+    A full board only needs reviewing down to its last site. A short board (vacant lots)
+    claims there is nothing else in the whole depth, so everything down to ``depth`` must
+    have been reviewed.
+    """
+    full = len(board) >= board_size
+    cutoff = int(board["source_rank"].max()) if full and not board.empty else depth
+    unreviewed = classified[classified["status"] == "unreviewed"]
+    first_unreviewed = int(unreviewed["rank"].min()) if not unreviewed.empty else None
+    blocking = unreviewed[unreviewed["rank"] <= cutoff].sort_values("rank")["domain"].tolist()
+    return {
+        "depth": depth,
+        "cutoff_source_rank": cutoff,
         "reviewed_through_rank": (first_unreviewed - 1) if first_unreviewed else int(classified["rank"].max()),
         "unreviewed_above_cutoff": blocking,
         "ok": not blocking,

@@ -47,11 +47,27 @@ def build_world(rules: clean.Rules, month: str, board_size: int) -> report.Board
     out_dir = config.SNAPSHOT_DIR / month
     changed = snapshot.write_json(out_dir / "world.json", payload)
     snapshot.write_ranked_csv(classified, out_dir / "world_ranked_top500.csv")
+    categories = build_categories(classified, "world", month, source, "tranco", board_size)
     return report.BoardResult(
         "world", month, "ok", source=f"Tranco list {meta['list_id']} ({source['window']})",
         payload=payload, coverage=coverage, changed=changed,
         unreviewed=report.unreviewed_domains(classified),
+        categories=categories,
     )
+
+
+def build_categories(classified, board_name: str, month: str, source: dict, source_key: str,
+                     board_size: int) -> dict:
+    """Per-colour-set boards from the same classified list, reaching CATEGORY_DEPTH deep."""
+    groups = {k: g for k, (g, _) in config.CATEGORY_BOARDS.items()}
+    boards = clean.build_category_boards(classified, groups, board_size, config.CATEGORY_DEPTH)
+    coverage = {k: clean.category_coverage(classified, b, board_size, config.CATEGORY_DEPTH)
+                for k, b in boards.items()}
+    payload = snapshot.category_payload(boards, coverage, board_name, month, source, source_key,
+                                        board_size, config.CATEGORY_DEPTH)
+    changed = snapshot.write_json(config.SNAPSHOT_DIR / month / f"{board_name}_categories.json", payload,
+                                 compact=True)
+    return {"payload": payload, "changed": changed}
 
 
 def build_uk(rules: clean.Rules, month: str, board_size: int) -> report.BoardResult:

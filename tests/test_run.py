@@ -64,3 +64,28 @@ def test_report_flags_unreviewed_domains(tmp_path, monkeypatch):
     assert "2 unreviewed domains" in text
     assert "**Pending:** No token." in text
     assert summary.read_text() == text
+
+
+def test_report_lists_category_boards_and_flags_gaps(tmp_path, monkeypatch):
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(tmp_path / "s.md"))
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    cats = {"changed": True, "payload": {
+        "board_size": 28, "depth": 1000,
+        "brands": {"google": {"brand": "Google"}},
+        "boards": {
+            "search": {"sites": [{"id": "google", "rank": 1}], "vacant": 27,
+                       "coverage": {"unreviewed_above_cutoff": ["mystery.com"], "ok": False}},
+            "tech": {"sites": [], "vacant": 28, "coverage": {"unreviewed_above_cutoff": ["mystery.com"]}},
+        }}}
+    result = report.BoardResult(
+        "world", "2026-10", "ok", source="Tranco list X",
+        payload={"sites": [{"brand": "Google", "rank": 1}], "has_previous_month": False, "dropped_out": []},
+        coverage={"reviewed_through_rank": 999, "last_board_source_rank": 30,
+                  "unreviewed_above_cutoff": [], "ok": True},
+        categories=cats,
+    )
+    assert report.category_warnings(result) == ["mystery.com"]
+    text = report.publish([result])
+    assert "| Search & portals | 1 | 27 | Google |" in text
+    assert "| Tech & AI | 0 | 28 | - |" in text
+    assert "1 unreviewed domains rank inside the category-board depth" in text

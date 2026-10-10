@@ -29,6 +29,19 @@ class BoardResult:
     coverage: dict | None = None
     unreviewed: list[tuple[int, str]] = field(default_factory=list)
     changed: bool = False
+    categories: dict | None = None    # {"payload": ..., "changed": bool} for category boards
+
+
+def category_warnings(result: "BoardResult") -> list[str]:
+    """Unreviewed domains that could be missing from any category board (deduplicated)."""
+    if not result.categories:
+        return []
+    seen = []
+    for b in result.categories["payload"]["boards"].values():
+        for d in b["coverage"].get("unreviewed_above_cutoff", []):
+            if d not in seen:
+                seen.append(d)
+    return seen
 
 
 def unreviewed_domains(classified: pd.DataFrame, top_n: int = config.RAW_TOP_N) -> list[tuple[int, str]]:
@@ -85,6 +98,29 @@ def render(results: list[BoardResult]) -> str:
                 + ", ".join(f"`{d}`" for d in r.coverage["unreviewed_above_cutoff"]),
                 "",
             ]
+        if r.categories:
+            cp = r.categories["payload"]
+            labels = {k: label for k, (_, label) in config.CATEGORY_BOARDS.items()}
+            lines += [
+                f"**Category boards** (top {cp['board_size']} per colour set, from the raw top "
+                f"{cp['depth']}; file {'updated' if r.categories['changed'] else 'unchanged'}):", "",
+                "| Colour set | Sites | Vacant | #1 |", "|---|---:|---:|---|",
+                *[f"| {labels.get(k, k)} | {len(b['sites'])} | {b['vacant']} | "
+                  f"{cp['brands'][b['sites'][0]['id']]['brand'] if b['sites'] else '-'} |"
+                  for k, b in cp["boards"].items()],
+                "",
+            ]
+            missing = category_warnings(r)
+            if missing:
+                shown_missing = missing[:MAX_UNREVIEWED_LISTED]
+                lines += [
+                    "> [!WARNING]",
+                    f"> {len(missing)} unreviewed domains rank inside the category-board depth, so a "
+                    "category board may be missing a site. Add each to `site_map.csv` or "
+                    "`exclude.csv`: " + ", ".join(f"`{d}`" for d in shown_missing)
+                    + (" …" if len(missing) > len(shown_missing) else ""),
+                    "",
+                ]
         if r.unreviewed:
             shown = r.unreviewed[:MAX_UNREVIEWED_LISTED]
             lines += [
@@ -111,6 +147,10 @@ def publish(results: list[BoardResult]) -> str:
             if r.coverage and r.coverage["unreviewed_above_cutoff"]:
                 domains = ", ".join(r.coverage["unreviewed_above_cutoff"])
                 print(f"::warning title=Searchopoly {r.board} {r.month}: domains to review::{domains}")
+            missing = category_warnings(r)
+            if missing:
+                print(f"::warning title=Searchopoly {r.board} {r.month} category boards: "
+                      f"{len(missing)} domains to review::{', '.join(missing[:MAX_UNREVIEWED_LISTED])}")
             if r.status == "failed":
                 print(f"::error title=Searchopoly {r.board} {r.month}::{r.message}")
     return text

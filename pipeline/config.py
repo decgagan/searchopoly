@@ -29,3 +29,21 @@ RADAR_LIMIT = 100
 
 HTTP_TIMEOUT = 60
 USER_AGENT = "Searchopoly-pipeline/0.1 (+https://github.com/decgagan/searchopoly)"
+
+# Category boards: the top sites within each colour set. They reach deeper into the list
+# than the main board, so every domain down to this raw rank must be reviewed (mapped or
+# excluded) or the run flags it. A set with fewer sites than BOARD_SIZE in that depth gets
+# "vacant lot" squares rather than padding from unreviewed domains.
+CATEGORY_DEPTH = 1000
+
+# URL slug -> colour-set group (pipeline/data/categories.csv) and label, in board order.
+CATEGORY_BOARDS = {
+    "search": ("search_portals", "Search & portals"),
+    "social": ("social_messaging", "Social & messaging"),
+    "entertainment": ("entertainment", "Entertainment"),
+    "shopping": ("shopping", "Shopping"),
+    "news": ("news_sport", "News & sport"),
+    "reference": ("reference_learning", "Reference & learning"),
+    "tech": ("tech_ai", "Tech & AI"),
+    "work": ("work_money", "Work & money"),
+}

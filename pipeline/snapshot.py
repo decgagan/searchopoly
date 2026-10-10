@@ -68,6 +68,75 @@ def board_payload(board: pd.DataFrame, board_name: str, month: str, source: dict
     }
 
 
+def _previous_file(filename: str, month: str) -> dict | None:
+    earlier = sorted(p for p in config.SNAPSHOT_DIR.glob(f"*/{filename}") if p.parent.name < month)
+    return json.loads(earlier[-1].read_text()) if earlier else None
+
+
+def _clean_note(note) -> str | None:
+    return note if isinstance(note, str) and note.strip() else None
+
+
+def category_payload(boards: dict[str, pd.DataFrame], coverage: dict[str, dict], board_name: str,
+                     month: str, source: dict, source_key: str,
+                     board_size: int = config.BOARD_SIZE,
+                     depth: int = config.CATEGORY_DEPTH) -> dict:
+    """All category boards for one month in one compact file.
+
+    Brand details (domain, merged domains, note) are stored once in ``brands``; each board
+    lists only ids and ranks. Movement compares with the same category board last month.
+    """
+    filename = f"{board_name}_categories.json"
+    prev = _previous_file(filename, month)
+    prev_boards = (prev or {}).get("boards", {})
+    prev_brands = (prev or {}).get("brands", {})
+    brands: dict[str, dict] = {}
+    out = {}
+    for key, board in boards.items():
+        prev_rank = {s["id"]: s["rank"] for s in prev_boards.get(key, {}).get("sites", [])}
+        sites = []
+        for row in board.itertuples(index=False):
+            brands.setdefault(row.id, {
+                "brand": row.brand,
+                "domain": row.domain,
+                "category": row.category,
+                "group": row.group,
+                "source": source_key,
+                "merged_domains": list(row.merged_domains),
+                "note": _clean_note(row.note),
+            })
+            previous = prev_rank.get(row.id)
+            sites.append({
+                "rank": int(row.rank),
+                "id": row.id,
+                "source_rank": int(row.source_rank),
+                "previous_rank": previous,
+                "movement": (previous - int(row.rank)) if previous else None,
+            })
+        ids = set(board["id"])
+        out[key] = {
+            "sites": sites,
+            "vacant": max(board_size - len(sites), 0),
+            "coverage": coverage.get(key, {}),
+            "dropped_out": [
+                {"id": i, "brand": prev_brands.get(i, {}).get("brand", i), "previous_rank": r}
+                for i, r in sorted(prev_rank.items(), key=lambda x: x[1]) if i not in ids
+            ],
+        }
+    return {
+        "board": board_name,
+        "month": month,
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "metric": "Relative popularity (most visited) within each colour set, not search volume",
+        "source": source,
+        "depth": depth,
+        "board_size": board_size,
+        "has_previous_month": prev is not None,
+        "brands": dict(sorted(brands.items())),
+        "boards": out,
+    }
+
+
 VOLATILE_KEYS = {"generated_at"}
 
 
@@ -75,7 +144,33 @@ def _stable(payload: dict) -> dict:
     return {k: v for k, v in payload.items() if k not in VOLATILE_KEYS}
 
 
-def write_json(path: Path, payload: dict) -> bool:
+def _is_flat(obj) -> bool:
+    values = obj.values() if isinstance(obj, dict) else obj
+    return all(not isinstance(v, (dict, list)) or
+               (isinstance(v, list) and all(not isinstance(x, (dict, list)) for x in v))
+               for v in values)
+
+
+def _dumps(obj, compact: bool, level: int = 0) -> str:
+    """Indented JSON. With ``compact``, flat objects (no nested objects) go on one line.
+
+    Category files hold hundreds of small objects; one per line keeps them small but still
+    readable in a git diff.
+    """
+    if not compact:
+        return json.dumps(obj, indent=2, ensure_ascii=False, allow_nan=False)
+    if not isinstance(obj, (dict, list)) or not obj or _is_flat(obj):
+        return json.dumps(obj, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+    pad, inner = "  " * level, "  " * (level + 1)
+    if isinstance(obj, dict):
+        items = [f"{inner}{json.dumps(k, ensure_ascii=False)}: {_dumps(v, compact, level + 1)}"
+                 for k, v in obj.items()]
+        return "{\n" + ",\n".join(items) + "\n" + pad + "}"
+    items = [inner + _dumps(v, compact, level + 1) for v in obj]
+    return "[\n" + ",\n".join(items) + "\n" + pad + "]"
+
+
+def write_json(path: Path, payload: dict, compact: bool = False) -> bool:
     """Write ``payload`` unless only volatile fields (timestamps) would change.
 
     Keeps re-runs idempotent, so the monthly job only commits when the data really changed.
@@ -89,7 +184,7 @@ def write_json(path: Path, payload: dict) -> bool:
         except ValueError:
             pass
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n")
+    path.write_text(_dumps(payload, compact) + "\n")
     log.info("Wrote %s", path.relative_to(config.ROOT))
     return True
 
@@ -124,6 +219,17 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict],
             entry.update(status)
         boards[name] = entry
     groups = (categories.groupby("group", sort=False)["category"].apply(list).to_dict())
+    category_months = {
+        name: [m for m in months if (config.SNAPSHOT_DIR / m / f"{name}_categories.json").exists()]
+        for name in ("world", "uk")
+    }
+    category_boards = {
+        "depth": config.CATEGORY_DEPTH,
+        "board_size": config.BOARD_SIZE,
+        "filters": [{"id": k, "group": g, "label": label}
+                    for k, (g, label) in config.CATEGORY_BOARDS.items()],
+        "months": {k: v for k, v in category_months.items() if v},
+    }
     index = {
         "project": "Searchopoly",
         "latest_month": latest,
@@ -131,6 +237,7 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict],
         "boards": boards,
         "categories": categories.to_dict("records"),
         "groups": groups,
+        "category_boards": category_boards,
         "curation": curation or {},
     }
     return write_json(config.LATEST_JSON, index)
