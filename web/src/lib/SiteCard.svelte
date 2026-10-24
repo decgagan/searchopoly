@@ -147,7 +147,7 @@
             </div>
           {/if}
         {:else}
-        <div><dt>Category</dt><dd>{group.label}{#if (categoryLabels[site.category] ?? site.category) !== group.label} · {categoryLabels[site.category] ?? site.category}{/if}</dd></div>
+        <div><dt>Category</dt><dd>{group.label}{#if (categoryLabels[site.category] ?? site.category) !== group.label}{" · "}{categoryLabels[site.category] ?? site.category}{/if}</dd></div>
         <div><dt>Raw rank</dt><dd>#{site.source_rank} in {sourceName}{snapshot.source?.list_id ? ` list ${snapshot.source.list_id}` : ""}</dd></div>
         {#if site.merged_domains?.length > 1}
           <div class="domains">
