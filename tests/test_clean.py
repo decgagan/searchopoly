@@ -130,3 +130,19 @@ def test_snapshot_payload_is_strict_json(rules):
     text = json.dumps(payload, allow_nan=False)  # raises on NaN
     sites = json.loads(text)["sites"]
     assert sites[0]["note"] is None and sites[1]["note"] == "Has a note."
+
+
+def test_slugify_folds_accents_to_ascii():
+    from pipeline.clean import slugify
+    assert slugify("Nicolás Maduro") == "nicolas-maduro"
+    assert slugify("Kylian Mbappé") == "kylian-mbappe"
+    assert slugify("Johannes Høsflot Klæbo") == "johannes-hosflot-klaebo"
+    assert slugify("Straße Łódź") == "strasse-lodz"
+    assert slugify("X (Twitter)") == "x-twitter"
+    assert slugify("Mail.ru") == "mail-ru"
+
+
+def test_people_slug_uses_same_rule():
+    from pipeline.people import slug
+    assert slug("Zlatan Ibrahimović") == "zlatan-ibrahimovic"
+    assert slug("中文") == "person"

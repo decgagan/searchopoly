@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import logging
 import re
+import unicodedata
 from dataclasses import dataclass
 
 import pandas as pd
@@ -39,9 +40,25 @@ INFRA_PATTERNS = [
 _INFRA_RE = re.compile("|".join(INFRA_PATTERNS))
 
 
+# Letters NFKD doesn't decompose into a base letter + accent.
+_FOLD = str.maketrans({
+    "ß": "ss", "ẞ": "SS", "ø": "o", "Ø": "O", "ł": "l", "Ł": "L", "æ": "ae", "Æ": "AE",
+    "œ": "oe", "Œ": "OE", "đ": "d", "Đ": "D", "ð": "d", "Ð": "D", "þ": "th", "Þ": "Th",
+    "ı": "i", "ħ": "h", "Ħ": "H",
+})
+
+
+def ascii_fold(text: str) -> str:
+    """'Nicolás Dončić Øster Straße' -> 'Nicolas Doncic Oster Strasse'."""
+    text = unicodedata.normalize("NFKD", text.translate(_FOLD))
+    return "".join(c for c in text if not unicodedata.combining(c))
+
+
 def slugify(brand: str) -> str:
-    """URL-safe, stable ID for a brand, e.g. 'X (Twitter)' -> 'x-twitter'."""
-    return re.sub(r"[^a-z0-9]+", "-", brand.lower()).strip("-")
+    """URL-safe, stable ID, e.g. 'X (Twitter)' -> 'x-twitter', 'Nicolás Maduro' -> 'nicolas-maduro'.
+
+    Mirrors slug() in web/src/lib/slug.js."""
+    return re.sub(r"[^a-z0-9]+", "-", ascii_fold(brand).lower()).strip("-")
 
 
 def normalise_domain(domain: str) -> str:

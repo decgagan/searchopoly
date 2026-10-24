@@ -37,7 +37,7 @@
     {"rank":28,"id":"peter-mandelson","qid":"Q310046","name":"Peter Mandelson","title":"Peter_Mandelson","views":1540936,"category":"politics","source_rank":48,"description":"British politician and life peer (born 1953)","previous_rank":null,"movement":null}
   ],
   "dropped_out": [
-    {"id":"nicol-s-maduro","name":"Nicolás Maduro","previous_rank":1},
+    {"id":"nicolas-maduro","name":"Nicolás Maduro","previous_rank":1},
     {"id":"ajit-pawar","name":"Ajit Pawar","previous_rank":4},
     {"id":"fernando-mendoza","name":"Fernando Mendoza","previous_rank":6},
     {"id":"curt-cignetti","name":"Curt Cignetti","previous_rank":7},
@@ -51,9 +51,9 @@
     {"id":"kristi-noem","name":"Kristi Noem","previous_rank":15},
     {"id":"joe-keery","name":"Joe Keery","previous_rank":16},
     {"id":"teyana-taylor","name":"Teyana Taylor","previous_rank":17},
-    {"id":"timoth-e-chalamet","name":"Timothée Chalamet","previous_rank":18},
+    {"id":"timothee-chalamet","name":"Timothée Chalamet","previous_rank":18},
     {"id":"jessie-buckley","name":"Jessie Buckley","previous_rank":19},
-    {"id":"hugo-ch-vez","name":"Hugo Chávez","previous_rank":20},
+    {"id":"hugo-chavez","name":"Hugo Chávez","previous_rank":20},
     {"id":"elizabeth-smart","name":"Elizabeth Smart","previous_rank":21},
     {"id":"sam-darnold","name":"Sam Darnold","previous_rank":22},
     {"id":"drake-maye","name":"Drake Maye","previous_rank":23},

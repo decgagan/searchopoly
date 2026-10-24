@@ -35,6 +35,7 @@ import pandas as pd
 import requests
 
 from . import config, pageview_dumps
+from .clean import slugify
 
 log = logging.getLogger(__name__)
 
@@ -463,7 +464,7 @@ def load_overrides(path=config.PEOPLE_OVERRIDES_CSV) -> Overrides:
 
 
 def slug(name: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") or "person"
+    return slugify(name) or "person"
 
 
 # --- Board --------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 <script>
+  import { findLegacy } from "./lib/slug.js";
   import Board from "./lib/Board.svelte";
   import MobileList from "./lib/MobileList.svelte";
   import SiteCard from "./lib/SiteCard.svelte";
@@ -177,6 +178,12 @@
     })) : []
   );
   const site = $derived(snapshot?.sites.find((s) => s.id === route.site) ?? null);
+  // Old links used accent-to-hyphen ids (nicol-s-maduro): rewrite them to the current id.
+  $effect(() => {
+    if (!snapshot || !route.site || site) return;
+    const match = findLegacy(snapshot.sites, route.site);
+    if (match) navigate({ site: match.id });
+  });
   const categoryLabels = $derived(
     Object.fromEntries([
       ...(index?.categories ?? []).map((c) => [c.category, c.label]),
