@@ -34,14 +34,24 @@ try {
   await prev.setContent(`<body style="margin:0;background:transparent"><img src="data:image/png;base64,${b64}" style="width:48px;height:48px;border-radius:50%;display:block">`);
   await prev.screenshot({ path: resolve(out, "avatar-preview-48.png"), omitBackground: true });
 
-  // 2. Header + safe-zone preview
-  const hp = await shot("header.html", 1500, 500, resolve(out, "header-1500x500.png"),
+  // Real Google card (October 2026) from the live site, for header v2
+  const cp = await browser.newPage({ viewport: { width: 1280, height: 1100 }, deviceScaleFactor: 2, reducedMotion: "reduce" });
+  await cp.goto(`${SITE}/#world/2026-10/google`);
+  await cp.waitForSelector("dialog.card[open]"); await cp.waitForTimeout(1500);
+  await cp.evaluate(() => { document.activeElement?.blur(); return document.fonts.ready; });
+  await cp.locator("dialog.card").screenshot({ path: resolve(tmp, "card-google.png") });
+
+  // 2. Header (v1 and v2) + safe-zone previews
+  for (const [file, png, preview] of [["header.html", "header-1500x500.png", "header-safe-zones-preview.png"],
+    ["header-v2.html", "header-1500x500-v2.png", "header-v2-safe-zones-preview.png"]]) {
+  const hp = await shot(file, 1500, 500, resolve(out, png),
     { fn: (a) => window.render(a), arg: { sites: world.sites.slice(0, 9), groups } });
   await hp.evaluate(() => document.body.insertAdjacentHTML("beforeend", `
     <div style="position:absolute;inset:0 0 auto 0;height:60px;background:rgba(255,0,0,.35)"></div>
     <div style="position:absolute;inset:auto 0 0 0;height:60px;background:rgba(255,0,0,.35)"></div>
     <div style="position:absolute;left:0;bottom:0;width:200px;height:150px;background:rgba(255,0,0,.5);outline:3px dashed #fff;color:#fff;font:700 16px sans-serif;display:grid;place-items:center">avatar overlap</div>`));
-  await hp.screenshot({ path: resolve(out, "header-safe-zones-preview.png") });
+  await hp.screenshot({ path: resolve(out, preview) });
+  }
 
   // 3. Launch image from live board screenshots
   for (const [name, hash] of [["world", "#world/2026-10"], ["people", "#people/2026-09"]]) {

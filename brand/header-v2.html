@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="brand.css">
+<style>
+  body { width: 1500px; height: 500px; position: relative; }
+  /* A strip of the real board: one corner plus the top ranked squares, run along the top-right. */
+  .strip { position: absolute; top: 66px; right: -40px; display: flex; transform: rotate(-2deg); transform-origin: right top; }
+  .strip > * { margin-left: -2px; }
+  .wordmark { font-size: 76px; line-height: 1; }
+  .tag { margin-top: 12px; font-family: var(--display); font-weight: 600; font-size: 34px; color: var(--paper); opacity: .92; }
+  .url { margin-top: 14px; display: inline-block; font-family: var(--display); font-weight: 700; font-size: 24px; color: #fff; background: var(--accent-strong); padding: 6px 14px; border-radius: 999px; }
+  .copy { position: absolute; left: 520px; top: 248px; }
+  /* v2: the real Google site card (screenshot of the live dialog, top part), angled like the strip. */
+  .card { position: absolute; left: 214px; top: 112px; width: 286px; height: 262px; overflow: hidden; border-radius: 14px;
+    transform: rotate(-2deg); box-shadow: 0 14px 40px rgba(0,0,0,.5); background: var(--paper); }
+  .card img { width: 100%; display: block; }
+  .card::after { content: ""; position: absolute; inset: auto 0 0 0; height: 46px; background: linear-gradient(transparent, var(--paper)); }
+</style>
+<body class="bg">
+  <div class="strip" id="strip"></div>
+  <div class="card"><img src="out/card-google.png" alt=""></div>
+  <div class="copy"><div class="wordmark">Search<b>opoly</b></div><div class="tag">The internet as a board game</div><div class="url">searchopoly.co.uk</div></div>
+<script>
+const ICONS = { arrow: '<path d="M40 24H10m0 0 11-11M10 24l11 11"/>' };
+window.render = ({ sites, groups }) => {
+  const strip = document.getElementById("strip");
+  strip.innerHTML = `<div class="corner logon" style="--u:150px"><svg viewBox="0 0 48 48">${ICONS.arrow}</svg><span class="title">Log On</span><span class="text">Start here</span></div>` +
+    sites.map(s => `<div class="sq" style="--u:100px;--set:${groups[s.group]}"><div class="band">${s.rank}</div><div class="body"><div class="tile">${s.brand.replace(/[^A-Za-z0-9]/g,"").slice(0,1)}</div><div class="brand">${s.brand}</div><div class="domain">${s.domain}</div></div></div>`).join("");
+};
+</script></body>
