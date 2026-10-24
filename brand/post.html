@@ -1,0 +1,31 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="brand.css">
+<style>
+  body { width: 1200px; height: 675px; position: relative; padding: 40px 56px; color: var(--paper); }
+  .wordmark { font-size: 30px; }
+  h1 { font-family: var(--display); font-weight: 700; font-size: 46px; line-height: 1.05; margin: 14px 0 8px; letter-spacing: -0.01em; }
+  .sub { font-size: 20px; opacity: .85; line-height: 1.35; margin: 0 0 18px; }
+  .foot { position: absolute; right: 30px; bottom: 20px; text-align: right; font-size: 13px; opacity: .8; }
+  .foot b { font-family: var(--display); font-size: 16px; color: #fff; opacity: 1; display: block; }
+  .cards { position: absolute; top: 34px; right: 60px; display: flex; gap: 22px; }
+  .cards img { height: 560px; border-radius: 14px; box-shadow: 0 14px 40px rgba(0,0,0,.5); display: block; }
+  .text { width: 640px; }
+  .stats { display: flex; gap: 14px; flex-wrap: wrap; }
+  .stat { background: rgba(251,247,239,.08); border: 1px solid rgba(251,247,239,.18); border-radius: 12px; padding: 12px 16px; min-width: 150px; }
+  .stat .k { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; opacity: .75; }
+  .stat .v { font-family: var(--display); font-weight: 700; font-size: 34px; color: #fff; }
+  .stat .v small { font-size: 18px; opacity: .8; }
+  .stat.hi { border-color: var(--accent); background: rgba(232,89,12,.18); }
+  .mini { display: grid; grid-template-columns: repeat(7, 22px); gap: 3px; }
+  .mini i { width: 16px; height: 16px; border-radius: 4px; background: rgba(251,247,239,.15); }
+  .mini i.on { background: var(--set); }
+  .months { display: flex; gap: 26px; margin-top: 6px; }
+  .months .m { text-align: center; }
+  .months .n { font-family: var(--display); font-weight: 700; font-size: 40px; color: #fff; margin-top: 8px; }
+  .months .l { font-size: 15px; opacity: .8; }
+  .sqrow { display: flex; gap: 0; margin-top: 18px; }
+  .sqrow .sq { color: var(--ink); }
+</style>
+<body class="bg"><div id="root"></div><div class="foot"><b>searchopoly.co.uk</b><span id="credit"></span></div>
+<script>
+window.render = ({ html, credit }) => { document.getElementById("root").innerHTML = html; document.getElementById("credit").textContent = credit; };
+</script></body>
