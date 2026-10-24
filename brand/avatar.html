@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="brand.css">
+<style>
+  body { width: 400px; height: 400px; display: grid; place-items: center; }
+  /* A board tile: paper card, orange colour band, bold S. Sized to sit inside the circle crop. */
+  .tile { width: 236px; height: 236px; border-radius: 34px; background: var(--paper); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 0 6px var(--accent); }
+  .tile .band { height: 52px; background: var(--accent); }
+  .tile .s { flex: 1; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 196px; line-height: 1; color: var(--navy); margin-top: -14px; }
+</style>
+<body class="bg"><div class="tile"><div class="band"></div><div class="s">S</div></div></body>

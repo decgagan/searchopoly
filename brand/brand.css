@@ -1,0 +1,26 @@
+/* Shared brand styles: the same fonts, palette and square anatomy as web/src (app.css, Square.svelte, Corner.svelte). */
+@font-face { font-family: "Space Grotesk Variable"; font-weight: 300 700; src: url("../web/node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter Variable"; font-weight: 100 900; src: url("../web/node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2"); }
+:root {
+  --display: "Space Grotesk Variable", system-ui, sans-serif;
+  --body: "Inter Variable", system-ui, sans-serif;
+  --ink: #101828; --ink-soft: #5d6577; --paper: #fbf7ef; --paper-deep: #f3ecdf;
+  --line: #1d2939; --accent: #e8590c; --accent-strong: #c74c0a; --navy: #101828; --navy-glow: #22304a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--body); color: var(--ink); overflow: hidden; }
+.bg { background: radial-gradient(1200px 700px at 50% 0%, var(--navy-glow) 0%, transparent 70%), var(--navy); }
+.sq { --u: 120px; width: var(--u); height: calc(var(--u) * 1.5); background: var(--paper); display: flex; flex-direction: column; border: 2px solid var(--line); }
+.sq .band { background: var(--set); height: calc(var(--u) * 0.26); display: grid; place-items: center; color: #fff; font-family: var(--display); font-weight: 700; font-size: calc(var(--u) * 0.15); }
+.sq .body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * .06); padding: calc(var(--u) * .08); text-align: center; }
+.sq .tile { width: calc(var(--u)*.44); height: calc(var(--u)*.44); border-radius: calc(var(--u)*.09); display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: calc(var(--u)*.24); color: var(--set); background: color-mix(in srgb, var(--set) 14%, var(--paper)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--set) 35%, transparent); }
+.sq .brand { font-weight: 650; font-size: calc(var(--u)*.13); line-height: 1.15; }
+.sq .domain { font-size: calc(var(--u)*.088); color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.corner { --u: 180px; width: var(--u); height: var(--u); background: var(--paper); border: 2px solid var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u)*.04); text-align: center; }
+.corner svg { width: calc(var(--u)*.48); height: calc(var(--u)*.48); fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.corner .title { font-family: var(--display); font-weight: 700; font-size: calc(var(--u)*.2); line-height: 1; }
+.corner .text { font-size: calc(var(--u)*.09); color: var(--ink-soft); }
+.logon { background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
+.wordmark { font-family: var(--display); font-weight: 700; letter-spacing: -0.02em; color: var(--paper); }
+.wordmark b { color: var(--accent); font-weight: 700; }
