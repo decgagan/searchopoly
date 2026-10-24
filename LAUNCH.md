@@ -93,7 +93,7 @@ Do this last, once the site is live and looks right.
 1. Go to `https://github.com/decgagan` → **Customize your pins** → tick `searchopoly` → **Save pins**.
 2. On the repo page, click the ⚙ next to **About** and set:
    - Website: `https://searchopoly.co.uk`
-   - Description: *The web's most visited sites as a board game, World vs UK, updated monthly.*
+   - Description: *The web's most visited sites and Wikipedia's most viewed people as a board game, updated monthly.*
    - Topics: `data-visualisation`, `svelte`, `d3`, `python`, `github-actions`, `cloudflare-pages`.
 3. Under **Settings → General → Social preview**, upload `web/public/og.png`, so links to the repo
    use the same card.

@@ -147,3 +147,11 @@ def test_published_category_boards_are_complete_and_fully_reviewed():
             assert board["coverage"]["ok"], (month, key, board["coverage"])
             group = config.CATEGORY_BOARDS[key][0]
             assert all(data["brands"][s["id"]]["group"] == group for s in board["sites"])
+
+
+def test_no_pre_merge_category_names():
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    labels = (root / "pipeline/data/categories.csv").read_text()
+    assert "Search & portals" not in labels and "Tech & AI" not in labels
+    assert '"Search & portals"' not in (root / "data/latest.json").read_text()

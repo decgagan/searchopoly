@@ -3,7 +3,7 @@
 # a link). Background traffic (CDNs, APIs, ads, telemetry) belongs in exclude.csv instead.
 # `note` is optional, shown on the site card. Put it on one row per brand (usually the canonical one).
 domain,brand,canonical_domain,category,note
-# --- Search & portals ---
+# --- Search (Search & tech set) ---
 google.com,Google,google.com,search,"Includes Google's country sites (google.co.uk, google.de and others) and gmail.com. YouTube is counted separately."
 google.co.uk,Google,google.com,search,
 google.de,Google,google.com,search,
