@@ -64,9 +64,18 @@
         <dt>UK board: <a href="https://radar.cloudflare.com/domains" target="_blank" rel="noopener">Cloudflare Radar</a></dt>
         <dd>
           Cloudflare's ranking of the top 100 domains by country, based on its 1.1.1.1 DNS resolver.
-          {#if ukLive}It powers the UK board.{:else}The UK board switches on as soon as the Radar
+          {#if ukLive}It powers the UK board: each month uses Radar's GB ranking dated the 1st
+          (Radar's "popular" ranking, location GB), cleaned, merged and categorised exactly like
+          the World board.{:else}The UK board switches on as soon as the Radar
           connection is added; until then it shows "coming soon" rather than a guess.{/if}
-          Tranco has no country split, and estimating the UK from <code>.uk</code> domains would be
+          Its limits are worth knowing. Radar only publishes an ordered list of its top 100
+          domains per country, and most of those are background traffic (CDNs, Apple and Windows
+          services, ad and telemetry hosts), so only about 18 to 22 real sites are left each month.
+          The rest of the UK board shows as <strong>vacant lots</strong> rather than guesses, and its
+          category boards are mostly vacant. It is one source (DNS lookups through 1.1.1.1, which
+          skews towards people and devices that use Cloudflare's resolver), not a five-source
+          average like Tranco, so it is noisier and favours sites with lots of background
+          lookups. Tranco has no country split, and estimating the UK from <code>.uk</code> domains would be
           wrong, as most UK traffic goes to <code>.com</code> sites.
         </dd>
       </div>
@@ -125,8 +134,9 @@
       filter. Neither filled a board, so they're now one set,
       <a href="#world/search-tech">Search &amp; tech</a>, which fills all 28 squares every month. If
       a set ever runs short, the empty squares show as <strong>vacant lots</strong> rather than being
-      padded with sites that didn't make the cut or unreviewed domains. Category boards are World
-      only: Cloudflare Radar's UK ranking stops at 100 domains, too shallow to fill them.
+      padded with sites that didn't make the cut or unreviewed domains. The UK board has
+      category boards too, but Cloudflare Radar's UK ranking stops at 100 domains, so they only
+      reach that deep and most of their squares are vacant lots.
     </p>
   </section>
 

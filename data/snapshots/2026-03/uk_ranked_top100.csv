@@ -1,0 +1,101 @@
+rank,domain,status,brand,category,reason
+1,google.com,mapped,Google,search,
+2,microsoft.com,mapped,Microsoft,productivity,
+3,googleapis.com,excluded,,,infrastructure (name pattern)
+4,apple.com,mapped,Apple,tech,
+5,facebook.com,mapped,Facebook,social,
+6,gstatic.com,excluded,,,infrastructure (name pattern)
+7,amazonaws.com,excluded,,,infrastructure (name pattern)
+8,akadns.net,excluded,,,infrastructure (name pattern)
+9,office.com,mapped,Microsoft,productivity,
+10,akamaiedge.net,excluded,,,infrastructure (name pattern)
+11,akamai.net,excluded,,,infrastructure (name pattern)
+12,instagram.com,mapped,Instagram,social,
+13,azure.com,excluded,,,infrastructure (name pattern)
+14,whatsapp.net,excluded,,,background (WhatsApp app traffic)
+15,apple-dns.net,excluded,,,background (Apple)
+16,aaplimg.com,excluded,,,background (Apple)
+17,ntp.org,excluded,,,infrastructure (time servers)
+18,icloud.com,mapped,Apple,tech,
+19,googlevideo.com,excluded,,,infrastructure (name pattern)
+20,cloudflare.com,excluded,,,infrastructure (DNS/CDN provider; 1.1.1.1 and edge services)
+21,chatgpt.com,mapped,ChatGPT,ai,
+22,cloudfront.net,excluded,,,infrastructure (name pattern)
+23,youtube.com,mapped,YouTube,video,
+24,live.com,mapped,Microsoft,productivity,
+25,doubleclick.net,excluded,,,infrastructure (name pattern)
+26,tiktokcdn.com,excluded,,,infrastructure (name pattern)
+27,amazon.com,mapped,Amazon,shopping,
+28,fastly.net,excluded,,,infrastructure (name pattern)
+29,fbcdn.net,excluded,,,background (Facebook media)
+30,ui.com,excluded,,,background (network devices)
+31,tiktokv.eu,excluded,,,background (TikTok app)
+32,spotify.com,mapped,Spotify,music,
+33,office.net,excluded,,,infrastructure (Office service traffic)
+34,trafficmanager.net,excluded,,,infrastructure (name pattern)
+35,snapchat.com,mapped,Snapchat,social,
+36,googleusercontent.com,excluded,,,infrastructure (name pattern)
+37,bing.com,mapped,Bing,search,
+38,microsoftonline.com,excluded,,,infrastructure (Microsoft sign-in)
+39,digicert.com,excluded,,,infrastructure (TLS certificates)
+40,googlesyndication.com,excluded,,,infrastructure (name pattern)
+41,cloudflare-dns.com,excluded,,,infrastructure (name pattern)
+42,tiktokcdn-eu.com,excluded,,,infrastructure (name pattern)
+43,office365.com,mapped,Microsoft,productivity,
+44,netflix.com,mapped,Netflix,video,
+45,windows.net,excluded,,,infrastructure
+46,tiktokv.com,excluded,,,background (TikTok app)
+47,windowsupdate.com,excluded,,,infrastructure (name pattern)
+48,sharepoint.com,mapped,Microsoft,productivity,
+49,skype.com,excluded,,,infrastructure (Skype closed in 2025; residual app traffic)
+50,cdninstagram.com,excluded,,,background (Instagram media)
+51,msn.com,mapped,MSN,news,
+52,cloud.microsoft,mapped,Microsoft,productivity,
+53,yahoo.com,mapped,Yahoo,search,
+54,gvt2.com,excluded,,,background (Chrome/Android updates)
+55,outlook.com,mapped,Microsoft,productivity,
+56,ytimg.com,excluded,,,background (YouTube images)
+57,windows.com,excluded,,,infrastructure (Windows services)
+58,app-analytics-services.com,excluded,,,analytics
+59,msftncsi.com,excluded,,,infrastructure (name pattern)
+60,amazon.co.uk,mapped,Amazon,shopping,
+61,app-measurement.com,excluded,,,infrastructure (name pattern)
+62,msftconnecttest.com,excluded,,,infrastructure (name pattern)
+63,google-analytics.com,excluded,,,infrastructure (name pattern)
+64,googletagmanager.com,excluded,,,infrastructure (name pattern)
+65,amazon-adsystem.com,excluded,,,infrastructure (name pattern)
+66,googleadservices.com,excluded,,,infrastructure (name pattern)
+67,whatsapp.com,mapped,WhatsApp,messaging,
+68,appsflyersdk.com,excluded,,,ads/attribution SDK
+69,cdn-apple.com,excluded,,,infrastructure (name pattern)
+70,avast.com,excluded,,,background (antivirus updates)
+71,a2z.com,excluded,,,infrastructure (Amazon internal)
+72,sentry.io,excluded,,,analytics (error reporting)
+73,gmail.com,mapped,Google,search,
+74,ubuntu.com,excluded,,,infrastructure (OS updates)
+75,gvt1.com,excluded,,,background (Chrome/Android updates)
+76,amazon.dev,excluded,,,infrastructure (Amazon internal)
+77,bbci.co.uk,excluded,,,BBC static assets and media CDN (pages load from bbc.co.uk)
+78,bbc.co.uk,mapped,BBC,news,
+79,github.com,mapped,GitHub,tech,
+80,ibyteimg.com,excluded,,,background (TikTok/ByteDance)
+81,cloudflare.net,excluded,,,infrastructure
+82,dns.google,excluded,,,infrastructure (name pattern)
+83,linkedin.com,mapped,LinkedIn,social,
+84,mzstatic.com,excluded,,,background (Apple media)
+85,applovin.com,excluded,,,ads
+86,nr-data.net,excluded,,,analytics (New Relic)
+87,ggpht.com,excluded,,,background (Google images)
+88,pki.goog,excluded,,,infrastructure (certificates)
+89,unity3d.com,excluded,,,background (game engine services)
+90,akamaized.net,excluded,,,infrastructure (name pattern)
+91,adobe.com,mapped,Adobe,productivity,
+92,steamserver.net,excluded,,,background (game servers)
+93,google.co.uk,mapped,Google,search,
+94,dropbox.com,mapped,Dropbox,productivity,
+95,launchdarkly.com,excluded,,,analytics
+96,roblox.com,mapped,Roblox,gaming,
+97,fastly-edge.com,excluded,,,infrastructure (name pattern)
+98,aws.dev,excluded,,,infrastructure (Amazon internal)
+99,msedge.net,excluded,,,infrastructure (name pattern)
+100,mozilla.com,excluded,,,background (Firefox services)

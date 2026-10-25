@@ -1,0 +1,336 @@
+{
+  "board": "uk",
+  "label": "United Kingdom",
+  "month": "2026-08",
+  "generated_at": "2026-10-25T12:42:30Z",
+  "metric": "Relative popularity (most visited), not search volume",
+  "source": {
+    "name": "Cloudflare Radar",
+    "dataset": "Domain Rankings (POPULAR, ordered top 100)",
+    "location": "GB",
+    "list_date": "2026-08-01",
+    "last_updated": null,
+    "url": "https://radar.cloudflare.com/domains",
+    "licence_note": "Cloudflare Radar data, CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/). Modified: infrastructure domains removed and sibling domains merged."
+  },
+  "coverage": {
+    "last_board_source_rank": 86,
+    "reviewed_through_rank": 100,
+    "unreviewed_above_cutoff": [],
+    "ok": true
+  },
+  "has_previous_month": true,
+  "sites": [
+    {
+      "rank": 1,
+      "id": "google",
+      "brand": "Google",
+      "domain": "google.com",
+      "category": "search",
+      "group": "search_tech",
+      "source": "cloudflare_radar",
+      "source_rank": 1,
+      "merged_domains": [
+        "google.com",
+        "gmail.com",
+        "google.co.uk"
+      ],
+      "previous_rank": 1,
+      "movement": 0,
+      "note": "Includes Google's country sites (google.co.uk, google.de and others) and gmail.com. YouTube is counted separately."
+    },
+    {
+      "rank": 2,
+      "id": "microsoft",
+      "brand": "Microsoft",
+      "domain": "microsoft.com",
+      "category": "productivity",
+      "group": "work_money",
+      "source": "cloudflare_radar",
+      "source_rank": 2,
+      "merged_domains": [
+        "microsoft.com",
+        "office.com",
+        "live.com",
+        "cloud.microsoft",
+        "office365.com",
+        "sharepoint.com",
+        "outlook.com"
+      ],
+      "previous_rank": 2,
+      "movement": 0,
+      "note": "Likely ranked higher than real visits alone would justify: DNS-based rankings also count Windows and Office background traffic (updates, sign-ins). Merges microsoft.com, office.com, live.com, outlook.com and more."
+    },
+    {
+      "rank": 3,
+      "id": "facebook",
+      "brand": "Facebook",
+      "domain": "facebook.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "cloudflare_radar",
+      "source_rank": 4,
+      "merged_domains": [
+        "facebook.com"
+      ],
+      "previous_rank": 3,
+      "movement": 0,
+      "note": "Background traffic from Facebook's SDK and image servers (facebook.net, fbcdn.net) is excluded."
+    },
+    {
+      "rank": 4,
+      "id": "apple",
+      "brand": "Apple",
+      "domain": "apple.com",
+      "category": "tech",
+      "group": "search_tech",
+      "source": "cloudflare_radar",
+      "source_rank": 5,
+      "merged_domains": [
+        "apple.com",
+        "icloud.com"
+      ],
+      "previous_rank": 4,
+      "movement": 0,
+      "note": "Likely boosted by iPhone and Mac background traffic to apple.com and icloud.com, which DNS-based rankings can't separate from real visits."
+    },
+    {
+      "rank": 5,
+      "id": "instagram",
+      "brand": "Instagram",
+      "domain": "instagram.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "cloudflare_radar",
+      "source_rank": 8,
+      "merged_domains": [
+        "instagram.com"
+      ],
+      "previous_rank": 5,
+      "movement": 0,
+      "note": null
+    },
+    {
+      "rank": 6,
+      "id": "youtube",
+      "brand": "YouTube",
+      "domain": "youtube.com",
+      "category": "video",
+      "group": "entertainment",
+      "source": "cloudflare_radar",
+      "source_rank": 24,
+      "merged_domains": [
+        "youtube.com"
+      ],
+      "previous_rank": 6,
+      "movement": 0,
+      "note": "Includes youtu.be share links. Video streaming hosts (googlevideo.com, ytimg.com) are excluded."
+    },
+    {
+      "rank": 7,
+      "id": "bing",
+      "brand": "Bing",
+      "domain": "bing.com",
+      "category": "search",
+      "group": "search_tech",
+      "source": "cloudflare_radar",
+      "source_rank": 32,
+      "merged_domains": [
+        "bing.com"
+      ],
+      "previous_rank": 7,
+      "movement": 0,
+      "note": "Possibly boosted by Windows search, widgets and Edge features that contact bing.com in the background."
+    },
+    {
+      "rank": 8,
+      "id": "spotify",
+      "brand": "Spotify",
+      "domain": "spotify.com",
+      "category": "music",
+      "group": "entertainment",
+      "source": "cloudflare_radar",
+      "source_rank": 36,
+      "merged_domains": [
+        "spotify.com"
+      ],
+      "previous_rank": 9,
+      "movement": 1,
+      "note": null
+    },
+    {
+      "rank": 9,
+      "id": "snapchat",
+      "brand": "Snapchat",
+      "domain": "snapchat.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "cloudflare_radar",
+      "source_rank": 37,
+      "merged_domains": [
+        "snapchat.com"
+      ],
+      "previous_rank": 10,
+      "movement": 1,
+      "note": null
+    },
+    {
+      "rank": 10,
+      "id": "amazon",
+      "brand": "Amazon",
+      "domain": "amazon.com",
+      "category": "shopping",
+      "group": "shopping",
+      "source": "cloudflare_radar",
+      "source_rank": 43,
+      "merged_domains": [
+        "amazon.com",
+        "amazon.co.uk"
+      ],
+      "previous_rank": 12,
+      "movement": 2,
+      "note": "Merges Amazon's country stores (amazon.co.uk, amazon.de and others). Prime Video and AWS are not included."
+    },
+    {
+      "rank": 11,
+      "id": "chatgpt",
+      "brand": "ChatGPT",
+      "domain": "chatgpt.com",
+      "category": "ai",
+      "group": "search_tech",
+      "source": "cloudflare_radar",
+      "source_rank": 44,
+      "merged_domains": [
+        "chatgpt.com",
+        "openai.com"
+      ],
+      "previous_rank": 8,
+      "movement": -3,
+      "note": "Merges chatgpt.com and openai.com."
+    },
+    {
+      "rank": 12,
+      "id": "msn",
+      "brand": "MSN",
+      "domain": "msn.com",
+      "category": "news",
+      "group": "news_sport",
+      "source": "cloudflare_radar",
+      "source_rank": 47,
+      "merged_domains": [
+        "msn.com"
+      ],
+      "previous_rank": 11,
+      "movement": -1,
+      "note": null
+    },
+    {
+      "rank": 13,
+      "id": "whatsapp",
+      "brand": "WhatsApp",
+      "domain": "whatsapp.com",
+      "category": "messaging",
+      "group": "social_messaging",
+      "source": "cloudflare_radar",
+      "source_rank": 57,
+      "merged_domains": [
+        "whatsapp.com"
+      ],
+      "previous_rank": 14,
+      "movement": 1,
+      "note": "Counts whatsapp.com and wa.me links. In-app chat traffic (whatsapp.net) is excluded."
+    },
+    {
+      "rank": 14,
+      "id": "yahoo",
+      "brand": "Yahoo",
+      "domain": "yahoo.com",
+      "category": "search",
+      "group": "search_tech",
+      "source": "cloudflare_radar",
+      "source_rank": 60,
+      "merged_domains": [
+        "yahoo.com"
+      ],
+      "previous_rank": 13,
+      "movement": -1,
+      "note": null
+    },
+    {
+      "rank": 15,
+      "id": "netflix",
+      "brand": "Netflix",
+      "domain": "netflix.com",
+      "category": "video",
+      "group": "entertainment",
+      "source": "cloudflare_radar",
+      "source_rank": 65,
+      "merged_domains": [
+        "netflix.com"
+      ],
+      "previous_rank": 15,
+      "movement": 0,
+      "note": null
+    },
+    {
+      "rank": 16,
+      "id": "github",
+      "brand": "GitHub",
+      "domain": "github.com",
+      "category": "tech",
+      "group": "search_tech",
+      "source": "cloudflare_radar",
+      "source_rank": 79,
+      "merged_domains": [
+        "github.com"
+      ],
+      "previous_rank": 18,
+      "movement": 2,
+      "note": null
+    },
+    {
+      "rank": 17,
+      "id": "adobe",
+      "brand": "Adobe",
+      "domain": "adobe.com",
+      "category": "productivity",
+      "group": "work_money",
+      "source": "cloudflare_radar",
+      "source_rank": 81,
+      "merged_domains": [
+        "adobe.com"
+      ],
+      "previous_rank": 16,
+      "movement": -1,
+      "note": "Possibly boosted by Creative Cloud apps contacting adobe.com in the background."
+    },
+    {
+      "rank": 18,
+      "id": "linkedin",
+      "brand": "LinkedIn",
+      "domain": "linkedin.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "cloudflare_radar",
+      "source_rank": 86,
+      "merged_domains": [
+        "linkedin.com"
+      ],
+      "previous_rank": 17,
+      "movement": -1,
+      "note": null
+    }
+  ],
+  "dropped_out": [
+    {
+      "id": "bbc",
+      "brand": "BBC",
+      "previous_rank": 19
+    },
+    {
+      "id": "grammarly",
+      "brand": "Grammarly",
+      "previous_rank": 20
+    }
+  ]
+}

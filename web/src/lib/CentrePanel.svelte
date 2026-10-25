@@ -74,7 +74,7 @@
       {:else if people}
         Top {sites.length} people, ranked by Wikipedia page views
       {:else if filterLabel}
-        Top {sites.length} {filterLabel} sites worldwide, ranked by visits
+        Top {sites.length} {filterLabel} sites{boardKey === "uk" ? " in the UK" : " worldwide"}, ranked by visits
       {:else}
         Top {sites.length} sites{boardKey === "uk" ? " in the UK" : " worldwide"}, ranked by visits
       {/if}
@@ -86,8 +86,8 @@
       </p>
     {:else if snapshot.vacant}
       <p class="vacant">
-        {snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}: no other {filterLabel} site is in
-        the top {snapshot.depth.toLocaleString("en-GB")} domains. <a href="#about">Why?</a>
+        {snapshot.vacant} vacant lot{snapshot.vacant === 1 ? "" : "s"}: no other {filterLabel ? `${filterLabel} ` : "real "}site is in
+        the top {snapshot.depth.toLocaleString("en-GB")} {boardKey === "uk" ? "UK " : ""}domains. <a href="#about">Why?</a>
       </p>
     {/if}
 

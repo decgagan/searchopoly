@@ -113,6 +113,7 @@ skype.com,infrastructure (Skype closed in 2025; residual app traffic)
 live-video.net,infrastructure (Twitch video)
 ttvnw.net,infrastructure (Twitch video)
 # --- Device, OS and app background traffic ---
+bbci.co.uk,BBC static assets and media CDN (pages load from bbc.co.uk)
 android.com,background (Android OS services)
 aaplimg.com,background (Apple)
 mzstatic.com,background (Apple media)

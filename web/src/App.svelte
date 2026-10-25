@@ -121,10 +121,25 @@
     return snap;
   }
 
+  const vacancy = new Map();
+  function withVacancy(raw) {
+    const key = `${raw.board}/${raw.month}`;
+    if (!vacancy.has(key)) {
+      const size = index?.category_boards?.board_size ?? 28;
+      vacancy.set(key, { ...raw, depth: 100,
+                         vacant: Math.max(0, size - raw.sites.length) });
+    }
+    return vacancy.get(key);
+  }
+
   function snapshotFor(board, filter, m) {
     if (!filter) {
       const raw = snapshots[board]?.[m] ?? null;
-      return raw && board === "people" ? peopleSnapshot(raw) : raw;
+      if (raw && board === "people") return peopleSnapshot(raw);
+      // Radar's UK ranking stops at 100 domains, which holds fewer than 28 real sites once
+      // background domains are removed: the rest of the board shows as vacant lots.
+      if (raw && board === "uk") return withVacancy(raw);
+      return raw;
     }
     const raw = categoryData[board]?.[m];
     return raw ? categorySnapshot(raw, filter) : null;

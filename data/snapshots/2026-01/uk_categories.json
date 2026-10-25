@@ -1,0 +1,100 @@
+{
+  "board": "uk",
+  "month": "2026-01",
+  "generated_at": "2026-10-25T12:42:58Z",
+  "metric": "Relative popularity (most visited) within each colour set, not search volume",
+  "source": {"name":"Cloudflare Radar","dataset":"Domain Rankings (POPULAR, ordered top 100)","location":"GB","list_date":"2026-01-01","last_updated":null,"url":"https://radar.cloudflare.com/domains","licence_note":"Cloudflare Radar data, CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/). Modified: infrastructure domains removed and sibling domains merged."},
+  "depth": 100,
+  "board_size": 28,
+  "has_previous_month": false,
+  "brands": {
+    "adobe": {"brand":"Adobe","domain":"adobe.com","category":"productivity","group":"work_money","source":"cloudflare_radar","merged_domains":["adobe.com"],"note":"Possibly boosted by Creative Cloud apps contacting adobe.com in the background."},
+    "amazon": {"brand":"Amazon","domain":"amazon.com","category":"shopping","group":"shopping","source":"cloudflare_radar","merged_domains":["amazon.com","amazon.co.uk"],"note":"Merges Amazon's country stores (amazon.co.uk, amazon.de and others). Prime Video and AWS are not included."},
+    "apple": {"brand":"Apple","domain":"apple.com","category":"tech","group":"search_tech","source":"cloudflare_radar","merged_domains":["apple.com","icloud.com"],"note":"Likely boosted by iPhone and Mac background traffic to apple.com and icloud.com, which DNS-based rankings can't separate from real visits."},
+    "bing": {"brand":"Bing","domain":"bing.com","category":"search","group":"search_tech","source":"cloudflare_radar","merged_domains":["bing.com"],"note":"Possibly boosted by Windows search, widgets and Edge features that contact bing.com in the background."},
+    "chatgpt": {"brand":"ChatGPT","domain":"chatgpt.com","category":"ai","group":"search_tech","source":"cloudflare_radar","merged_domains":["chatgpt.com"],"note":"Merges chatgpt.com and openai.com."},
+    "facebook": {"brand":"Facebook","domain":"facebook.com","category":"social","group":"social_messaging","source":"cloudflare_radar","merged_domains":["facebook.com"],"note":"Background traffic from Facebook's SDK and image servers (facebook.net, fbcdn.net) is excluded."},
+    "github": {"brand":"GitHub","domain":"github.com","category":"tech","group":"search_tech","source":"cloudflare_radar","merged_domains":["github.com"],"note":null},
+    "google": {"brand":"Google","domain":"google.com","category":"search","group":"search_tech","source":"cloudflare_radar","merged_domains":["google.com","gmail.com","google.co.uk"],"note":"Includes Google's country sites (google.co.uk, google.de and others) and gmail.com. YouTube is counted separately."},
+    "instagram": {"brand":"Instagram","domain":"instagram.com","category":"social","group":"social_messaging","source":"cloudflare_radar","merged_domains":["instagram.com"],"note":null},
+    "linkedin": {"brand":"LinkedIn","domain":"linkedin.com","category":"social","group":"social_messaging","source":"cloudflare_radar","merged_domains":["linkedin.com"],"note":null},
+    "microsoft": {"brand":"Microsoft","domain":"microsoft.com","category":"productivity","group":"work_money","source":"cloudflare_radar","merged_domains":["microsoft.com","office.com","live.com","office365.com","outlook.com","sharepoint.com","cloud.microsoft"],"note":"Likely ranked higher than real visits alone would justify: DNS-based rankings also count Windows and Office background traffic (updates, sign-ins). Merges microsoft.com, office.com, live.com, outlook.com and more."},
+    "msn": {"brand":"MSN","domain":"msn.com","category":"news","group":"news_sport","source":"cloudflare_radar","merged_domains":["msn.com"],"note":null},
+    "netflix": {"brand":"Netflix","domain":"netflix.com","category":"video","group":"entertainment","source":"cloudflare_radar","merged_domains":["netflix.com"],"note":null},
+    "roblox": {"brand":"Roblox","domain":"roblox.com","category":"gaming","group":"entertainment","source":"cloudflare_radar","merged_domains":["roblox.com"],"note":null},
+    "snapchat": {"brand":"Snapchat","domain":"snapchat.com","category":"social","group":"social_messaging","source":"cloudflare_radar","merged_domains":["snapchat.com"],"note":null},
+    "spotify": {"brand":"Spotify","domain":"spotify.com","category":"music","group":"entertainment","source":"cloudflare_radar","merged_domains":["spotify.com"],"note":null},
+    "whatsapp": {"brand":"WhatsApp","domain":"whatsapp.com","category":"messaging","group":"social_messaging","source":"cloudflare_radar","merged_domains":["whatsapp.com"],"note":"Counts whatsapp.com and wa.me links. In-app chat traffic (whatsapp.net) is excluded."},
+    "yahoo": {"brand":"Yahoo","domain":"yahoo.com","category":"search","group":"search_tech","source":"cloudflare_radar","merged_domains":["yahoo.com"],"note":null},
+    "youtube": {"brand":"YouTube","domain":"youtube.com","category":"video","group":"entertainment","source":"cloudflare_radar","merged_domains":["youtube.com"],"note":"Includes youtu.be share links. Video streaming hosts (googlevideo.com, ytimg.com) are excluded."}
+  },
+  "boards": {
+    "search-tech": {
+      "sites": [
+        {"rank":1,"id":"google","source_rank":1,"previous_rank":null,"movement":null},
+        {"rank":2,"id":"apple","source_rank":5,"previous_rank":null,"movement":null},
+        {"rank":3,"id":"bing","source_rank":31,"previous_rank":null,"movement":null},
+        {"rank":4,"id":"yahoo","source_rank":51,"previous_rank":null,"movement":null},
+        {"rank":5,"id":"chatgpt","source_rank":78,"previous_rank":null,"movement":null},
+        {"rank":6,"id":"github","source_rank":97,"previous_rank":null,"movement":null}
+      ],
+      "vacant": 22,
+      "coverage": {"depth":100,"cutoff_source_rank":100,"reviewed_through_rank":100,"unreviewed_above_cutoff":[],"ok":true},
+      "dropped_out": []
+    },
+    "social": {
+      "sites": [
+        {"rank":1,"id":"facebook","source_rank":4,"previous_rank":null,"movement":null},
+        {"rank":2,"id":"instagram","source_rank":11,"previous_rank":null,"movement":null},
+        {"rank":3,"id":"snapchat","source_rank":27,"previous_rank":null,"movement":null},
+        {"rank":4,"id":"whatsapp","source_rank":70,"previous_rank":null,"movement":null},
+        {"rank":5,"id":"linkedin","source_rank":80,"previous_rank":null,"movement":null}
+      ],
+      "vacant": 23,
+      "coverage": {"depth":100,"cutoff_source_rank":100,"reviewed_through_rank":100,"unreviewed_above_cutoff":[],"ok":true},
+      "dropped_out": []
+    },
+    "entertainment": {
+      "sites": [
+        {"rank":1,"id":"youtube","source_rank":24,"previous_rank":null,"movement":null},
+        {"rank":2,"id":"spotify","source_rank":30,"previous_rank":null,"movement":null},
+        {"rank":3,"id":"netflix","source_rank":46,"previous_rank":null,"movement":null},
+        {"rank":4,"id":"roblox","source_rank":88,"previous_rank":null,"movement":null}
+      ],
+      "vacant": 24,
+      "coverage": {"depth":100,"cutoff_source_rank":100,"reviewed_through_rank":100,"unreviewed_above_cutoff":[],"ok":true},
+      "dropped_out": []
+    },
+    "shopping": {
+      "sites": [
+        {"rank":1,"id":"amazon","source_rank":37,"previous_rank":null,"movement":null}
+      ],
+      "vacant": 27,
+      "coverage": {"depth":100,"cutoff_source_rank":100,"reviewed_through_rank":100,"unreviewed_above_cutoff":[],"ok":true},
+      "dropped_out": []
+    },
+    "news": {
+      "sites": [
+        {"rank":1,"id":"msn","source_rank":48,"previous_rank":null,"movement":null}
+      ],
+      "vacant": 27,
+      "coverage": {"depth":100,"cutoff_source_rank":100,"reviewed_through_rank":100,"unreviewed_above_cutoff":[],"ok":true},
+      "dropped_out": []
+    },
+    "reference": {
+      "sites": [],
+      "vacant": 28,
+      "coverage": {"depth":100,"cutoff_source_rank":100,"reviewed_through_rank":100,"unreviewed_above_cutoff":[],"ok":true},
+      "dropped_out": []
+    },
+    "work": {
+      "sites": [
+        {"rank":1,"id":"microsoft","source_rank":2,"previous_rank":null,"movement":null},
+        {"rank":2,"id":"adobe","source_rank":94,"previous_rank":null,"movement":null}
+      ],
+      "vacant": 26,
+      "coverage": {"depth":100,"cutoff_source_rank":100,"reviewed_through_rank":100,"unreviewed_above_cutoff":[],"ok":true},
+      "dropped_out": []
+    }
+  }
+}

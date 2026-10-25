@@ -55,7 +55,7 @@
         {#if snapshot.board === "people"}
           Nobody else in {snapshot.filterLabel} is in the month's top {(snapshot.depth ?? 0).toLocaleString("en-GB")} English Wikipedia articles.
         {:else}
-          No other {snapshot.filterLabel} site is in the top {snapshot.depth.toLocaleString("en-GB")} domains.
+          No other {snapshot.filterLabel ? `${snapshot.filterLabel} ` : "real "}site is in the top {snapshot.depth.toLocaleString("en-GB")} {snapshot.board === "uk" ? "UK " : ""}domains.
         {/if}
       </p>
     {/if}
