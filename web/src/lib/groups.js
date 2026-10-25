@@ -44,7 +44,7 @@ export const FILTERS = [
 
 export const PEOPLE_FILTERS = Object.entries(PEOPLE_GROUPS).map(([id, g]) => ({ id, group: id, ...g }));
 
-export const filtersFor = (board) => (board === "people" ? PEOPLE_FILTERS : board === "world" ? FILTERS : []);
+export const filtersFor = (board) => (board === "people" ? PEOPLE_FILTERS : board === "world" || board === "uk" ? FILTERS : []);
 export const FILTER_IDS = [...FILTERS, ...PEOPLE_FILTERS].map((f) => f.id);
 // Slugs from before Search & portals and Tech & AI merged; old links still work.
 export const FILTER_ALIASES = { search: "search-tech", tech: "search-tech" };
