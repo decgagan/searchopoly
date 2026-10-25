@@ -42,6 +42,14 @@ CATEGORY_DEPTH = 1000
 
 # URL slug -> colour-set group (pipeline/data/categories.csv) and label, in board order.
 # Old slugs "search" and "tech" (before the two sets merged) redirect to "search-tech" in the site.
+# The UK board has fewer real sites to draw on, so its filters merge the colour sets into
+# three groups that can each fill 28 squares.
+UK_CATEGORY_BOARDS = {
+    "tech-work": (("search_tech", "work_money"), "Tech & work"),
+    "social-entertainment": (("social_messaging", "entertainment"), "Social & entertainment"),
+    "shopping-news": (("shopping", "news_sport", "reference_learning"), "Shopping, news & reference"),
+}
+
 CATEGORY_BOARDS = {
     "search-tech": ("search_tech", "Search & tech"),
     "social": ("social_messaging", "Social & messaging"),

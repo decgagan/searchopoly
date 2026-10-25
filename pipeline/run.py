@@ -21,9 +21,10 @@ import re
 import sys
 from datetime import datetime, timezone
 
+import pandas as pd
 import requests
 
-from . import clean, config, people, radar, report, snapshot, tranco
+from . import clean, config, crux, people, radar, report, snapshot, tranco
 
 log = logging.getLogger("pipeline")
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
@@ -63,9 +64,10 @@ def build_world(rules: clean.Rules, month: str, board_size: int) -> report.Board
 
 
 def build_categories(classified, board_name: str, month: str, source: dict, source_key: str,
-                     board_size: int, depth: int = config.CATEGORY_DEPTH) -> dict:
+                     board_size: int, depth: int = config.CATEGORY_DEPTH,
+                     boards: dict | None = None) -> dict:
     """Per-colour-set boards from the same classified list, reaching CATEGORY_DEPTH deep."""
-    groups = {k: g for k, (g, _) in config.CATEGORY_BOARDS.items()}
+    groups = {k: g for k, (g, _) in (boards or config.CATEGORY_BOARDS).items()}
     boards = clean.build_category_boards(classified, groups, board_size, depth)
     coverage = {k: clean.category_coverage(classified, b, board_size, depth)
                 for k, b in boards.items()}
@@ -76,29 +78,77 @@ def build_categories(classified, board_name: str, month: str, source: dict, sour
     return {"payload": payload, "changed": changed}
 
 
+def _uk_pool(radar_ranked: pd.DataFrame, month: str) -> tuple[pd.DataFrame, dict, dict | None]:
+    """Radar's ordered GB top 100, then CrUX's GB top-1,000 bucket for the month before.
+
+    Radar stops at 100 domains, which leaves only about 20 real sites. CrUX lists the top 1,000
+    origins Chrome users in the UK loaded, but without an order inside the bucket, so those
+    domains are ordered by their world Tranco rank (the same list as the World board) and only
+    fill the squares after the last Radar site. Returns the combined ranking (CrUX rows get
+    ranks after Radar's), {combined rank: Tranco rank} for the CrUX rows, and the CrUX source.
+    """
+    crux_month = _month_before(month)
+    try:
+        bucket = crux.top_bucket(crux_month)
+        world = tranco.download_list(tranco.list_meta(f"{month}-01"))
+    except (crux.CruxUnavailable, tranco.TrancoUnavailable, requests.RequestException) as exc:
+        log.warning("UK %s: no CrUX fill (%s)", month, exc)
+        return radar_ranked, {}, None
+    seen = set(radar_ranked["domain"].map(clean.normalise_domain))
+    bucket["domain"] = bucket["domain"].map(clean.normalise_domain)
+    bucket = bucket[~bucket["domain"].isin(seen)].drop_duplicates("domain")
+    trank = dict(zip(world["domain"].map(clean.normalise_domain), world["rank"]))
+    bucket["tranco_rank"] = bucket["domain"].map(trank)
+    bucket = bucket.dropna(subset=["tranco_rank"]).sort_values("tranco_rank")
+    base = int(radar_ranked["rank"].max())
+    bucket["rank"] = range(base + 1, base + 1 + len(bucket))
+    extra = dict(zip(bucket["rank"].astype(int), bucket["tranco_rank"].astype(int)))
+    combined = pd.concat([radar_ranked, bucket[["rank", "domain"]]], ignore_index=True)
+    return combined, extra, crux.attribution(crux_month)
+
+
+def _mark_crux(sites: list[dict], extra: dict, crux_month: str | None) -> None:
+    for s in sites:
+        r = s.get("source_rank")
+        if r in extra:
+            s["source"] = "crux_gb"
+            s["crux_month"] = crux_month
+            s["tranco_rank"] = extra[r]
+
+
 def build_uk(rules: clean.Rules, month: str, board_size: int) -> report.BoardResult:
     date = f"{month}-01"
     try:
-        ranked, meta = radar.fetch_top(location="GB", date=date)
+        radar_ranked, meta = radar.fetch_top(location="GB", date=date)
     except radar.RadarUnavailable as exc:
         log.warning("UK board pending: %s", exc)
         return report.BoardResult("uk", month, "pending", message=str(exc))
+    ranked, extra, crux_source = _uk_pool(radar_ranked, month)
     classified = clean.classify(ranked, rules)
     board = clean.build_board(classified, board_size)
     coverage = clean.coverage_check(classified, board)
     if len(board) < board_size:
-        log.warning("UK: only %d user-facing sites in Radar's top %d", len(board), len(ranked))
+        log.warning("UK: only %d user-facing sites", len(board))
     source = radar.attribution(meta, "GB")
+    if crux_source:
+        source["fill"] = crux_source
     payload = snapshot.board_payload(board, "uk", month, source, "cloudflare_radar", coverage)
+    _mark_crux(payload["sites"], extra, crux_source and crux_source["month"])
+    payload["radar_sites"] = sum(1 for s in payload["sites"] if s["source"] == "cloudflare_radar")
     out_dir = config.SNAPSHOT_DIR / month
     changed = snapshot.write_json(out_dir / "uk.json", payload)
-    snapshot.write_ranked_csv(classified, out_dir / "uk_ranked_top100.csv", top_n=config.RADAR_LIMIT)
+    snapshot.write_ranked_csv(classified, out_dir / "uk_ranked.csv", top_n=len(ranked))
+    depth = int(ranked["rank"].max())
     categories = build_categories(classified, "uk", month, source, "cloudflare_radar", board_size,
-                                  depth=config.RADAR_LIMIT)  # Radar only ranks its top 100
+                                  depth=depth, boards=config.UK_CATEGORY_BOARDS)
+    for b in categories["payload"]["boards"].values():
+        _mark_crux(b["sites"], extra, crux_source and crux_source["month"])
+    snapshot.write_json(out_dir / "uk_categories.json", categories["payload"], compact=True)
     return report.BoardResult(
-        "uk", month, "ok", source=f"Cloudflare Radar GB top {len(ranked)} ({source['list_date']})",
+        "uk", month, "ok", source=f"Cloudflare Radar GB top {len(radar_ranked)} ({source['list_date']})"
+        + (f" + CrUX GB top 1,000 ({crux_source['month']})" if crux_source else ""),
         payload=payload, coverage=coverage, changed=changed,
-        unreviewed=report.unreviewed_domains(classified, config.RADAR_LIMIT),
+        unreviewed=report.unreviewed_domains(classified, len(ranked)),
         categories=categories,
     )
 

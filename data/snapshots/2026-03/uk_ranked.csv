@@ -1,0 +1,344 @@
+rank,domain,status,brand,category,reason
+1,google.com,mapped,Google,search,
+2,microsoft.com,mapped,Microsoft,productivity,
+3,googleapis.com,excluded,,,infrastructure (name pattern)
+4,apple.com,mapped,Apple,tech,
+5,facebook.com,mapped,Facebook,social,
+6,gstatic.com,excluded,,,infrastructure (name pattern)
+7,amazonaws.com,excluded,,,infrastructure (name pattern)
+8,akadns.net,excluded,,,infrastructure (name pattern)
+9,office.com,mapped,Microsoft,productivity,
+10,akamaiedge.net,excluded,,,infrastructure (name pattern)
+11,akamai.net,excluded,,,infrastructure (name pattern)
+12,instagram.com,mapped,Instagram,social,
+13,azure.com,excluded,,,infrastructure (name pattern)
+14,whatsapp.net,excluded,,,background (WhatsApp app traffic)
+15,apple-dns.net,excluded,,,background (Apple)
+16,aaplimg.com,excluded,,,background (Apple)
+17,ntp.org,excluded,,,infrastructure (time servers)
+18,icloud.com,mapped,Apple,tech,
+19,googlevideo.com,excluded,,,infrastructure (name pattern)
+20,cloudflare.com,excluded,,,infrastructure (DNS/CDN provider; 1.1.1.1 and edge services)
+21,chatgpt.com,mapped,ChatGPT,ai,
+22,cloudfront.net,excluded,,,infrastructure (name pattern)
+23,youtube.com,mapped,YouTube,video,
+24,live.com,mapped,Microsoft,productivity,
+25,doubleclick.net,excluded,,,infrastructure (name pattern)
+26,tiktokcdn.com,excluded,,,infrastructure (name pattern)
+27,amazon.com,mapped,Amazon,shopping,
+28,fastly.net,excluded,,,infrastructure (name pattern)
+29,fbcdn.net,excluded,,,background (Facebook media)
+30,ui.com,excluded,,,background (network devices)
+31,tiktokv.eu,excluded,,,background (TikTok app)
+32,spotify.com,mapped,Spotify,music,
+33,office.net,excluded,,,infrastructure (Office service traffic)
+34,trafficmanager.net,excluded,,,infrastructure (name pattern)
+35,snapchat.com,mapped,Snapchat,social,
+36,googleusercontent.com,excluded,,,infrastructure (name pattern)
+37,bing.com,mapped,Bing,search,
+38,microsoftonline.com,excluded,,,infrastructure (Microsoft sign-in)
+39,digicert.com,excluded,,,infrastructure (TLS certificates)
+40,googlesyndication.com,excluded,,,infrastructure (name pattern)
+41,cloudflare-dns.com,excluded,,,infrastructure (name pattern)
+42,tiktokcdn-eu.com,excluded,,,infrastructure (name pattern)
+43,office365.com,mapped,Microsoft,productivity,
+44,netflix.com,mapped,Netflix,video,
+45,windows.net,excluded,,,infrastructure
+46,tiktokv.com,excluded,,,background (TikTok app)
+47,windowsupdate.com,excluded,,,infrastructure (name pattern)
+48,sharepoint.com,mapped,Microsoft,productivity,
+49,skype.com,excluded,,,infrastructure (Skype closed in 2025; residual app traffic)
+50,cdninstagram.com,excluded,,,background (Instagram media)
+51,msn.com,mapped,MSN,news,
+52,cloud.microsoft,mapped,Microsoft,productivity,
+53,yahoo.com,mapped,Yahoo,search,
+54,gvt2.com,excluded,,,background (Chrome/Android updates)
+55,outlook.com,mapped,Microsoft,productivity,
+56,ytimg.com,excluded,,,background (YouTube images)
+57,windows.com,excluded,,,infrastructure (Windows services)
+58,app-analytics-services.com,excluded,,,analytics
+59,msftncsi.com,excluded,,,infrastructure (name pattern)
+60,amazon.co.uk,mapped,Amazon,shopping,
+61,app-measurement.com,excluded,,,infrastructure (name pattern)
+62,msftconnecttest.com,excluded,,,infrastructure (name pattern)
+63,google-analytics.com,excluded,,,infrastructure (name pattern)
+64,googletagmanager.com,excluded,,,infrastructure (name pattern)
+65,amazon-adsystem.com,excluded,,,infrastructure (name pattern)
+66,googleadservices.com,excluded,,,infrastructure (name pattern)
+67,whatsapp.com,mapped,WhatsApp,messaging,
+68,appsflyersdk.com,excluded,,,ads/attribution SDK
+69,cdn-apple.com,excluded,,,infrastructure (name pattern)
+70,avast.com,excluded,,,background (antivirus updates)
+71,a2z.com,excluded,,,infrastructure (Amazon internal)
+72,sentry.io,excluded,,,analytics (error reporting)
+73,gmail.com,mapped,Google,search,
+74,ubuntu.com,excluded,,,infrastructure (OS updates)
+75,gvt1.com,excluded,,,background (Chrome/Android updates)
+76,amazon.dev,excluded,,,infrastructure (Amazon internal)
+77,bbci.co.uk,excluded,,,BBC static assets and media CDN (pages load from bbc.co.uk)
+78,bbc.co.uk,mapped,BBC,news,
+79,github.com,mapped,GitHub,tech,
+80,ibyteimg.com,excluded,,,background (TikTok/ByteDance)
+81,cloudflare.net,excluded,,,infrastructure
+82,dns.google,excluded,,,infrastructure (name pattern)
+83,linkedin.com,mapped,LinkedIn,social,
+84,mzstatic.com,excluded,,,background (Apple media)
+85,applovin.com,excluded,,,ads
+86,nr-data.net,excluded,,,analytics (New Relic)
+87,ggpht.com,excluded,,,background (Google images)
+88,pki.goog,excluded,,,infrastructure (certificates)
+89,unity3d.com,excluded,,,background (game engine services)
+90,akamaized.net,excluded,,,infrastructure (name pattern)
+91,adobe.com,mapped,Adobe,productivity,
+92,steamserver.net,excluded,,,background (game servers)
+93,google.co.uk,mapped,Google,search,
+94,dropbox.com,mapped,Dropbox,productivity,
+95,launchdarkly.com,excluded,,,analytics
+96,roblox.com,mapped,Roblox,gaming,
+97,fastly-edge.com,excluded,,,infrastructure (name pattern)
+98,aws.dev,excluded,,,infrastructure (Amazon internal)
+99,msedge.net,excluded,,,infrastructure (name pattern)
+100,mozilla.com,excluded,,,background (Firefox services)
+101,x.com,mapped,X (Twitter),social,
+102,tiktok.com,mapped,TikTok,social,
+103,zoom.us,mapped,Zoom,productivity,
+104,samsung.com,mapped,Samsung,tech,
+105,reddit.com,mapped,Reddit,social,
+106,t.me,mapped,Telegram,messaging,
+107,paypal.com,mapped,PayPal,finance,
+108,epicgames.com,mapped,Epic Games,gaming,
+109,archive.org,mapped,Internet Archive,reference,
+110,tumblr.com,mapped,Tumblr,social,
+111,discord.com,mapped,Discord,messaging,
+112,nytimes.com,mapped,The New York Times,news,
+113,shopify.com,mapped,Shopify,tech,
+114,flickr.com,mapped,Flickr,social,
+115,theguardian.com,mapped,The Guardian,news,
+116,forbes.com,mapped,Forbes,news,
+117,twitch.tv,mapped,Twitch,video,
+118,bbc.com,mapped,BBC,news,
+119,weather.com,mapped,The Weather Channel,weather,
+120,researchgate.net,mapped,ResearchGate,education,
+121,sciencedirect.com,mapped,ScienceDirect,education,
+122,ebay.com,mapped,eBay,shopping,
+123,canva.com,mapped,Canva,productivity,
+124,imdb.com,mapped,IMDb,video,
+125,etsy.com,mapped,Etsy,shopping,
+126,reuters.com,mapped,Reuters,news,
+127,gov.uk,mapped,GOV.UK,government,
+128,booking.com,mapped,Booking.com,travel,
+129,tradingview.com,mapped,TradingView,finance,
+130,businessinsider.com,mapped,Business Insider,news,
+131,dailymail.co.uk,mapped,Daily Mail,news,
+132,dailymotion.com,mapped,Dailymotion,video,
+133,bloomberg.com,mapped,Bloomberg,news,
+134,telegraph.co.uk,mapped,The Telegraph,news,
+135,temu.com,mapped,Temu,shopping,
+136,aliexpress.com,mapped,AliExpress,shopping,
+137,duckduckgo.com,mapped,DuckDuckGo,search,
+138,steamcommunity.com,mapped,Steam,gaming,
+139,quora.com,mapped,Quora,social,
+140,goodreads.com,mapped,Goodreads,social,
+141,scribd.com,mapped,Scribd,reference,
+142,ft.com,mapped,Financial Times,news,
+143,bsky.app,mapped,Bluesky,social,
+144,deviantart.com,mapped,DeviantArt,social,
+145,independent.co.uk,mapped,The Independent,news,
+146,xhamster.com,excluded,,,adult
+147,nintendo.com,mapped,Nintendo,gaming,
+148,britannica.com,mapped,Britannica,reference,
+149,ikea.com,mapped,IKEA,shopping,
+150,accuweather.com,mapped,AccuWeather,weather,
+151,patreon.com,mapped,Patreon,social,
+152,ups.com,mapped,UPS,travel,
+153,nike.com,mapped,Nike,shopping,
+154,wattpad.com,mapped,Wattpad,social,
+155,xvideos.com,excluded,,,adult
+156,wp.pl,mapped,Wirtualna Polska,news,
+157,merriam-webster.com,mapped,Merriam-Webster,reference,
+158,amazon.in,mapped,Amazon,shopping,
+159,stripchat.com,excluded,,,adult
+160,fiverr.com,mapped,Fiverr,productivity,
+161,disneyplus.com,mapped,Disney+,video,
+162,people.com,mapped,People,news,
+163,xbox.com,mapped,Xbox,gaming,
+164,primevideo.com,mapped,Prime Video,video,
+165,allegro.pl,mapped,Allegro,shopping,
+166,pornhub.com,excluded,,,adult
+167,erome.com,excluded,,,adult
+168,onlyfans.com,excluded,,,adult
+169,discogs.com,mapped,Discogs,music,
+170,chess.com,mapped,Chess.com,gaming,
+171,healthline.com,mapped,Healthline,reference,
+172,ebay.co.uk,mapped,eBay,shopping,
+173,genius.com,mapped,Genius,music,
+174,onet.pl,mapped,Onet,news,
+175,chaturbate.com,excluded,,,adult
+176,biblegateway.com,mapped,Bible Gateway,reference,
+177,faphouse.com,excluded,,,adult
+178,poki.com,mapped,Poki,gaming,
+179,character.ai,mapped,Character.AI,ai,
+180,crazygames.com,mapped,CrazyGames,gaming,
+181,xnxx.com,excluded,,,adult
+182,nexusmods.com,mapped,Nexus Mods,gaming,
+183,quizlet.com,mapped,Quizlet,education,
+184,sofascore.com,mapped,Sofascore,sport,
+185,ancestry.com,mapped,Ancestry,reference,
+186,ecosia.org,mapped,Ecosia,search,
+187,letterboxd.com,mapped,Letterboxd,video,
+188,ilovepdf.com,mapped,iLovePDF,productivity,
+189,aparat.com,mapped,Aparat,video,
+190,wise.com,mapped,Wise,finance,
+191,archiveofourown.org,mapped,Archive of Our Own,reference,
+192,fortune.com,mapped,Fortune,news,
+193,tnaflix.com,excluded,,,adult
+194,skysports.com,mapped,Sky Sports,sport,
+195,furaffinity.net,mapped,Fur Affinity,social,
+196,espncricinfo.com,mapped,ESPNcricinfo,sport,
+197,hltv.org,mapped,HLTV,sport,
+198,flashscore.com,mapped,Flashscore,sport,
+199,argos.co.uk,mapped,Argos,shopping,
+200,bet365.com,excluded,,,gambling (left off the boards)
+201,jw.org,mapped,JW.org,reference,
+202,rule34.xxx,excluded,,,adult
+203,pornpics.com,excluded,,,adult
+204,rightmove.co.uk,mapped,Rightmove,shopping,
+205,spankbang.com,excluded,,,adult
+206,youporn.com,excluded,,,adult
+207,lichess.org,mapped,Lichess,gaming,
+208,paramountplus.com,mapped,Paramount+,video,
+209,fetlife.com,excluded,,,adult
+210,cricbuzz.com,mapped,Cricbuzz,sport,
+211,redtube.com,excluded,,,adult
+212,b7510.com,excluded,,,unidentified (no recognisable public site)
+213,buzzfeed.com,mapped,BuzzFeed,news,
+214,sportybet.com,excluded,,,gambling (left off the boards)
+215,fanfiction.net,mapped,FanFiction.Net,reference,
+216,txnhh.com,excluded,,,unidentified (no recognisable public site)
+217,boyfriendtv.com,excluded,,,adult
+218,livescore.com,mapped,LiveScore,sport,
+219,eporner.com,excluded,,,adult
+220,ryanair.com,mapped,Ryanair,travel,
+221,calculator.net,mapped,Calculator.net,reference,
+222,noodlemagazine.com,excluded,,,adult
+223,cam4.com,excluded,,,adult
+224,aternos.org,mapped,Aternos,gaming,
+225,futbin.com,mapped,FUTBIN,gaming,
+226,coolmathgames.com,mapped,Coolmath Games,gaming,
+227,youjizz.com,excluded,,,adult
+228,thisvid.com,excluded,,,adult
+229,e621.net,excluded,,,adult
+230,asuracomic.net,excluded,,,"unlicensed content (pirated video, manga or novels)"
+231,ey43.com,excluded,,,unidentified (no recognisable public site)
+232,cardgames.io,mapped,CardGames.io,gaming,
+233,toyhou.se,mapped,Toyhouse,social,
+234,rkv1.com,excluded,,,unidentified (no recognisable public site)
+235,missav.ws,excluded,,,adult
+236,varzesh3.com,mapped,Varzesh3,sport,
+237,hianime.to,excluded,,,"unlicensed content (pirated video, manga or novels)"
+238,e-hentai.org,excluded,,,adult
+239,imhentai.xxx,excluded,,,adult
+240,ixxx.com,excluded,,,adult
+241,xxxbp.tv,excluded,,,adult
+242,boardgamearena.com,mapped,Board Game Arena,gaming,
+243,imagefap.com,excluded,,,adult
+244,mangago.me,excluded,,,"unlicensed content (pirated video, manga or novels)"
+245,hdporncomics.com,excluded,,,adult
+246,gelbooru.com,excluded,,,adult
+247,cardmarket.com,mapped,Cardmarket,shopping,
+248,pussyspace.com,excluded,,,adult
+249,motherless.com,excluded,,,adult
+250,mat6tube.com,excluded,,,adult
+251,aniwatchtv.to,excluded,,,"unlicensed content (pirated video, manga or novels)"
+252,iporntv.net,excluded,,,adult
+253,wow.xxx,excluded,,,adult
+254,xnxx.health,excluded,,,adult
+255,xnxx-arabic.com,excluded,,,adult
+256,mangabuddy.com,excluded,,,"unlicensed content (pirated video, manga or novels)"
+257,search-redirect.com,excluded,,,unidentified (no recognisable public site)
+258,novelbin.com,excluded,,,"unlicensed content (pirated video, manga or novels)"
+259,imgsrc.ru,excluded,,,adult
+260,twpornstars.com,excluded,,,adult
+261,fabswingers.com,excluded,,,adult
+262,sexalarab.com,excluded,,,adult
+263,flashscore.mobi,mapped,Flashscore,sport,
+264,fabguys.com,excluded,,,adult
+265,tamildhool.tech,excluded,,,"unlicensed content (pirated video, manga or novels)"
+266,shop.app,mapped,Shop,shopping,
+267,sky.com,mapped,Sky,news,
+268,justice.gov,mapped,US Department of Justice,government,
+269,nhs.uk,mapped,NHS,government,
+270,thesun.co.uk,mapped,The Sun,news,
+271,wowhead.com,mapped,Wowhead,gaming,
+272,euronews.com,mapped,Euronews,news,
+273,ign.com,mapped,IGN,gaming,
+274,mirror.co.uk,mapped,The Mirror,news,
+275,timeanddate.com,mapped,timeanddate.com,reference,
+276,variety.com,mapped,Variety,news,
+277,playhop.com,mapped,Playhop,gaming,
+278,polybuzz.ai,mapped,PolyBuzz,ai,
+279,autotrader.co.uk,mapped,Auto Trader,shopping,
+280,strava.com,mapped,Strava,social,
+281,pimpbunny.com,excluded,,,adult
+282,9animetv.to,excluded,,,"unlicensed content (pirated video, manga or novels)"
+283,americanexpress.com,mapped,American Express,finance,
+284,olympics.com,mapped,Olympics,sport,
+285,mangafire.to,excluded,,,"unlicensed content (pirated video, manga or novels)"
+286,theblowers.com,excluded,,,adult
+287,lego.com,mapped,LEGO,shopping,
+288,express.co.uk,mapped,Daily Express,news,
+289,techradar.com,mapped,TechRadar,tech,
+290,livescience.com,mapped,Live Science,news,
+291,uniqlo.com,mapped,Uniqlo,shopping,
+292,bt.com,mapped,BT,tech,
+293,itv.com,mapped,ITVX,video,
+294,marksandspencer.com,mapped,Marks & Spencer,shopping,
+295,flightradar24.com,mapped,Flightradar24,travel,
+296,rottentomatoes.com,mapped,Rotten Tomatoes,video,
+297,ubereats.com,mapped,Uber Eats,shopping,
+298,getyourguide.com,mapped,GetYourGuide,travel,
+299,metro.co.uk,mapped,Metro,news,
+300,thetimes.com,mapped,The Times,news,
+301,nhentai.net,excluded,,,adult
+302,cosmopolitan.com,mapped,Cosmopolitan,news,
+303,goodhousekeeping.com,mapped,Good Housekeeping,news,
+304,next.co.uk,mapped,Next,shopping,
+305,timeout.com,mapped,Time Out,travel,
+306,redbubble.com,mapped,Redbubble,shopping,
+307,shahvani.com,excluded,,,adult
+308,taktube.net,excluded,,,adult
+309,luticlip.com,excluded,,,adult
+310,standard.co.uk,mapped,Evening Standard,news,
+311,asos.com,mapped,ASOS,shopping,
+312,mcdonalds.com,mapped,McDonald's,shopping,
+313,popularmechanics.com,mapped,Popular Mechanics,news,
+314,irishtimes.com,mapped,The Irish Times,news,
+315,eventbrite.co.uk,mapped,Eventbrite,shopping,
+316,tesco.com,mapped,Tesco,shopping,
+317,tomsguide.com,mapped,Tom's Guide,tech,
+318,tripadvisor.co.uk,mapped,Tripadvisor,travel,
+319,simpcity.cr,excluded,,,adult
+320,screenrant.com,mapped,Screen Rant,news,
+321,getadblock.com,excluded,,,unidentified (no recognisable public site)
+322,easyjet.com,mapped,easyJet,travel,
+323,legislation.gov.uk,mapped,legislation.gov.uk,government,
+324,channel4.com,mapped,Channel 4,video,
+325,rte.ie,mapped,RTÉ,news,
+326,tvtropes.org,mapped,TV Tropes,reference,
+327,tfl.gov.uk,mapped,TfL,travel,
+328,skyscanner.net,mapped,Skyscanner,travel,
+329,boardgamegeek.com,mapped,BoardGameGeek,gaming,
+330,sciencealert.com,mapped,ScienceAlert,news,
+331,bbcgoodfood.com,mapped,BBC Good Food,reference,
+332,metoffice.gov.uk,mapped,Met Office,weather,
+333,premierleague.com,mapped,Premier League,sport,
+334,boredpanda.com,mapped,Bored Panda,news,
+335,parade.com,mapped,Parade,news,
+336,pcgamer.com,mapped,PC Gamer,gaming,
+337,rome2rio.com,mapped,Rome2Rio,travel,
+338,collider.com,mapped,Collider,news,
+339,johnlewis.com,mapped,John Lewis,shopping,
+340,xda-developers.com,mapped,XDA Developers,tech,
+341,thetrainline.com,mapped,Trainline,travel,
+342,1337x.to,excluded,,,"unlicensed content (pirated video, manga or novels)"
+343,bricklink.com,mapped,BrickLink,shopping,

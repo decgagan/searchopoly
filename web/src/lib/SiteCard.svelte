@@ -148,7 +148,11 @@
           {/if}
         {:else}
         <div><dt>Category</dt><dd>{group.label}{#if (categoryLabels[site.category] ?? site.category) !== group.label}{" · "}{categoryLabels[site.category] ?? site.category}{/if}</dd></div>
+        {#if site.source === "crux_gb"}
+        <div><dt>Raw rank</dt><dd>Outside Radar's UK top 100; in Chrome's UK top 1,000 (CrUX, {site.crux_month}), placed by world Tranco rank #{site.tranco_rank}</dd></div>
+        {:else}
         <div><dt>Raw rank</dt><dd>#{site.source_rank} in {sourceName}{snapshot.source?.list_id ? ` list ${snapshot.source.list_id}` : ""}</dd></div>
+        {/if}
         {#if site.merged_domains?.length > 1}
           <div class="domains">
             <dt>Domains counted</dt>

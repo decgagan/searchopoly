@@ -161,12 +161,13 @@
           type="button"
           class="chip"
           style:--set={f.colour}
+          style:--swatch={f.colours ? `linear-gradient(90deg, ${f.colours.join(", ")})` : null}
           aria-pressed={filter === f.id}
           onclick={() => onSelectFilter(filter === f.id ? null : f.id)}
         >
           <span class="swatch" aria-hidden="true"></span>
           <span class="label">{f.label}</span>
-          {#if !filter}<span class="count"><span class="sr-only">, </span>{counts[f.group] ?? 0}<span class="sr-only"> on this board</span></span>{/if}
+          {#if !filter}<span class="count"><span class="sr-only">, </span>{(f.groups ?? [f.group]).reduce((n, g) => n + (counts[g] ?? 0), 0)}<span class="sr-only"> on this board</span></span>{/if}
         </button>
       {/each}
     </div>
@@ -430,7 +431,7 @@
   .mobile .swatch { width: 1em; }
   .mobile .count { padding-left: 0.4em; }
   .legend li { display: flex; align-items: center; gap: 0.6em; color: var(--ink); }
-  .swatch { width: 1.7em; height: 1em; border-radius: 3px; background: var(--set); flex: none; }
+  .swatch { width: 1.7em; height: 1em; border-radius: 3px; background: var(--swatch, var(--set)); flex: none; }
   .count { margin-left: auto; color: var(--ink-soft); font-variant-numeric: tabular-nums; padding-left: 0.8em; }
 
   .vacant { margin: 0; font-size: var(--fs-movers); color: var(--ink-soft); max-width: 46ch; line-height: 1.4; }

@@ -63,9 +63,13 @@ Every one of the top 500 raw domains, and how it was treated, is in
 
 The **UK board** (Cloudflare Radar, GB) is live for January to October 2026. October's top 5:
 Google, Microsoft, Apple, Facebook, Instagram. Radar only ranks its top 100 domains per country,
-and after removing background traffic that leaves 18 to 22 real sites a month, so the rest of
-the UK board shows as vacant lots ([`uk.json`](data/snapshots/2026-10/uk.json),
-[`uk_ranked_top100.csv`](data/snapshots/2026-10/uk_ranked_top100.csv)).
+and after removing background traffic that leaves 18 to 22 real sites a month. The rest of the
+board is filled from the Chrome UX Report's UK top-1,000 bucket (CC BY 4.0, via the
+[crux-top-lists](https://github.com/zakird/crux-top-lists) mirror) for the previous month,
+ordered by world Tranco rank because CrUX is unordered within a bucket, so every month is full
+([`uk.json`](data/snapshots/2026-10/uk.json),
+[`uk_ranked.csv`](data/snapshots/2026-10/uk_ranked.csv)). Cards from CrUX are marked
+`"source": "crux_gb"`. The UK board also leaves off gambling and pirated-content sites.
 
 ## How the pipeline works
 
@@ -138,8 +142,9 @@ about 540 more domains, 223 mapped to sites and 317 excluded with a reason.
   shown as vacant lots. They aren't padded with deeper or unreviewed domains. The coverage
   check is stricter for these boards: a short board claims nothing else in the set is in the
   top 1,000, so the run warns if *any* unreviewed domain sits inside that depth.
-- **UK too, but shallow.** Radar's UK ranking stops at 100 domains, so UK category boards reach
-  only that deep and are mostly vacant lots.
+- **UK: merged filters.** The UK pool (Radar top 100 + CrUX UK top 1,000) is smaller, so UK
+  filters merge sets (`UK_CATEGORY_BOARDS` in `pipeline/config.py`): Tech & work, Social &
+  entertainment, and Shopping, news & reference. Each fills 28 squares every month.
 - **One file per month:** `world_categories.json` (about 55 KB, 9 KB gzipped) holds all seven
   boards. Brand details are stored once and the boards list only ids and ranks, one object
   per line so diffs stay readable. The site loads these files only when a filter is first used.

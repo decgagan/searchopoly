@@ -2,7 +2,7 @@
   "board": "uk",
   "label": "United Kingdom",
   "month": "2026-01",
-  "generated_at": "2026-10-25T12:42:14Z",
+  "generated_at": "2026-10-25T13:11:30Z",
   "metric": "Relative popularity (most visited), not search volume",
   "source": {
     "name": "Cloudflare Radar",
@@ -11,11 +11,18 @@
     "list_date": "2026-01-01",
     "last_updated": null,
     "url": "https://radar.cloudflare.com/domains",
-    "licence_note": "Cloudflare Radar data, CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/). Modified: infrastructure domains removed and sibling domains merged."
+    "licence_note": "Cloudflare Radar data, CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/). Modified: infrastructure domains removed and sibling domains merged.",
+    "fill": {
+      "name": "Chrome UX Report (CrUX)",
+      "month": "2025-12",
+      "bucket": 1000,
+      "url": "https://developer.chrome.com/docs/crux/",
+      "licence_note": "CrUX data by Google, CC BY 4.0. GB country file via github.com/zakird/crux-top-lists."
+    }
   },
   "coverage": {
-    "last_board_source_rank": 97,
-    "reviewed_through_rank": 100,
+    "last_board_source_rank": 109,
+    "reviewed_through_rank": 344,
     "unreviewed_above_cutoff": [],
     "ok": true
   },
@@ -185,7 +192,8 @@
       "source_rank": 37,
       "merged_domains": [
         "amazon.com",
-        "amazon.co.uk"
+        "amazon.co.uk",
+        "amazon.in"
       ],
       "previous_rank": null,
       "movement": null,
@@ -334,7 +342,170 @@
       "previous_rank": null,
       "movement": null,
       "note": null
+    },
+    {
+      "rank": 20,
+      "id": "x-twitter",
+      "brand": "X (Twitter)",
+      "domain": "x.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "crux_gb",
+      "source_rank": 101,
+      "merged_domains": [
+        "x.com"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": "Merges twitter.com and x.com. The t.co link shortener is excluded.",
+      "crux_month": "2025-12",
+      "tranco_rank": 60
+    },
+    {
+      "rank": 21,
+      "id": "tiktok",
+      "brand": "TikTok",
+      "domain": "tiktok.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "crux_gb",
+      "source_rank": 102,
+      "merged_domains": [
+        "tiktok.com"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 65
+    },
+    {
+      "rank": 22,
+      "id": "samsung",
+      "brand": "Samsung",
+      "domain": "samsung.com",
+      "category": "tech",
+      "group": "search_tech",
+      "source": "crux_gb",
+      "source_rank": 103,
+      "merged_domains": [
+        "samsung.com"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 86
+    },
+    {
+      "rank": 23,
+      "id": "reddit",
+      "brand": "Reddit",
+      "domain": "reddit.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "crux_gb",
+      "source_rank": 104,
+      "merged_domains": [
+        "reddit.com"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 103
+    },
+    {
+      "rank": 24,
+      "id": "telegram",
+      "brand": "Telegram",
+      "domain": "telegram.org",
+      "category": "messaging",
+      "group": "social_messaging",
+      "source": "crux_gb",
+      "source_rank": 105,
+      "merged_domains": [
+        "t.me"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 118
+    },
+    {
+      "rank": 25,
+      "id": "epic-games",
+      "brand": "Epic Games",
+      "domain": "epicgames.com",
+      "category": "gaming",
+      "group": "entertainment",
+      "source": "crux_gb",
+      "source_rank": 106,
+      "merged_domains": [
+        "epicgames.com"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 119
+    },
+    {
+      "rank": 26,
+      "id": "dropbox",
+      "brand": "Dropbox",
+      "domain": "dropbox.com",
+      "category": "productivity",
+      "group": "work_money",
+      "source": "crux_gb",
+      "source_rank": 107,
+      "merged_domains": [
+        "dropbox.com"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 124
+    },
+    {
+      "rank": 27,
+      "id": "internet-archive",
+      "brand": "Internet Archive",
+      "domain": "archive.org",
+      "category": "reference",
+      "group": "reference_learning",
+      "source": "crux_gb",
+      "source_rank": 108,
+      "merged_domains": [
+        "archive.org"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 147
+    },
+    {
+      "rank": 28,
+      "id": "tumblr",
+      "brand": "Tumblr",
+      "domain": "tumblr.com",
+      "category": "social",
+      "group": "social_messaging",
+      "source": "crux_gb",
+      "source_rank": 109,
+      "merged_domains": [
+        "tumblr.com"
+      ],
+      "previous_rank": null,
+      "movement": null,
+      "note": null,
+      "crux_month": "2025-12",
+      "tranco_rank": 152
     }
   ],
-  "dropped_out": []
+  "dropped_out": [],
+  "radar_sites": 19
 }

@@ -71,12 +71,25 @@
           Its limits are worth knowing. Radar only publishes an ordered list of its top 100
           domains per country, and most of those are background traffic (CDNs, Apple and Windows
           services, ad and telemetry hosts), so only about 18 to 22 real sites are left each month.
-          The rest of the UK board shows as <strong>vacant lots</strong> rather than guesses, and its
-          category boards are mostly vacant. It is one source (DNS lookups through 1.1.1.1, which
+          The rest of the board is filled from the
+          <a href="https://developer.chrome.com/docs/crux" target="_blank" rel="noopener">Chrome UX Report</a>
+          (CrUX, below). Radar is one source (DNS lookups through 1.1.1.1, which
           skews towards people and devices that use Cloudflare's resolver), not a five-source
           average like Tranco, so it is noisier and favours sites with lots of background
           lookups. Tranco has no country split, and estimating the UK from <code>.uk</code> domains would be
           wrong, as most UK traffic goes to <code>.com</code> sites.
+        </dd>
+        <dt>UK fill: <a href="https://developer.chrome.com/docs/crux" target="_blank" rel="noopener">Chrome UX Report (CrUX)</a></dt>
+        <dd>
+          Google publishes which sites Chrome users in each country visit most, but only in
+          rank buckets (top 1,000, top 10,000 …), not in order. Squares after Radar's real sites
+          come from CrUX's UK top 1,000 for the month before (matching Radar's previous-30-days
+          window, so the October board uses September's CrUX), cleaned the same way and
+          <strong>ordered by the site's world Tranco rank</strong>, because CrUX gives no order inside
+          the bucket. So those squares say "in the UK's top 1,000, and globally big", not an exact UK
+          position. Each card says which source placed it. We read the monthly CSVs from the
+          <a href="https://github.com/zakird/crux-top-lists" target="_blank" rel="noopener">crux-top-lists</a>
+          mirror. For the UK board gambling and pirated-content sites are left off, as well as adult sites.
         </dd>
       </div>
       <div>
@@ -134,9 +147,11 @@
       filter. Neither filled a board, so they're now one set,
       <a href="#world/search-tech">Search &amp; tech</a>, which fills all 28 squares every month. If
       a set ever runs short, the empty squares show as <strong>vacant lots</strong> rather than being
-      padded with sites that didn't make the cut or unreviewed domains. The UK board has
-      category boards too, but Cloudflare Radar's UK ranking stops at 100 domains, so they only
-      reach that deep and most of their squares are vacant lots.
+      padded with sites that didn't make the cut or unreviewed domains. The UK board draws on
+      fewer sites, so its filters merge sets into three that each fill all 28 squares every month:
+      <a href="#uk/tech-work">Tech &amp; work</a>,
+      <a href="#uk/social-entertainment">Social &amp; entertainment</a> and
+      <a href="#uk/shopping-news">Shopping, news &amp; reference</a>.
     </p>
   </section>
 
@@ -230,6 +245,11 @@
         World data: Tranco, from Le Pochat et al., "Tranco: A Research-Oriented Top Sites Ranking
         Hardened Against Manipulation", NDSS 2019,
         <a href="https://doi.org/10.14722/ndss.2019.23386" target="_blank" rel="noopener">doi:10.14722/ndss.2019.23386</a>.
+      </li>
+      <li>
+        Chrome UX Report data is published by Google under
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+        (modified: bucket filtered, cleaned and ordered by Tranco rank).
       </li>
       <li>
         Cloudflare Radar data is licensed

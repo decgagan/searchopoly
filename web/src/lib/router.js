@@ -10,7 +10,7 @@
 //   #people/sport/2026-09/<person> ...one colour set, a month and a person's card
 //   #about                         "How it's made" page
 //   #og                            share-image layout (used by scripts/og-image.mjs)
-import { FILTER_IDS, FILTER_ALIASES } from "./groups.js";
+import { FILTER_IDS, FILTER_ALIASES, UK_FILTER_ALIASES } from "./groups.js";
 
 export const BOARDS = ["world", "uk", "people"];
 export const PAGES = ["about", "og"];
@@ -23,7 +23,8 @@ export function parseHash(hash) {
   let board = "world";
   if (BOARDS.includes(parts[0])) board = parts.shift();
   else if (parts.length) return blank; // unknown hash
-  if (board !== "people" && FILTER_ALIASES[parts[0]]) parts[0] = FILTER_ALIASES[parts[0]];
+  if (board === "uk" && UK_FILTER_ALIASES[parts[0]]) parts[0] = UK_FILTER_ALIASES[parts[0]];
+  else if (board !== "people" && FILTER_ALIASES[parts[0]]) parts[0] = FILTER_ALIASES[parts[0]];
   const filter = FILTER_IDS.includes(parts[0]) ? parts.shift() : null;
   const month = parts[0] && MONTH.test(parts[0]) ? parts.shift() : null;
   const site = parts[0] ? decodeURIComponent(parts[0]) : null;

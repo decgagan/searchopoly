@@ -1,7 +1,7 @@
 {
   "board": "world",
   "month": "2026-10",
-  "generated_at": "2026-10-10T20:30:53Z",
+  "generated_at": "2026-10-25T13:11:38Z",
   "metric": "Relative popularity (most visited) within each colour set, not search volume",
   "source": {"name":"Tranco","list_id":"Y83YG","list_date":"2026-10-01","window":"2026-09-02 to 2026-10-01","providers":["crux","farsight","majestic","radar","umbrella"],"url":"https://tranco-list.eu/list/Y83YG","citation":"Le Pochat et al. (2019), 'Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation', NDSS 2019. https://doi.org/10.14722/ndss.2019.23386","licence_note":"Tranco aggregates Cisco Umbrella, Majestic (CC BY 3.0), Farsight, Chrome UX Report and Cloudflare Radar (CC BY-NC 4.0) rankings. Non-commercial use."},
   "depth": 1000,
@@ -59,7 +59,7 @@
     "espn": {"brand":"ESPN","domain":"espn.com","category":"sport","group":"news_sport","source":"tranco","merged_domains":["espn.com"],"note":null},
     "etsy": {"brand":"Etsy","domain":"etsy.com","category":"shopping","group":"shopping","source":"tranco","merged_domains":["etsy.com"],"note":null},
     "european-union": {"brand":"European Union","domain":"europa.eu","category":"government","group":"reference_learning","source":"tranco","merged_domains":["europa.eu"],"note":null},
-    "eventbrite": {"brand":"Eventbrite","domain":"eventbrite.com","category":"shopping","group":"shopping","source":"tranco","merged_domains":["eventbrite.com"],"note":null},
+    "eventbrite": {"brand":"Eventbrite","domain":"eventbrite.com","category":"shopping","group":"shopping","source":"tranco","merged_domains":["eventbrite.com","eventbrite.co.uk"],"note":null},
     "facebook": {"brand":"Facebook","domain":"facebook.com","category":"social","group":"social_messaging","source":"tranco","merged_domains":["facebook.com","fb.com"],"note":"Background traffic from Facebook's SDK and image servers (facebook.net, fbcdn.net) is excluded."},
     "fandom": {"brand":"Fandom","domain":"fandom.com","category":"reference","group":"reference_learning","source":"tranco","merged_domains":["fandom.com","wikia.com"],"note":null},
     "fast-com": {"brand":"Fast.com","domain":"fast.com","category":"tech","group":"search_tech","source":"tranco","merged_domains":["fast.com"],"note":"Netflix's speed test. Some smart TVs and apps run it in the background."},
@@ -238,7 +238,7 @@
         {"rank":28,"id":"fast-com","source_rank":561,"previous_rank":28,"movement":0}
       ],
       "vacant": 0,
-      "coverage": {"depth":1000,"cutoff_source_rank":561,"reviewed_through_rank":1005,"unreviewed_above_cutoff":[],"ok":true},
+      "coverage": {"depth":1000,"cutoff_source_rank":561,"reviewed_through_rank":1008,"unreviewed_above_cutoff":[],"ok":true},
       "dropped_out": []
     },
     "social": {
@@ -273,7 +273,7 @@
         {"rank":28,"id":"behance","source_rank":520,"previous_rank":28,"movement":0}
       ],
       "vacant": 0,
-      "coverage": {"depth":1000,"cutoff_source_rank":520,"reviewed_through_rank":1005,"unreviewed_above_cutoff":[],"ok":true},
+      "coverage": {"depth":1000,"cutoff_source_rank":520,"reviewed_through_rank":1008,"unreviewed_above_cutoff":[],"ok":true},
       "dropped_out": []
     },
     "entertainment": {
@@ -308,7 +308,7 @@
         {"rank":28,"id":"youku","source_rank":947,"previous_rank":27,"movement":-1}
       ],
       "vacant": 0,
-      "coverage": {"depth":1000,"cutoff_source_rank":947,"reviewed_through_rank":1005,"unreviewed_above_cutoff":[],"ok":true},
+      "coverage": {"depth":1000,"cutoff_source_rank":947,"reviewed_through_rank":1008,"unreviewed_above_cutoff":[],"ok":true},
       "dropped_out": [
         {"id":"ubisoft","brand":"Ubisoft","previous_rank":26},
         {"id":"paramount","brand":"Paramount+","previous_rank":28}
@@ -346,7 +346,7 @@
         {"rank":28,"id":"craigslist","source_rank":799,"previous_rank":null,"movement":null}
       ],
       "vacant": 0,
-      "coverage": {"depth":1000,"cutoff_source_rank":799,"reviewed_through_rank":1005,"unreviewed_above_cutoff":[],"ok":true},
+      "coverage": {"depth":1000,"cutoff_source_rank":799,"reviewed_through_rank":1008,"unreviewed_above_cutoff":[],"ok":true},
       "dropped_out": [
         {"id":"mercado-libre","brand":"Mercado Libre","previous_rank":27}
       ]
@@ -383,7 +383,7 @@
         {"rank":28,"id":"time","source_rank":571,"previous_rank":27,"movement":-1}
       ],
       "vacant": 0,
-      "coverage": {"depth":1000,"cutoff_source_rank":571,"reviewed_through_rank":1005,"unreviewed_above_cutoff":[],"ok":true},
+      "coverage": {"depth":1000,"cutoff_source_rank":571,"reviewed_through_rank":1008,"unreviewed_above_cutoff":[],"ok":true},
       "dropped_out": [
         {"id":"usa-today","brand":"USA Today","previous_rank":28}
       ]
@@ -420,7 +420,7 @@
         {"rank":28,"id":"taylor-francis-online","source_rank":568,"previous_rank":28,"movement":0}
       ],
       "vacant": 0,
-      "coverage": {"depth":1000,"cutoff_source_rank":568,"reviewed_through_rank":1005,"unreviewed_above_cutoff":[],"ok":true},
+      "coverage": {"depth":1000,"cutoff_source_rank":568,"reviewed_through_rank":1008,"unreviewed_above_cutoff":[],"ok":true},
       "dropped_out": []
     },
     "work": {
@@ -455,7 +455,7 @@
         {"rank":28,"id":"wps-office","source_rank":707,"previous_rank":27,"movement":-1}
       ],
       "vacant": 0,
-      "coverage": {"depth":1000,"cutoff_source_rank":707,"reviewed_through_rank":1005,"unreviewed_above_cutoff":[],"ok":true},
+      "coverage": {"depth":1000,"cutoff_source_rank":707,"reviewed_through_rank":1008,"unreviewed_above_cutoff":[],"ok":true},
       "dropped_out": []
     }
   }

@@ -1,7 +1,7 @@
 {
   "board": "world",
   "month": "2026-02",
-  "generated_at": "2026-10-10T20:30:52Z",
+  "generated_at": "2026-10-25T13:11:30Z",
   "metric": "Relative popularity (most visited) within each colour set, not search volume",
   "source": {"name":"Tranco","list_id":"3Q9NL","list_date":"2026-02-01","window":"2026-01-03 to 2026-02-01","providers":["crux","farsight","majestic","radar","umbrella"],"url":"https://tranco-list.eu/list/3Q9NL","citation":"Le Pochat et al. (2019), 'Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation', NDSS 2019. https://doi.org/10.14722/ndss.2019.23386","licence_note":"Tranco aggregates Cisco Umbrella, Majestic (CC BY 3.0), Farsight, Chrome UX Report and Cloudflare Radar (CC BY-NC 4.0) rankings. Non-commercial use."},
   "depth": 1000,
@@ -58,7 +58,7 @@
     "espn": {"brand":"ESPN","domain":"espn.com","category":"sport","group":"news_sport","source":"tranco","merged_domains":["espn.com"],"note":null},
     "etsy": {"brand":"Etsy","domain":"etsy.com","category":"shopping","group":"shopping","source":"tranco","merged_domains":["etsy.com"],"note":null},
     "european-union": {"brand":"European Union","domain":"europa.eu","category":"government","group":"reference_learning","source":"tranco","merged_domains":["europa.eu"],"note":null},
-    "eventbrite": {"brand":"Eventbrite","domain":"eventbrite.com","category":"shopping","group":"shopping","source":"tranco","merged_domains":["eventbrite.com"],"note":null},
+    "eventbrite": {"brand":"Eventbrite","domain":"eventbrite.com","category":"shopping","group":"shopping","source":"tranco","merged_domains":["eventbrite.com","eventbrite.co.uk"],"note":null},
     "facebook": {"brand":"Facebook","domain":"facebook.com","category":"social","group":"social_messaging","source":"tranco","merged_domains":["facebook.com","fb.com"],"note":"Background traffic from Facebook's SDK and image servers (facebook.net, fbcdn.net) is excluded."},
     "fast-com": {"brand":"Fast.com","domain":"fast.com","category":"tech","group":"search_tech","source":"tranco","merged_domains":["fast.com"],"note":"Netflix's speed test. Some smart TVs and apps run it in the background."},
     "flickr": {"brand":"Flickr","domain":"flickr.com","category":"social","group":"social_messaging","source":"tranco","merged_domains":["flickr.com"],"note":null},

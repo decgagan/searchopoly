@@ -320,6 +320,9 @@ def write_latest_index(categories: pd.DataFrame, board_status: dict[str, dict],
         "board_size": config.BOARD_SIZE,
         "filters": [{"id": k, "group": g, "label": label}
                     for k, (g, label) in config.CATEGORY_BOARDS.items()],
+        # The UK board merges colour sets into fewer, fuller filters.
+        "uk_filters": [{"id": k, "groups": list(g), "label": label}
+                       for k, (g, label) in config.UK_CATEGORY_BOARDS.items()],
         "months": {k: v for k, v in category_months.items() if v},
         # The People board's colour sets come from Wikidata occupations (pipeline/people.py).
         "people_filters": [{"id": k, "group": k, "label": label}

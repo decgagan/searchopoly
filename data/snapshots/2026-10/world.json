@@ -2,7 +2,7 @@
   "board": "world",
   "label": "World",
   "month": "2026-10",
-  "generated_at": "2026-10-10T20:30:52Z",
+  "generated_at": "2026-10-25T13:11:38Z",
   "metric": "Relative popularity (most visited), not search volume",
   "source": {
     "name": "Tranco",
@@ -22,7 +22,7 @@
   },
   "coverage": {
     "last_board_source_rank": 87,
-    "reviewed_through_rank": 1005,
+    "reviewed_through_rank": 1008,
     "unreviewed_above_cutoff": [],
     "ok": true
   },

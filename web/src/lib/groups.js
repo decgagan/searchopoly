@@ -42,10 +42,25 @@ export const FILTERS = [
   { id: "work", group: "work_money" },
 ].map((f) => ({ ...f, label: GROUPS[f.group].label, colour: GROUPS[f.group].colour }));
 
+// The UK board has fewer sites to draw on, so its filters merge colour sets (see
+// UK_CATEGORY_BOARDS in pipeline/config.py). Each fills all 28 squares every month.
+export const UK_FILTERS = [
+  { id: "tech-work", groups: ["search_tech", "work_money"], label: "Tech & work" },
+  { id: "social-entertainment", groups: ["social_messaging", "entertainment"], label: "Social & entertainment" },
+  { id: "shopping-news", groups: ["shopping", "news_sport", "reference_learning"], label: "Shopping, news & reference" },
+].map((f) => ({ ...f, group: f.groups[0], colour: GROUPS[f.groups[0]].colour,
+                colours: f.groups.map((g) => GROUPS[g].colour) }));
+
 export const PEOPLE_FILTERS = Object.entries(PEOPLE_GROUPS).map(([id, g]) => ({ id, group: id, ...g }));
 
-export const filtersFor = (board) => (board === "people" ? PEOPLE_FILTERS : board === "world" || board === "uk" ? FILTERS : []);
-export const FILTER_IDS = [...FILTERS, ...PEOPLE_FILTERS].map((f) => f.id);
+export const filtersFor = (board) => (board === "people" ? PEOPLE_FILTERS : board === "world" ? FILTERS : board === "uk" ? UK_FILTERS : []);
+export const FILTER_IDS = [...FILTERS, ...UK_FILTERS, ...PEOPLE_FILTERS].map((f) => f.id);
 // Slugs from before Search & portals and Tech & AI merged; old links still work.
 export const FILTER_ALIASES = { search: "search-tech", tech: "search-tech" };
+// Old single-set UK links (#uk/work) open the merged UK filter that contains that set.
+export const UK_FILTER_ALIASES = {
+  "search-tech": "tech-work", search: "tech-work", tech: "tech-work", work: "tech-work",
+  social: "social-entertainment", entertainment: "social-entertainment",
+  shopping: "shopping-news", news: "shopping-news", reference: "shopping-news",
+};
 export const filterOf = (id, board = "world") => filtersFor(board).find((f) => f.id === id) ?? null;

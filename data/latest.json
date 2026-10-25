@@ -307,9 +307,9 @@
     ]
   },
   "curation": {
-    "mapped_domains": 503,
-    "brands": 433,
-    "excluded_domains": 675,
+    "mapped_domains": 602,
+    "brands": 527,
+    "excluded_domains": 774,
     "infra_patterns": 43
   }
 }

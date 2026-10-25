@@ -225,7 +225,8 @@ def build_category_boards(classified: pd.DataFrame, groups: dict[str, str],
     every = every[every["source_rank"] <= depth]
     boards = {}
     for key, group in groups.items():
-        sub = every[every["group"] == group].head(board_size).reset_index(drop=True)
+        wanted = [group] if isinstance(group, str) else list(group)
+        sub = every[every["group"].isin(wanted)].head(board_size).reset_index(drop=True)
         sub["rank"] = range(1, len(sub) + 1)
         boards[key] = sub
     return boards
