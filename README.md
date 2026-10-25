@@ -61,7 +61,11 @@ The full 28 are in [`data/snapshots/2026-10/world.json`](data/snapshots/2026-10/
 Every one of the top 500 raw domains, and how it was treated, is in
 [`world_ranked_top500.csv`](data/snapshots/2026-10/world_ranked_top500.csv).
 
-The **UK board is pending** until a Cloudflare Radar API token is added (see below).
+The **UK board** (Cloudflare Radar, GB) is live for January to October 2026. October's top 5:
+Google, Microsoft, Apple, Facebook, Instagram. Radar only ranks its top 100 domains per country,
+and after removing background traffic that leaves 18 to 22 real sites a month, so the rest of
+the UK board shows as vacant lots ([`uk.json`](data/snapshots/2026-10/uk.json),
+[`uk_ranked_top100.csv`](data/snapshots/2026-10/uk_ranked_top100.csv)).
 
 ## How the pipeline works
 
@@ -134,7 +138,8 @@ about 540 more domains, 223 mapped to sites and 317 excluded with a reason.
   shown as vacant lots. They aren't padded with deeper or unreviewed domains. The coverage
   check is stricter for these boards: a short board claims nothing else in the set is in the
   top 1,000, so the run warns if *any* unreviewed domain sits inside that depth.
-- **World only.** Radar's UK ranking stops at 100 domains, too shallow for category boards.
+- **UK too, but shallow.** Radar's UK ranking stops at 100 domains, so UK category boards reach
+  only that deep and are mostly vacant lots.
 - **One file per month:** `world_categories.json` (about 55 KB, 9 KB gzipped) holds all seven
   boards. Brand details are stored once and the boards list only ids and ranks, one object
   per line so diffs stay readable. The site loads these files only when a filter is first used.
